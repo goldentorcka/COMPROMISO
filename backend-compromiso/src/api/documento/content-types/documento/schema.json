@@ -1,0 +1,50 @@
+  {
+    "kind": "collectionType",
+    "collectionName": "documentos",
+    "info": {
+      "singularName": "documento",
+      "pluralName": "documentos",
+      "displayName": "Documento",
+      "description": ""
+    },
+    "options": {
+      "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+      "procedimientos": {
+        "type": "relation",
+        "relation": "manyToMany",
+        "target": "api::procedimiento.procedimiento",
+        "inversedBy": "documentos"
+      },
+      "tipo_documento": {
+        "type": "string"
+      },
+      "codigo": {
+        "type": "string"
+      },
+      "version": {
+        "type": "string"
+      },
+      "responsables": {
+        "type": "relation",
+        "relation": "manyToMany",
+        "target": "api::responsable.responsable",
+        "inversedBy": "documentos"
+      },
+      "documento": {
+        "allowedTypes": [
+          "images",
+          "files",
+          "videos",
+          "audios"
+        ],
+        "type": "media",
+        "multiple": true
+      },
+      "nombre_documento": {
+        "type": "string"
+      }
+    }
+  }

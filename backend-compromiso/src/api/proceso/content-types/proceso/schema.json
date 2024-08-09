@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "procesos",
+  "info": {
+    "singularName": "proceso",
+    "pluralName": "procesos",
+    "displayName": "Proceso",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_proceso": {
+      "type": "string"
+    },
+    "id_estado": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::estado.estado",
+      "inversedBy": "procesos"
+    },
+    "procedimientos": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::procedimiento.procedimiento",
+      "mappedBy": "id_proceso"
+    }
+  }
+}

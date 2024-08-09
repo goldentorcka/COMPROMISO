@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "procedimientos",
+  "info": {
+    "singularName": "procedimiento",
+    "pluralName": "procedimientos",
+    "displayName": "Procedimiento"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_procedimiento": {
+      "type": "string"
+    },
+    "id_estado": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::estado.estado",
+      "inversedBy": "procedimientos"
+    },
+    "id_proceso": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::proceso.proceso",
+      "inversedBy": "procedimientos"
+    },
+    "documentos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::documento.documento",
+      "mappedBy": "procedimientos"
+    }
+  }
+}

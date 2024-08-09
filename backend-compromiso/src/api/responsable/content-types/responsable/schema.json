@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "responsables",
+  "info": {
+    "singularName": "responsable",
+    "pluralName": "responsables",
+    "displayName": "Responsable"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "nombre_responsable": {
+      "type": "string"
+    },
+    "id_estado": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::estado.estado",
+      "inversedBy": "responsables"
+    },
+    "documentos": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::documento.documento",
+      "mappedBy": "responsables"
+    }
+  }
+}
