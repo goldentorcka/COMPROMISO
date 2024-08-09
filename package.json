@@ -1,0 +1,15 @@
+{
+  "name": "compromiso",
+  "version": "1.0.0",
+  "description": "Proyecto-Sena",
+  "main": "App.js",
+  "scripts": {
+    "test": "npm start"
+  },
+  "author": "Marlon_Cumbe",
+  "license": "ISC",
+  "dependencies": {
+    "express-validator": "^7.1.0",
+    "strapi": "^3.6.11"
+  }
+}
