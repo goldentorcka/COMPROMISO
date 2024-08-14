@@ -1,3 +1,4 @@
+import { element } from 'prop-types'
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -40,6 +41,8 @@ const RegisterResponsible = React.lazy(() => import('./views/admin/responsables/
 const RegisterArea = React.lazy(() => import('./views/admin/areas/RegisterArea'))
 //REGISTROUNIDADES
 const RegisterUnit = React.lazy(() => import('./views/admin/unidades/RegisterUnit'))
+//REGISTROUSUARIOS ADMINISTRADORES
+// const RegisterUserAdministrator = React.lazy(() => import('./views/admin/usuarios/RegisterUserAdministrator'))
 
 //LISTAS DE PROCESOS
 const ProcessList = React.lazy(() => import('./views/admin/lists/procesos/ProcessList'))
@@ -104,7 +107,7 @@ const routes = [
   // RUTAS DE LOS RESPONSABLES
   { path: '/register-responsible', name: 'Registrar Responsable', element: RegisterResponsible, exact: true },
   // RUTAS DE LOS USUARIOS
-
+  // { path: '/list-users', name: 'Registrar Usuario Administrador', element: RegisterUserAdministrator, exact: true},
   // RUTA DE LAS AREAS
   { path: '/register-area', name: 'Registrar Area', element: RegisterArea, exact: true },
   //RUTA DE LAS UNIDADES

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios'; // Importa axios
 import {
   CButton,
   CCard,
@@ -17,14 +18,13 @@ const Tooltips = () => {
   const [validated, setValidated] = useState(false);
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [estado, setEstado] = useState('');
-  const [error, setError] = useState(null); // Estado de error
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
 
-    // Validación manual de los campos requeridos
     if (!nombreUsuario || !estado) {
       setError('Todos los campos son obligatorios.');
       setValidated(true);
@@ -37,12 +37,19 @@ const Tooltips = () => {
     }
 
     try {
-      // Aquí deberías agregar la lógica para manejar la solicitud (e.g., axios.post)
+      const token = localStorage.getItem('token'); // O obtenerlo de otro lugar
+
+      // Realiza la solicitud POST con el token en los encabezados
+      await axios.post(
+        '/api/registro-usuario', 
+        { nombreUsuario, estado }, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
       alert('Usuario Administrador registrado con éxito');
-      // Limpieza de los campos después de enviar
       setNombreUsuario('');
       setEstado('');
-      setError(null); // Limpiar error en caso de éxito
+      setError(null);
     } catch (error) {
       console.error('Error registrando el Usuario Administrador:', error);
       setError('Hubo un error al registrar el Usuario Administrador');

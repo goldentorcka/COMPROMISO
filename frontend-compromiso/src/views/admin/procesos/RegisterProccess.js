@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import logger from '../config/logger.js';
 import {
   CButton,
   CCard,
@@ -15,7 +14,6 @@ import {
   CRow,
 } from '@coreui/react';
 
-
 const RegisterProcess = () => {
   const [validated, setValidated] = useState(false);
   const [nombreProceso, setNombreProceso] = useState('');
@@ -28,7 +26,6 @@ const RegisterProcess = () => {
     // Validación manual de los campos requeridos
     if (!nombreProceso || !estado) {
       alert('Todos los campos son obligatorios.');
-      logger.error('Faltan campos obligatorios: nombreProceso o estado.');
       return;
     }
 
@@ -50,11 +47,9 @@ const RegisterProcess = () => {
         setNombreProceso('');
         setEstado('');
       } else {
-        logger.error(`Error registrando el proceso: Status ${response.status} - ${response.statusText}`);
         alert(`Error: ${response.statusText}`);
       }
     } catch (error) {
-      logger.error(`Error registrando el proceso: ${error.message}`);
       alert('Hubo un error al registrar el proceso. Verifica la consola para más detalles.');
     }
   };

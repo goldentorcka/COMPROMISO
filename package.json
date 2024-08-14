@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "express-validator": "^7.1.0",
+    "jsdoc": "^4.0.3",
     "strapi": "^3.6.11"
   }
 }

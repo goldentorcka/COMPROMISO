@@ -1,39 +1,31 @@
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../../config/database.js'); // Ajusta la ruta si es necesario
+const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 
 const Proceso = sequelize.define('Proceso', {
-  id: {
+  Id_Proceso: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     primaryKey: true,
+  },
+  Nom_Proceso: {
+    type: DataTypes.STRING,
     allowNull: false,
   },
-  nombre_proceso: {
-    type: DataTypes.STRING(255),
+  Id_Responsable: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: 'Responsable', // Usar el nombre del modelo en lugar de importar
+      key: 'Id_Responsable',
+    },
+  },
+  estado: {
+    type: DataTypes.ENUM('Sí', 'No'),
     allowNull: false,
-  },
-  created_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: DataTypes.NOW,
-  },
-  updated_at: {
-    type: DataTypes.DATE(6),
-    defaultValue: DataTypes.NOW,
-  },
-  published_at: {
-    type: DataTypes.DATE(6),
-  },
-  created_by_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
-  },
-  updated_by_id: {
-    type: DataTypes.INTEGER,
-    allowNull: true,
+    defaultValue: 'No',
   },
 }, {
-  tableName: 'procesos',
-  timestamps: false,
+  tableName: 'proceso',
+  timestamps: true,
 });
 
 module.exports = Proceso;

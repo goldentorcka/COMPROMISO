@@ -32,6 +32,26 @@ const _nav = [
     name: 'Gestion de Documentos',
   },
   /////aca se agrega el componente PROCESOS
+  
+  {
+    component: CNavGroup,
+    name: 'Usuarios',
+    to: '/usuarios',
+    icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Lista de Usarios',
+        to: '/list-users',
+      },
+      {
+        component: CNavItem,
+        name: 'Registro de Usuarios Administradores',
+        to: '/register-User-Administrator',
+      },
+    ],
+  },
+
   {
     component: CNavGroup,
     name: 'Procesos',
