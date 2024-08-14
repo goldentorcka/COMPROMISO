@@ -20,41 +20,43 @@ Usuario.init(
       allowNull: false,
     },
     Cod_Usuario: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(50),
       allowNull: false,
       unique: true,
     },
     Cor_Usuario: {
       type: DataTypes.STRING(255),
       allowNull: false,
-      unique: true,
     },
     Nde_Usuario: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING(20),
       allowNull: false,
     },
     Fec_Usuario: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    password: {
-      type: DataTypes.STRING,
+    estado: {
+      type: DataTypes.ENUM('Sí', 'No'),
       allowNull: false,
     },
     rol: {
-      type: DataTypes.STRING,
+      type: DataTypes.ENUM('Administrador'),
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.STRING(50),
+    token: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    password: {
+      type: DataTypes.STRING(255),
       allowNull: false,
-      defaultValue: 'Activo',
     },
   },
   {
     sequelize,
     modelName: 'Usuario',
-    tableName: 'usuarios',
+    tableName: 'usuario',
     timestamps: true, // Para incluir createdAt y updatedAt
   }
 );

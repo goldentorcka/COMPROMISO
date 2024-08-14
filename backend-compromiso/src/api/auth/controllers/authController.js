@@ -1,14 +1,19 @@
 const Usuario = require('../../usuario/models/usuarioModel.js');
+const logger = require('../../../../config/logger.js');
 
-// Ejemplo de acceso a la propiedad 'password'
-Usuario.findOne({ where: { Cod_Usuario: 'algunCodigo' } })
-  .then(usuario => {
+const buscarUsuarioPorCodigo = async (req, res) => {
+  try {
+    const usuario = await Usuario.findOne({ where: { Cod_Usuario: req.params.codUsuario } });
+
     if (usuario) {
-      console.log(usuario.password);
+      res.status(200).json({ password: usuario.password });
     } else {
-      console.log('Usuario no encontrado');
+      res.status(404).json({ message: 'Usuario no encontrado' });
     }
-  })
-  .catch(error => {
-    console.error('Error al buscar el usuario:', error);
-  });
+  } catch (error) {
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+module.exports = { buscarUsuarioPorCodigo };
