@@ -1,5 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../../../../config/database.js');
+const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 
 // Definición del modelo Usuario
 class Usuario extends Model {}

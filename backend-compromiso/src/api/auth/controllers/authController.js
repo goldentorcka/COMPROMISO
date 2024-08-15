@@ -1,12 +1,25 @@
-const Usuario = require('../../usuario/models/usuarioModel.js');
+const jwt = require('jsonwebtoken');
+const Usuario = require('../../usuario/models/usuarioModel.js'); // Asegúrate de que la ruta sea correcta
 const logger = require('../../../../config/logger.js');
+const jwtConfig = require('../../../../config/jwtConfig.js');
 
-const buscarUsuarioPorCodigo = async (req, res) => {
+const { jwtSecret, jwtExpiresIn } = jwtConfig;
+
+const login = async (req, res) => {
   try {
-    const usuario = await Usuario.findOne({ where: { Cod_Usuario: req.params.codUsuario } });
+    // Busca el usuario por Cod_Usuario
+    const usuario = await Usuario.findOne({ where: { Cod_Usuario: req.body.Cod_Usuario } });
 
     if (usuario) {
-      res.status(200).json({ password: usuario.password });
+      // Genera un token JWT
+      const token = jwt.sign(
+        { id: usuario.Id_Usuario, Cod_Usuario: usuario.Cod_Usuario }, 
+        jwtSecret, 
+        { expiresIn: jwtExpiresIn }
+      );
+
+      // Envía el token al cliente
+      res.status(200).json({ token });
     } else {
       res.status(404).json({ message: 'Usuario no encontrado' });
     }
@@ -16,4 +29,4 @@ const buscarUsuarioPorCodigo = async (req, res) => {
   }
 };
 
-module.exports = { buscarUsuarioPorCodigo };
+module.exports = { login };

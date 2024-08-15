@@ -32,15 +32,20 @@ app.use('/api/procedimientos', authenticateJWT, procedimientosRouter);
 app.use('/api/areas', authenticateJWT, areasRouter);
 app.use('/api/unidades', authenticateJWT, unidadesRouter);
 app.use('/api/formatos', authenticateJWT, formatosRouter);
-app.use('/api/usuarios', authenticateJWT, usuariosRouter);
+app.use('/api/usuarios', usuariosRouter);
 
 app.use((err, req, res, next) => {
   logger.error(err.message, { metadata: err });
   res.status(500).send('Error interno del servidor');
 });
 
-sequelize.sync().then(() => {
-  app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
+sequelize.sync()
+  .then(() => {
+    console.log('Conexión exitosa a la base de datos');
+    app.listen(port, () => {
+      console.log(`Servidor corriendo en http://localhost:${port}`);
+    });
+  })
+  .catch(err => {
+    console.error('Error al conectar con la base de datos:', err);
   });
-});
