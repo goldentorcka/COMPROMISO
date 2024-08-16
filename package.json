@@ -9,6 +9,7 @@
   "author": "Marlon_Cumbe",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.4",
     "express-validator": "^7.1.0",
     "jsdoc": "^4.0.3",
     "strapi": "^3.6.11"
