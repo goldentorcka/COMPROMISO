@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import clieteAxios from "../config/axios";
 import Alerta from "../components/Alerta";
 import { ReactSession } from 'react-client-session';
+import '../css/stylesFormUsers.css'
 
 const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
   const [Nombre, setNombre] = useState("");

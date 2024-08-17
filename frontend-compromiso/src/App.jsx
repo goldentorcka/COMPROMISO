@@ -4,7 +4,7 @@ import AuthLayout from "./layout/authLayout.jsx";
 import RutaProtegida from "./layout/RutaProtegida.jsx";
 import Home from "./home/home.jsx";
 import CrudUsers from "./users/crudUsers.jsx";
-import LoginFormAdmin from "./users/LoginUser";
+import LoginFormAdmin from "./users/LoginUser.jsx";
 import FormUsers from "./users/formUsers.jsx"
 
 function App() {

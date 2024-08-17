@@ -3,9 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
 import clieteAxios from "../config/axios";
 import useAuth from "../hooks/useAuth.jsx";
-import { ReactSession } from 'react-client-session';
+import { ReactSession } from "react-client-session";
 
-export const LoginFormAdmin = () => {
+const LoginFormAdmin = () => {
   const [Cor_User, setCor_User] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
@@ -49,7 +49,10 @@ export const LoginFormAdmin = () => {
       <div>
         <h1 className="text-stone-400 font-black text-5xl">
           Inicia Sesión{""}
-          <span className="text-green-700"> en el Aplicativo COMPROMISO SENA</span>
+          <span className="text-green-700">
+            {" "}
+            en el Aplicativo COMPROMISO SENA
+          </span>
         </h1>
       </div>
       <div className="mt-20 md:mt-5 shadow-2xl px-7 py-10 rounded-xl bg-white">
@@ -105,4 +108,4 @@ export const LoginFormAdmin = () => {
   );
 };
 
-
+export default LoginFormAdmin;
