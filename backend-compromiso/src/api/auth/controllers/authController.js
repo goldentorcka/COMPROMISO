@@ -1,32 +1,25 @@
 const jwt = require('jsonwebtoken');
-const Usuario = require('../../usuario/models/usuarioModel.js'); // Asegúrate de que la ruta sea correcta
-const logger = require('../../../../config/logger.js');
-const jwtConfig = require('../../../../config/jwtConfig.js');
+const { jwtSecret } = require('../../../../config/jwtConfig.js'); // Asegúrate de que este archivo tenga el mismo secreto que el middleware
 
-const { jwtSecret, jwtExpiresIn } = jwtConfig;
+function login(req, res) {
+  const { Nom_Usuario, Pass_Usuario } = req.body;
 
-const login = async (req, res) => {
-  try {
-    // Busca el usuario por Cod_Usuario
-    const usuario = await Usuario.findOne({ where: { Cod_Usuario: req.body.Cod_Usuario } });
+  // Aquí deberías verificar las credenciales del usuario (esto es solo un ejemplo)
+  if (Nom_Usuario === 'Marlon' && Pass_Usuario === 'marlon1234567') {
+    // Usuario encontrado y autenticado
 
-    if (usuario) {
-      // Genera un token JWT
-      const token = jwt.sign(
-        { id: usuario.Id_Usuario, Cod_Usuario: usuario.Cod_Usuario }, 
-        jwtSecret, 
-        { expiresIn: jwtExpiresIn }
-      );
+    // Datos que se incluirán en el token
+    const user = { id: 2, Nom_Usuario: 'Marlon' };
 
-      // Envía el token al cliente
-      res.status(200).json({ token });
-    } else {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    // Generación del token
+    const token = jwt.sign(user, jwtSecret, { expiresIn: '1h' });
+
+    // Envío del token al cliente
+    res.json({ token });
+  } else {
+    // Autenticación fallida
+    res.status(401).json({ message: 'Credenciales incorrectas' });
   }
-};
+}
 
 module.exports = { login };

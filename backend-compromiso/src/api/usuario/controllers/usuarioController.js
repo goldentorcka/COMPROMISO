@@ -1,6 +1,7 @@
 const Usuario = require('../models/usuarioModel.js');
 const logger = require('../../../../config/logger.js');
 
+// Obtener todos los usuarios
 const getUsuarios = async (req, res) => {
   try {
     const usuarios = await Usuario.findAll();
@@ -15,8 +16,7 @@ const getUsuarios = async (req, res) => {
   }
 };
 
-
-
+// Obtener un usuario por ID
 const getUsuarioById = async (req, res) => {
   try {
     const usuario = await Usuario.findByPk(req.params.id);
@@ -31,6 +31,7 @@ const getUsuarioById = async (req, res) => {
   }
 };
 
+// Crear un nuevo usuario
 const createUsuario = async (req, res) => {
   try {
     const usuario = await Usuario.create(req.body);
@@ -41,6 +42,7 @@ const createUsuario = async (req, res) => {
   }
 };
 
+// Actualizar un usuario existente
 const updateUsuario = async (req, res) => {
   try {
     const [updated] = await Usuario.update(req.body, {
@@ -58,6 +60,7 @@ const updateUsuario = async (req, res) => {
   }
 };
 
+// Eliminar un usuario
 const deleteUsuario = async (req, res) => {
   try {
     const deleted = await Usuario.destroy({

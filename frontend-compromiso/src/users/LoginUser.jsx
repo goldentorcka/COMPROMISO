@@ -1,9 +1,11 @@
+// LoginUser.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
 import clieteAxios from "../config/axios";
 import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
+import "../css/stylesLoginUserAdmin.css";
 
 const LoginFormAdmin = () => {
   const [Cor_User, setCor_User] = useState("");
@@ -44,67 +46,50 @@ const LoginFormAdmin = () => {
   };
 
   const { msg } = alerta;
+
   return (
-    <>
-      <div>
-        <h1 className="text-stone-400 font-black text-5xl">
-          Inicia Sesión{""}
-          <span className="text-green-700">
-            {" "}
-            en el Aplicativo COMPROMISO SENA
-          </span>
-        </h1>
-      </div>
-      <div className="mt-20 md:mt-5 shadow-2xl px-7 py-10 rounded-xl bg-white">
+    <div className="container">
+      <h1 className="title">
+        Inicia Sesión
+        <span> en el Aplicativo COMPROMISO SENA</span>
+      </h1>
+      <div className="form-container">
         {msg && <Alerta alerta={alerta} />}
         <form onSubmit={handleSubmit}>
-          <div className="my-5">
-            <label className="uppercase text-stone-600 font-bold block text-xl">
-              Correo:{" "}
-            </label>
+          <div className="form-group">
+            <label>Correo:</label>
             <input
               type="email"
-              className="border w-full p-2 mt-2 bg-gray-100 rounded-xl"
               placeholder="Aquí su Correo"
               value={Cor_User}
               onChange={(e) => setCor_User(e.target.value)}
             />
           </div>
-          <div className="my-5">
-            <label className="uppercase text-stone-600 font-bold block text-xl">
-              Contraseña:
-            </label>
+          <div className="form-group">
+            <label>Contraseña:</label>
             <input
               type="password"
-              className="border w-full p-2 mt-2 bg-gray-100 rounded-xl"
               placeholder="Aquí su Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
           <input
             type="submit"
             value="Iniciar Sesión"
-            className="bg-green-800 w-full py-3 px-8 rounded-xl text-white uppercase font-bold hover:cursor-pointer hover:bg-green-900 md:w-auto "
+            className="submit-button"
           />
         </form>
-        <nav className="mt-8 lg:flex lg:justify-between">
-          <Link
-            to="/auth/registrar" // Ruta actualizada
-            className="block text-center my-5 text-gray-500"
-          >
+        <nav>
+          <Link to="/auth/registrar" className="nav-link">
             ¿No tienes una Cuenta? Regístrate
           </Link>
-          <Link
-            to="/olvide-password"
-            className="block text-center my-5 text-gray-500"
-          >
+          <Link to="/olvide-password" className="nav-link">
             Olvidé mi Contraseña
           </Link>
         </nav>
       </div>
-    </>
+    </div>
   );
 };
 

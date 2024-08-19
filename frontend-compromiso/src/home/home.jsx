@@ -1,25 +1,24 @@
+// home.jsx
 import { Route, Routes, Link } from "react-router-dom";
-import  LoginFormAdmin  from "../users/LoginUser.jsx";
+import LoginFormAdmin from "../users/LoginUser.jsx";
 import '../css/stylesHome.css';
-// import ReactSession from 'react-client-session';
-// ReactSession.setStoreType("localStorage");
-
+import logo from '../assets/logo.png'; // Asegúrate de que la ruta sea correcta
 
 const Home = () => {
     return (
-        <>
-            <h1>Bienvenido al Home</h1>
+        <div className="container">
+            <img src={logo} alt="Logo Aplicativo" className="logo" />
+            <h1>Bienvenidos al aplicativo COMPROMISO SENA</h1>
             <nav>
-                {/* Enlace para ir al formulario de inicio de sesión */}
-                <Link to="/login-admin">Iniciar Sesión Admin</Link>
+                <Link to="/login-admin" className="nav-link">Modulo del Administrador</Link>
+                <Link to="/modulo-consulta" className="nav-link">Modulo de Consulta</Link>
             </nav>
-
-            {/* Configuración de las rutas */}
-            <Routes>
-                {/* Ruta para el componente LoginFormAdmin */}
-                <Route path="/" element={<LoginFormAdmin />} />
-            </Routes>
-        </>
+            <div className="routes">
+                <Routes>
+                    <Route path="/login-admin" element={<LoginFormAdmin />} />
+                </Routes>
+            </div>
+        </div>
     );
 };
 

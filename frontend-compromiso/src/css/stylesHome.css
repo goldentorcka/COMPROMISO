@@ -1,43 +1,80 @@
-/* src/css/stylesHome.css */
-
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+/* Reset para eliminar márgenes y paddings predeterminados */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.home-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Estilo para el contenedor principal */
+.container {
+  text-align: center;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  max-width: 600px;
+  width: 100%;
+  margin: 1rem; /* Añade un pequeño margen para separación */
+  position: relative; /* Necesario para posicionar el logo */
 }
 
-.home-container h1 {
-    color: #333;
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+/* Estilo para el logo */
+.logo {
+  position: absolute;
+  top: 1rem; /* Distancia desde la parte superior */
+  left: 1rem; /* Distancia desde la parte izquierda */
+  width: 50px; /* Ajusta el tamaño del logo */
+  height: auto;
+  transition: transform 0.3s ease;
 }
 
-.home-container nav {
-    margin-top: 20px;
+/* Efecto hover para el logo */
+.logo:hover {
+  transform: scale(1.1); /* Amplía ligeramente el logo al hacer hover */
 }
 
-.home-container nav a {
-    color: #1d72b8;
-    font-size: 1.2rem;
-    text-decoration: none;
-    padding: 10px 20px;
-    background-color: #e3f2fd;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+/* Estilo del título */
+.container h1 {
+  color: #1f2937;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1.5px;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 0.5rem;
+  transition: color 0.3s ease;
 }
 
-.home-container nav a:hover {
-    background-color: #90caf9;
+/* Estilo de los enlaces de navegación */
+.container nav a {
+  display: inline-block;
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1.5rem;
+  background-color: #3b82f6;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+.container nav a:hover {
+  background-color: #2563eb;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+.container nav a:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.container .routes {
+  display: none;
+  margin-top: 2rem;
+}
+
+.container .routes.active {
+  display: block;
 }

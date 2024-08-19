@@ -1,16 +1,15 @@
-import { Navigate } from 'react-router-dom';
-import useAuth from '../hooks/useAuth.jsx';
+import { Outlet, Navigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth.jsx";
 
-const RutaProtegida = ({ children }) => {
-    const { auth } = useAuth(); // Obteniendo el estado de autenticación desde el hook personalizado
+const RutaProtegida = () => {
+  const { auth } = useAuth();
 
-    // Si el usuario no está autenticado, redirige al login
-    if (!auth || !auth.token) {
-        return <Navigate to="/login" />;
-    }
+  if (!auth?.token) {
+    // Redirige a la página de inicio de sesión si no está autenticado
+    return <Navigate to="/login-admin" />;
+  }
 
-    // Si el usuario está autenticado, permite el acceso a las rutas protegidas
-    return children;
+  return <Outlet />;
 };
 
 export default RutaProtegida;

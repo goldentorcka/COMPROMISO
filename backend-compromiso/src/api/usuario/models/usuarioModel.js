@@ -36,19 +36,11 @@ Usuario.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    estado: {
-      type: DataTypes.ENUM('Sí', 'No'),
-      allowNull: false,
-    },
-    rol: {
-      type: DataTypes.ENUM('Administrador'),
-      allowNull: false,
-    },
-    token: {
+    Pass_Usuario: {
       type: DataTypes.STRING(255),
-      allowNull: true,
+      allowNull: false,
     },
-    password: {
+    estado: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
