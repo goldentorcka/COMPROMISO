@@ -1,8 +1,6 @@
 // home.jsx
 import { Route, Routes, Link } from "react-router-dom";
 import LoginFormAdmin from "../users/LoginUser.jsx";
-//aca se importa lo que se van a llamar en las rutas
-
 import '../css/stylesHome.css';
 import logo from '../assets/logo.png'; // Asegúrate de que la ruta sea correcta
 
@@ -21,9 +19,7 @@ const Home = () => {
             <div className="routes">
                 <Routes>
                     <Route path="/login-admin" element={<LoginFormAdmin />} />
-                    {/* <Route path="/modulo-consulta" element={<LoginFormAdmin />} />
-                    <Route path="/login-admin" element={<LoginFormAdmin />} />
-                    <Route path="/login-admin" element={<LoginFormAdmin />} /> */}
+                    {/* Puedes agregar más rutas aquí según sea necesario */}
                 </Routes>
             </div>
         </div>

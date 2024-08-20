@@ -1,3 +1,4 @@
+// LoginUser.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
@@ -48,7 +49,7 @@ const LoginFormAdmin = () => {
   const { msg } = alerta;
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <h1 className="title">
         Inicia Sesión
         <span> en el Aplicativo COMPROMISO SENA</span>
@@ -76,15 +77,17 @@ const LoginFormAdmin = () => {
               className="form-control"
             />
           </div>
-          <button type="submit" className="btn btn-success w-100 mt-3">
-            Iniciar Sesión
-          </button>
+          <input
+            type="submit"
+            value="Iniciar Sesión"
+            className="submit-button"
+          />
         </form>
         <nav>
-          <Link to="/auth/registrar" className="d-block mt-3 text-decoration-none text-primary">
+          <Link to="/auth/registrar" className="nav-link">
             ¿No tienes una Cuenta? Regístrate
           </Link>
-          <Link to="/olvide-password" className="d-block mt-2 text-decoration-none text-primary">
+          <Link to="/olvide-password" className="nav-link">
             Olvidé mi Contraseña
           </Link>
         </nav>

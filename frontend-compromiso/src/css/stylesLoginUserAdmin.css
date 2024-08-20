@@ -114,22 +114,11 @@ body {
   font-weight: bold;
   border-radius: 0.75rem;
   text-decoration: none;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
 }
 
 .back-button:hover {
   background-color: #1d4ed8;
   transform: translateX(-5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* ... estilos anteriores ... */
-/* Animación personalizada para el botón de volver */
-.back-button {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.back-button:hover {
-  transform: translateX(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

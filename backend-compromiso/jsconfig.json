@@ -11,7 +11,7 @@
   },
   "include": [
     "src/**/*.js"                  // Incluye archivos JavaScript en la carpeta src
-  ],
+, "config/logger.js"  ],
   "exclude": [
     "node_modules"                 // Excluye node_modules
   ]

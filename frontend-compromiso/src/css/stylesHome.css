@@ -12,24 +12,25 @@
   background-color: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  max-width: 900px;
+  max-width: 900px; /* Elegí el tamaño de 900px, pero puedes cambiarlo si prefieres 600px */
   width: 100%;
-  margin: 1rem auto;
+  margin: 1rem; /* Añade un pequeño margen para separación */
   position: relative; /* Necesario para posicionar el logo */
 }
 
 /* Estilo para el logo */
 .logo {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  width: 50px;
+  top: 1rem; /* Distancia desde la parte superior */
+  left: 1rem; /* Distancia desde la parte izquierda */
+  width: 50px; /* Ajusta el tamaño del logo */
   height: auto;
   transition: transform 0.3s ease;
 }
 
+/* Efecto hover para el logo */
 .logo:hover {
-  transform: scale(1.1);
+  transform: scale(1.1); /* Amplía ligeramente el logo al hacer hover */
 }
 
 /* Estilo del título */
@@ -70,8 +71,10 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   font-weight: bold;
   letter-spacing: 1px;
-  width: 100%;
+  width: 100%; /* Alineación centrada */
   text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .container nav a:hover {
@@ -80,10 +83,9 @@
   transform: translateY(-3px);
 }
 
-/* Estilo para la sección de rutas */
 .container .routes {
-  margin-top: 2rem;
   display: none;
+  margin-top: 2rem;
 }
 
 .container .routes.active {
@@ -103,8 +105,7 @@
   }
 }
 
-/* ... estilos anteriores ... */
-
+/* Estilo para la barra lateral */
 .sidebar {
   position: absolute;
   left: 0;

@@ -95,6 +95,7 @@ results
 node_modules
 .node_history
 
+
 ############################
 # Tests
 ############################
@@ -113,3 +114,8 @@ dist
 build
 .strapi-updater.json
 .strapi-cloud.json
+
+############################
+# Node.env
+############################
+.env
