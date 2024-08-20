@@ -20,6 +20,7 @@ const Home = () => {
                 <Routes>
                     <Route path="/login-admin" element={<LoginFormAdmin />} />
                     {/* Puedes agregar más rutas aquí según sea necesario */}
+                    {/* <Route path="/modulo-consulta" element={<ModuloConsulta />} /> */}
                 </Routes>
             </div>
         </div>

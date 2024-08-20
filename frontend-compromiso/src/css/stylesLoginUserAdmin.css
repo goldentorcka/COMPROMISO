@@ -23,20 +23,21 @@ body {
   border-radius: 1rem;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
   padding: 2rem;
-  max-width: 400px;
+  max-width: 900px; /* Combina un tamaño más amplio */
   width: 100%;
   margin: 1rem; /* Añade un pequeño margen para separación */
   position: relative;
 }
 
 /* Estilo del título */
-.title {
+.title, .container h1 {
   color: #78716c;
   font-weight: 900;
   font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
-.title span {
+.title span, .container h1 span {
   color: #047857;
 }
 
@@ -121,4 +122,14 @@ body {
   background-color: #1d4ed8;
   transform: translateX(-5px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Animación personalizada para el botón de volver */
+.back-button {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

@@ -49,7 +49,7 @@ const LoginFormAdmin = () => {
   const { msg } = alerta;
 
   return (
-    <div className="container">
+    <div className="container mt-5">
       <h1 className="title">
         Inicia Sesión
         <span> en el Aplicativo COMPROMISO SENA</span>
@@ -77,17 +77,15 @@ const LoginFormAdmin = () => {
               className="form-control"
             />
           </div>
-          <input
-            type="submit"
-            value="Iniciar Sesión"
-            className="submit-button"
-          />
+          <button type="submit" className="btn btn-success w-100 mt-3">
+            Iniciar Sesión
+          </button>
         </form>
         <nav>
-          <Link to="/auth/registrar" className="nav-link">
+          <Link to="/auth/registrar" className="d-block mt-3 text-decoration-none text-primary">
             ¿No tienes una Cuenta? Regístrate
           </Link>
-          <Link to="/olvide-password" className="nav-link">
+          <Link to="/olvide-password" className="d-block mt-2 text-decoration-none text-primary">
             Olvidé mi Contraseña
           </Link>
         </nav>
