@@ -12,7 +12,7 @@
   background-color: #ffffff;
   border-radius: 1rem;
   box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-  max-width: 600px;
+  max-width: 900px; /* Elegí el tamaño de 900px, pero puedes cambiarlo si prefieres 600px */
   width: 100%;
   margin: 1rem; /* Añade un pequeño margen para separación */
   position: relative; /* Necesario para posicionar el logo */
@@ -44,6 +44,21 @@
   transition: color 0.3s ease;
 }
 
+/* Estilo para el contenido con flexbox */
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Estilo de las secciones de navegación */
+.nav-links,
+.info-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 /* Estilo de los enlaces de navegación */
 .container nav a {
   display: inline-block;
@@ -56,6 +71,8 @@
   transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
   font-weight: bold;
   letter-spacing: 1px;
+  width: 100%; /* Alineación centrada */
+  text-align: center;
   position: relative;
   overflow: hidden;
 }
@@ -66,10 +83,6 @@
   transform: translateY(-3px);
 }
 
-.container nav a:not(:last-child) {
-  margin-right: 1rem;
-}
-
 .container .routes {
   display: none;
   margin-top: 2rem;
@@ -77,4 +90,66 @@
 
 .container .routes.active {
   display: block;
+}
+
+/* Estilo responsivo para ajustar el diseño en pantallas pequeñas */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links,
+  .info-links {
+    width: 100%;
+  }
+}
+
+/* Estilo para la barra lateral */
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.open {
+  width: 200px;
+}
+
+.toggle-btn {
+  background-color: #3b82f6;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.nav-link {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #2563eb;
+  border-radius: 5px;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #1d4ed8;
 }

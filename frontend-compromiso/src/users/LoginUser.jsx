@@ -6,6 +6,7 @@ import clieteAxios from "../config/axios";
 import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
 import "../css/stylesLoginUserAdmin.css";
+import "bootstrap/dist/css/bootstrap.min.css";  // Importar estilos de Bootstrap
 
 const LoginFormAdmin = () => {
   const [Cor_User, setCor_User] = useState("");
@@ -63,6 +64,7 @@ const LoginFormAdmin = () => {
               placeholder="Aquí su Correo"
               value={Cor_User}
               onChange={(e) => setCor_User(e.target.value)}
+              className="form-control"
             />
           </div>
           <div className="form-group">
@@ -72,6 +74,7 @@ const LoginFormAdmin = () => {
               placeholder="Aquí su Contraseña"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
             />
           </div>
           <input
@@ -89,6 +92,9 @@ const LoginFormAdmin = () => {
           </Link>
         </nav>
       </div>
+      <Link to="/" className="btn btn-primary mt-4 back-button">
+        &#8592; Volver
+      </Link>
     </div>
   );
 };
