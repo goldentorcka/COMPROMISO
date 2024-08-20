@@ -1,0 +1,135 @@
+/* Reset para eliminar márgenes y paddings predeterminados */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo general para centrar todo el contenido */
+body {
+  background-color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  flex-direction: column; /* Alinea los elementos verticalmente */
+}
+
+/* Contenedor principal */
+.container {
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  margin: 1rem; /* Añade un pequeño margen para separación */
+  position: relative;
+}
+
+/* Estilo del título */
+.title {
+  color: #78716c;
+  font-weight: 900;
+  font-size: 2.5rem;
+}
+
+.title span {
+  color: #047857;
+}
+
+/* Estilo del formulario */
+.form-container {
+  margin-top: 2.5rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 0.75rem;
+  background-color: #ffffff;
+  max-width: 28rem;
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  text-transform: uppercase;
+  color: #57534e;
+  font-weight: bold;
+  font-size: 1.125rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.75rem;
+}
+
+/* Estilo del botón */
+.submit-button {
+  background-color: #065f46;
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 0.75rem;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #064e3b;
+}
+
+/* Estilo de los enlaces de navegación */
+.nav-link {
+  display: block;
+  margin-top: 2rem;
+  color: #6b7280;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+/* Estilo para el botón de volver */
+.back-button {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #2563eb;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #1d4ed8;
+  transform: translateX(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* ... estilos anteriores ... */
+/* Animación personalizada para el botón de volver */
+.back-button {
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.back-button:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

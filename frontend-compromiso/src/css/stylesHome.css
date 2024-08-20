@@ -1,0 +1,154 @@
+/* Reset para eliminar márgenes y paddings predeterminados */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo para el contenedor principal */
+.container {
+  text-align: center;
+  padding: 2.5rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  width: 100%;
+  margin: 1rem auto;
+  position: relative; /* Necesario para posicionar el logo */
+}
+
+/* Estilo para el logo */
+.logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  width: 50px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.1);
+}
+
+/* Estilo del título */
+.container h1 {
+  color: #1f2937;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1.5px;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+/* Estilo para el contenido con flexbox */
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* Estilo de las secciones de navegación */
+.nav-links,
+.info-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Estilo de los enlaces de navegación */
+.container nav a {
+  display: inline-block;
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0.5rem 0;
+  padding: 0.75rem 1.5rem;
+  background-color: #3b82f6;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  font-weight: bold;
+  letter-spacing: 1px;
+  width: 100%;
+  text-align: center;
+}
+
+.container nav a:hover {
+  background-color: #2563eb;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+/* Estilo para la sección de rutas */
+.container .routes {
+  margin-top: 2rem;
+  display: none;
+}
+
+.container .routes.active {
+  display: block;
+}
+
+/* Estilo responsivo para ajustar el diseño en pantallas pequeñas */
+@media (max-width: 768px) {
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links,
+  .info-links {
+    width: 100%;
+  }
+}
+
+/* ... estilos anteriores ... */
+
+.sidebar {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  transition: width 0.3s ease;
+}
+
+.sidebar.open {
+  width: 200px;
+}
+
+.toggle-btn {
+  background-color: #3b82f6;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  font-size: 20px;
+}
+
+.nav-links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px;
+}
+
+.nav-link {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #2563eb;
+  border-radius: 5px;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover {
+  background-color: #1d4ed8;
+}
