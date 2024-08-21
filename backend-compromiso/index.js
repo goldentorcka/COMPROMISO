@@ -1,8 +1,12 @@
+// @ts-nocheck
 const express = require('express');
 require('dotenv').config();
-// const cors = require('cors'); // Importa el paquete CORS
+const cors = require('cors');
 const sequelize = require('./config/database.js');
 const logger = require('./config/logger.js');
+
+// Importa Swagger
+const { swaggerSetup, swaggerDocs } = require('./swagger'); // Importa la configuración de Swagger
 
 // Importa tus routers y middleware
 const responsablesRouter = require('./src/api/responsable/routes/responsableRoutes.js');
@@ -16,14 +20,14 @@ const authRouter = require('./src/api/auth/routes/authRoutes.js');
 const authenticateJWT = require('./src/api/auth/middlewares/authMiddleware.js');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 1337; // Asegúrate de usar el puerto correcto
 
 // Configura CORS
-// app.use(cors({
-//   origin: 'http://localhost:3000', // Cambia esto a la URL de tu frontend
-//   methods: 'GET,POST,PUT,DELETE',
-//   allowedHeaders: 'Content-Type',
-// }));
+app.use(cors({
+  origin: 'http://localhost:5173', // Cambia esto a la URL de tu frontend
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+}));
 
 app.use(express.json());
 
@@ -31,6 +35,9 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('Bienvenido al API de Compromiso!');
 });
+
+// Configura Swagger en la ruta /api-docs
+app.use('/api-docs', swaggerSetup, swaggerDocs);
 
 // Rutas de autenticación
 app.use('/api/auth', authRouter);
@@ -48,7 +55,7 @@ app.use('/api/usuarios', authenticateJWT, usuariosRouter);
 app.use((err, req, res, next) => {
   logger.error(err.message, { metadata: err });
   res.status(500).send('Error interno del servidor');
-}); 
+});
 
 // Conexión a la base de datos y arranque del servidor
 sequelize.sync()

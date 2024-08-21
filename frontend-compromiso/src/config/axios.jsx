@@ -6,3 +6,12 @@ const clienteAxios = axios.create({
 });
 
 export default clienteAxios;
+
+// import axios from "axios";
+
+// const clieteAxios = axios.create({
+//   baseURL: "http://localhost:1337", // Asegúrate de que esta URL sea correcta
+//   // Puedes agregar más configuraciones aquí si es necesario
+// });
+
+// export default clieteAxios;

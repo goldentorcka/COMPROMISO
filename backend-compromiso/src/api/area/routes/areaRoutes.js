@@ -10,6 +10,180 @@ const {
 const logger = require('../../../../config/logger.js');
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Áreas
+ *   description: Operaciones relacionadas con áreas
+ */
+
+/**
+ * @swagger
+ * /api/areas:
+ *   get:
+ *     summary: Obtiene todas las áreas
+ *     tags: [Áreas]
+ *     responses:
+ *       200:
+ *         description: Lista de áreas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     description: ID del área
+ *                   nombre:
+ *                     type: string
+ *                     description: Nombre del área
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/', getAreas);
+
+/**
+ * @swagger
+ * /api/areas/{id}:
+ *   get:
+ *     summary: Obtiene un área por ID
+ *     tags: [Áreas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del área
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Área encontrada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: ID del área
+ *                 nombre:
+ *                   type: string
+ *                   description: Nombre del área
+ *       404:
+ *         description: Área no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.get('/:id', getAreaById);
+
+/**
+ * @swagger
+ * /api/areas:
+ *   post:
+ *     summary: Crea una nueva área
+ *     tags: [Áreas]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 description: Nombre del área
+ *     responses:
+ *       201:
+ *         description: Área creada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: ID de la nueva área
+ *                 nombre:
+ *                   type: string
+ *                   description: Nombre de la nueva área
+ *       400:
+ *         description: Solicitud inválida
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/', createArea);
+
+/**
+ * @swagger
+ * /api/areas/{id}:
+ *   put:
+ *     summary: Actualiza un área existente
+ *     tags: [Áreas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del área
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nombre:
+ *                 type: string
+ *                 description: Nuevo nombre del área
+ *     responses:
+ *       200:
+ *         description: Área actualizada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   description: ID del área
+ *                 nombre:
+ *                   type: string
+ *                   description: Nombre actualizado del área
+ *       400:
+ *         description: Solicitud inválida
+ *       404:
+ *         description: Área no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.put('/:id', updateArea);
+
+/**
+ * @swagger
+ * /api/areas/{id}:
+ *   delete:
+ *     summary: Elimina un área por ID
+ *     tags: [Áreas]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: ID del área
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       204:
+ *         description: Área eliminada
+ *       404:
+ *         description: Área no encontrada
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.delete('/:id', deleteArea);
+
 // Middleware para capturar errores
 router.use((err, req, res, next) => {
   if (err) {
@@ -19,11 +193,5 @@ router.use((err, req, res, next) => {
     next();
   }
 });
-
-router.get('/', getAreas);
-router.get('/:id', getAreaById);
-router.post('/', createArea);
-router.put('/:id', updateArea);
-router.delete('/:id', deleteArea);
 
 module.exports = router;

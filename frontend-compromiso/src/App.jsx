@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "./context/authProvider.jsx";
+import AuthProvider from "./context/authProvider.jsx";
 import AuthLayout from "./layout/authLayout.jsx";
 import RutaProtegida from "./layout/RutaProtegida.jsx";
 import Home from "./home/home.jsx";
@@ -20,7 +20,7 @@ function App() {
           </Route>
           <Route path="/admin/*" element={<RutaProtegida />}>
             <Route index element={<CrudUsers />} />
-            {/* Otras rutas dentro de admin */}
+            {/* Agrega aquí otras rutas específicas de admin si es necesario */}
           </Route>
         </Routes>
       </AuthProvider>

@@ -1,33 +1,12 @@
-import { createContext, useState } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 
-// Crear el contexto de autenticación
-export const AuthContext = createContext();
-
-// Proveedor del contexto de autenticación
-const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-
-    // Función para iniciar sesión
-    const login = (userData) => {
-        setUser(userData);
-    };
-
-    // Función para cerrar sesión
-    const logout = () => {
-        setUser(null);
-    };
-
+const AuthLayout = ({ children }) => {
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <div>
+            {/* Contenido o estructura específica para las rutas de autenticación */}
             {children}
-        </AuthContext.Provider>
+        </div>
     );
 };
 
-// Validación de PropTypes para AuthProvider
-AuthProvider.propTypes = {
-    children: PropTypes.node.isRequired,
-};
-
-export default AuthProvider;
+export default AuthLayout;

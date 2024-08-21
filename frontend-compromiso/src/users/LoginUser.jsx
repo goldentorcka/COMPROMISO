@@ -1,4 +1,3 @@
-// LoginUser.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
@@ -7,6 +6,7 @@ import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
 import "../css/stylesLoginUserAdmin.css";
 import "bootstrap/dist/css/bootstrap.min.css";  // Importar estilos de Bootstrap
+
 
 const LoginFormAdmin = () => {
   const [Cor_User, setCor_User] = useState("");
@@ -25,29 +25,39 @@ const LoginFormAdmin = () => {
       });
       return;
     }
-
+    
     try {
-      const url = "/api/user/login";
+      const url = "/api/usuarios";
       const { data } = await clieteAxios.post(url, {
         Cor_User: Cor_User,
         password: password,
-        isAdmin: true, // Asumir que el usuario es administrador
       });
 
+      // Guardar el token en la sesión
       ReactSession.set("token", data.token);
 
+      // Guardar la información del usuario en el estado global
       setAuth(data);
-      navigate("/admin");
+
+      // Verificar si el usuario es administrador
+      if (data.isAdmin) {
+        navigate("/admin");
+      } else {
+        setAlerta({
+          msg: "No tienes permisos para acceder al panel de administración.",
+          error: true,
+        });
+      }
+
     } catch (error) {
+      console.log(error);
       setAlerta({
-        msg: error.response.data.msg,
+        msg: error.response.data.msg || "Error al iniciar sesión",
         error: true,
       });
     }
   };
-
   const { msg } = alerta;
-
   return (
     <div className="container mt-5">
       <h1 className="title">
