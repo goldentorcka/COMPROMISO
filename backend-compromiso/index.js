@@ -1,6 +1,6 @@
 const express = require('express');
 require('dotenv').config();
-const cors = require('cors'); // Importa el paquete CORS
+// const cors = require('cors'); // Importa el paquete CORS
 const sequelize = require('./config/database.js');
 const logger = require('./config/logger.js');
 
@@ -19,11 +19,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Configura CORS
-app.use(cors({
-  origin: 'http://localhost:3000', // Cambia esto a la URL de tu frontend
-  methods: 'GET,POST,PUT,DELETE',
-  allowedHeaders: 'Content-Type',
-}));
+// app.use(cors({
+//   origin: 'http://localhost:3000', // Cambia esto a la URL de tu frontend
+//   methods: 'GET,POST,PUT,DELETE',
+//   allowedHeaders: 'Content-Type',
+// }));
 
 app.use(express.json());
 
