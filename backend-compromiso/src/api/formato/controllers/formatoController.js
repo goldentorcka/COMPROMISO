@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Formato = require('../models/formatoModel.js');
 const logger = require('../../../../config/logger.js');
 

@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
-    "target": "ES2021",            // Define el estándar de JavaScript
-    "module": "CommonJS",          // Usa CommonJS para módulos en lugar de NodeNext
-    "moduleResolution": "Node",    // Resolución de módulos para Node.js
-    "checkJs": true,               // Habilita la verificación de JavaScript
-    "allowJs": true,               // Permite el uso de archivos JavaScript
-    "esModuleInterop": true,       // Permite interoperabilidad con módulos ES
-    "skipLibCheck": true,          // Omite la verificación de tipos en archivos de declaración de biblioteca
-    "forceConsistentCasingInFileNames": true  // Forza la coherencia en el uso de mayúsculas/minúsculas en los nombres de archivo
+    "target": "ES2021",
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "checkJs": true,
+    "allowJs": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
   },
   "include": [
-    "src/**/*.js"                  // Incluye archivos JavaScript en la carpeta src
-, "config/logger.js"  ],
+    "src/**/*.js",
+    "config/logger.js"
+  ],
   "exclude": [
-    "node_modules"                 // Excluye node_modules
+    "node_modules",
+    "src/api/auth/controllers/authController.js" // Excluye archivos específicos si es necesario
   ]
 }

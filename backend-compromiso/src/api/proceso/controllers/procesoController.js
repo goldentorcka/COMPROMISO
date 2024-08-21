@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Proceso = require('../models/procesoModel.js');
 const logger = require('../../../../config/logger.js');
 

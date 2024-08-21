@@ -1,7 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
-const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
+const sequelize = require('../../../../config/database.js');
 
-// Definición del modelo Usuario
 class Usuario extends Model {}
 
 Usuario.init(
@@ -36,11 +35,19 @@ Usuario.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    Pass_Usuario: {
-      type: DataTypes.STRING(255),
+    estado: {
+      type: DataTypes.ENUM('Sí', 'No'),
       allowNull: false,
     },
-    estado: {
+    rol: {
+      type: DataTypes.ENUM('Administrador'),
+      allowNull: false,
+    },
+    token: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+    },
+    password: {
       type: DataTypes.STRING(255),
       allowNull: false,
     },
@@ -49,7 +56,7 @@ Usuario.init(
     sequelize,
     modelName: 'Usuario',
     tableName: 'usuario',
-    timestamps: true, // Para incluir createdAt y updatedAt
+    timestamps: true,
   }
 );
 

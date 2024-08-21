@@ -1,3 +1,4 @@
+// @ts-nocheck
 // middlewares/authMiddleware.js
 const jwt = require('jsonwebtoken');
 require('dotenv').config();

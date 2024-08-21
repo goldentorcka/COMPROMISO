@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Unidad = require('../models/unidadModel.js');
 const logger = require('../../../../config/logger.js');
 

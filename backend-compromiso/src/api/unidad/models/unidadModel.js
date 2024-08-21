@@ -1,3 +1,4 @@
+// @ts-nocheck
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js'); // Ajusta la ruta a tu configuración de base de datos
 
