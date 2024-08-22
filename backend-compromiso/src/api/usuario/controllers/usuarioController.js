@@ -37,7 +37,7 @@ const getUsuarioById = async (req, res) => {
 // Crear un nuevo usuario
 const createUsuario = async (req, res) => {
   try {
-    // Opcional: Hashea la contraseña antes de guardar el usuario
+    // Hashea la contraseña antes de guardar el usuario
     if (req.body.password) {
       const hashedPassword = await bcrypt.hash(req.body.password, 10);
       req.body.password = hashedPassword;
@@ -85,32 +85,57 @@ const deleteUsuario = async (req, res) => {
   }
 };
 
-// Iniciar sesión
-const loginUsuario = async (req, res) => {
-  const { email, password } = req.body;
+// // Iniciar sesión
+// const loginUsuario = async (req, res) => {
+//   const { Cod_Usuario, password } = req.body;
 
-  try {
-    const usuario = await Usuario.findOne({ where: { email } });
+//   try {
+//     // Verificación básica de que se proporcionen los campos
+//     if (!Cod_Usuario || !password) {
+//       return res.status(400).json({ error: 'Faltan el código de usuario o la contraseña' });
+//     }
 
-    if (!usuario) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
+//     // Buscar al usuario en la base de datos real
+//     const usuario = await Usuario.findOne({ where: { Cod_Usuario } });
 
-    // Verifica la contraseña
-    const isMatch = await bcrypt.compare(password, usuario.password);
-    if (!isMatch) {
-      return res.status(401).json({ error: 'Credenciales inválidas' });
-    }
+//     if (!usuario) {
+//       return res.status(401).json({ error: 'Código de usuario o contraseña incorrectos' });
+//     }
 
-    // Genera un token JWT
-    const token = jwt.sign({ id: usuario.Id_Usuario }, process.env.JWT_SECRET, { expiresIn: '1h' });
+//     // Comparar la contraseña proporcionada con la hasheada en la base de datos
+//     const passwordMatch = await bcrypt.compare(password, usuario.password);
+    
+//     if (!passwordMatch) {
+//       return res.status(401).json({ error: 'Código de usuario o contraseña incorrectos' });
+//     }
 
-    res.json({ token });
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
-};
+//     // Generar un token JWT
+//     const token = jwt.sign(
+//       { Id_Usuario: usuario.Id_Usuario, rol: usuario.rol },
+//       process.env.JWT_SECRET || 'secretKey', // Usa la clave secreta del entorno o una por defecto
+//       { expiresIn: '1h' }
+//     );
+
+//     // Actualizar el token en la base de datos
+//     await Usuario.update({ token }, { where: { Id_Usuario: usuario.Id_Usuario } });
+
+//     // Si la autenticación es exitosa
+//     return res.status(200).json({
+//       message: 'Inicio de sesión exitoso',
+//       user: {
+//         Id_Usuario: usuario.Id_Usuario,
+//         Nom_Usuario: usuario.Nom_Usuario,
+//         Ape_Usuario: usuario.Ape_Usuario,
+//         Cor_Usuario: usuario.Cor_Usuario,
+//         rol: usuario.rol,
+//         token
+//       }
+//     });
+//   } catch (error) {
+//     logger.error(error.message, { stack: error.stack });
+//     res.status(500).json({ error: 'Error en el servidor' });
+//   }
+// };
 
 module.exports = {
   getUsuarios,
@@ -118,5 +143,5 @@ module.exports = {
   createUsuario,
   updateUsuario,
   deleteUsuario,
-  loginUsuario, // Exporta la función de inicio de sesión
+  // loginUsuario, // Exporta la función de inicio de sesión
 };

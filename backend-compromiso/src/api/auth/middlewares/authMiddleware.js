@@ -9,8 +9,10 @@ function authenticateJWT(req, res, next) {
     console.log('Token no encontrado');
     return res.sendStatus(401); // No autorizado
   }
+  console.log(jwtSecret, token)
 
   jwt.verify(token, jwtSecret, (err, user) => {
+    console.log()
     if (err) {
       console.log('Error en la verificación del token:', err.message);
       return res.sendStatus(403); // Prohibido

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
-import clieteAxios from "../config/axios";
-import Alerta from "../components/Alerta";
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../config/axios';
+import Alerta from '../components/Alerta';
 import { ReactSession } from 'react-client-session';
-import '../css/stylesFormUsers.css'
+import '../css/stylesFormUsers.css';
+import Swal from 'sweetalert2';
 
 const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
   const [Nombre, setNombre] = useState("");
@@ -10,8 +11,6 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
   const [Telefono, setTelefono] = useState("");
   const [Estado, setEstado] = useState("");
   const [alerta, setAlerta] = useState({});
-
-  // Estado para mensajes
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // 'success' o 'error'
 
@@ -39,24 +38,24 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
     try {
       let respuestApi;
       if (buttonForm === "Actualizar") {
-        respuestApi = await clieteAxios.put(
+        respuestApi = await clienteAxios.put(
           `/usuarios/${user.Id_Usuario}`,
           {
-            Nombre,
-            Email,
-            Telefono,
-            Estado,
+            Nom_Usuario: Nombre,
+            Cor_Usuario: Email,
+            Nde_Usuario: Telefono,
+            estado: Estado,
           },
           config
         );
       } else if (buttonForm === "Enviar") {
-        respuestApi = await clieteAxios.post(
+        respuestApi = await clienteAxios.post(
           `/usuarios`,
           {
-            Nombre,
-            Email,
-            Telefono,
-            Estado,
+            Nom_Usuario: Nombre,
+            Cor_Usuario: Email,
+            Nde_Usuario: Telefono,
+            estado: Estado,
           },
           config
         );
@@ -68,6 +67,13 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
         clearForm();
         getAllUsers();
         updateTextButton("Enviar");
+        if (buttonForm === "Actualizar") {
+          Swal.fire(
+            'Actualizado!',
+            'El usuario ha sido actualizado.',
+            'success'
+          );
+        }
       } else {
         setMessage(respuestApi.error.message || "Error al registrar el usuario.");
         setMessageType("error");
@@ -89,10 +95,12 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
   };
 
   const setData = () => {
-    setNombre(user.Nombre);
-    setEmail(user.Email);
-    setTelefono(user.Telefono);
-    setEstado(user.Estado);
+    if (user) {
+      setNombre(user.Nom_Usuario);
+      setEmail(user.Cor_Usuario);
+      setTelefono(user.Nde_Usuario);
+      setEstado(user.estado);
+    }
   };
 
   useEffect(() => {
@@ -111,7 +119,7 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
         >
           {msg && <Alerta alerta={alerta} />}
           <h1 className="font-bold text-green-600 text-3xl uppercase text-center my-5">
-            Registrar Usuarios
+            {buttonForm === "Actualizar" ? "Actualizar Usuario" : "Registrar Usuario"}
           </h1>
 
           {message && (
@@ -164,36 +172,26 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
 
           <div className="mb-3">
             <label className="text-gray-700 uppercase font-bold">
-              Estado:
+              Estado
             </label>
             <select
               id="estado"
               value={Estado}
               onChange={(e) => setEstado(e.target.value)}
-              className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+              className="w-full p-2 border rounded"
             >
-              <option value="">Seleccione un Estado:</option>
+              <option value="">Seleccione un estado</option>
               <option value="Activo">Activo</option>
               <option value="Inactivo">Inactivo</option>
             </select>
           </div>
 
-          <div className="flex justify-around">
-            <input
-              type="submit"
-              id="button"
-              value={buttonForm}
-              className="bg-green-600 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-green-700 md:w-auto"
-            />
-            <input
-              type="button"
-              id="button"
-              value="Limpiar"
-              onClick={() => clearForm()}
-              className="bg-yellow-400 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-yellow-500 md:w-auto"
-              aria-label="Limpiar"
-            />
-          </div>
+          <button
+            type="submit"
+            className={`w-full py-2 px-4 rounded ${buttonForm === "Actualizar" ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+          >
+            {buttonForm}
+          </button>
         </form>
       </div>
     </>
