@@ -4,11 +4,9 @@ require('dotenv').config();
 const cors = require('cors');
 const sequelize = require('./config/database.js');
 const logger = require('./config/logger.js');
+const authenticateJWT = require('./src/api/auth/middlewares/authMiddleware.js');
 
-// Importa Swagger
-const { swaggerSetup, swaggerDocs } = require('./swagger'); // Importa la configuración de Swagger
-
-// Importa tus routers y middleware
+// Importa los routers
 const responsablesRouter = require('./src/api/responsable/routes/responsableRoutes.js');
 const procesosRouter = require('./src/api/proceso/routes/Routesproceso.js');
 const procedimientosRouter = require('./src/api/procedimiento/routes/procedimientoRoutes.js');
@@ -16,8 +14,10 @@ const areasRouter = require('./src/api/area/routes/areaRoutes.js');
 const unidadesRouter = require('./src/api/unidad/routes/unidadRoutes.js');
 const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
 const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
-const authRouter = require('./src/api/auth/routes/authRoutes.js');
-const authenticateJWT = require('./src/api/auth/middlewares/authMiddleware.js');
+const authRoutes = require('./src/api/auth/routes/authRoutes.js');
+
+// Importa Swagger
+const { swaggerDocs, swaggerSetup } = require('./swagger.js');
 
 const app = express();
 const port = process.env.PORT || 1337; // Asegúrate de usar el puerto correcto
@@ -36,11 +36,11 @@ app.get('/', (req, res) => {
   res.send('Bienvenido al API de Compromiso!');
 });
 
-// Configura Swagger en la ruta /api-docs
-app.use('/api-docs', swaggerSetup, swaggerDocs);
+// Ruta de documentación Swagger
+app.use('/api-docs', swaggerDocs, swaggerSetup);
 
 // Rutas de autenticación
-app.use('/api/auth', authRouter);
+app.use('/api/auth', authRoutes);
 
 // Rutas protegidas
 app.use('/api/responsables', authenticateJWT, responsablesRouter);

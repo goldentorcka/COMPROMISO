@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Alerta from "../components/Alerta";
-import clieteAxios from "../config/axios";
+import clientAxios from "../config/axios";
 import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
 import "../css/stylesLoginUserAdmin.css";
@@ -27,8 +27,8 @@ const LoginFormAdmin = () => {
     }
     
     try {
-      const url = "/api/usuarios";
-      const { data } = await clieteAxios.post(url, {
+      const url = "/api/usuarios/login";
+      const { data } = await clientAxios.post(url, {
         Cor_User: Cor_User,
         password: password,
       });

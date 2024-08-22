@@ -1,5 +1,4 @@
 // @ts-nocheck
-// swagger.js
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,7 +11,7 @@ const options = {
       description: 'Documentación de la API usando Swagger',
     },
   },
-  apis: ['./src/api/**/*.js'], // Ajusta la ruta a tus archivos de rutas
+  apis: ['./src/api/**/*.js'], // Ajusta esta ruta según la ubicación real de tus archivos de rutas
 };
 
 const specs = swaggerJsdoc(options);
