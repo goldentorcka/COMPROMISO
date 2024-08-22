@@ -1,3 +1,4 @@
+// swagger.js
 // @ts-nocheck
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -16,7 +17,7 @@ const options = {
 
 const specs = swaggerJsdoc(options);
 
-const swaggerSetup = swaggerUi.serve;
-const swaggerDocs = swaggerUi.setup(specs);
+const swaggerSetup = swaggerUi.setup(specs);
+const swaggerDocs = swaggerUi.serve;
 
-module.exports = { swaggerSetup, swaggerDocs };
+module.exports = { swaggerDocs, swaggerSetup };
