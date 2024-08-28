@@ -1,3 +1,4 @@
+// @ts-nocheck
 const express = require('express');
 const {
   getAreas,
@@ -5,9 +6,8 @@ const {
   createArea,
   updateArea,
   deleteArea,
-} = require('../controllers/areaController.js');
-
-const logger = require('../../../../config/logger.js');
+} = require('../controllers/areaController');
+const logger = require('../../../../config/logger');
 const router = express.Router();
 
 /**
@@ -33,12 +33,16 @@ const router = express.Router();
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
+ *                   Id_Area:
  *                     type: integer
  *                     description: ID del área
- *                   nombre:
+ *                   Nom_Area:
  *                     type: string
  *                     description: Nombre del área
+ *                   estado:
+ *                     type: string
+ *                     enum: [Sí, No]
+ *                     description: Estado del área
  *       500:
  *         description: Error interno del servidor
  */
@@ -65,12 +69,16 @@ router.get('/', getAreas);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Area:
  *                   type: integer
  *                   description: ID del área
- *                 nombre:
+ *                 Nom_Area:
  *                   type: string
  *                   description: Nombre del área
+ *                 estado:
+ *                   type: string
+ *                   enum: [Sí, No]
+ *                   description: Estado del área
  *       404:
  *         description: Área no encontrada
  *       500:
@@ -91,9 +99,13 @@ router.get('/:id', getAreaById);
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Nom_Area:
  *                 type: string
  *                 description: Nombre del área
+ *               estado:
+ *                 type: string
+ *                 enum: [Sí, No]
+ *                 description: Estado del área
  *     responses:
  *       201:
  *         description: Área creada
@@ -102,12 +114,16 @@ router.get('/:id', getAreaById);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Area:
  *                   type: integer
  *                   description: ID de la nueva área
- *                 nombre:
+ *                 Nom_Area:
  *                   type: string
  *                   description: Nombre de la nueva área
+ *                 estado:
+ *                   type: string
+ *                   enum: [Sí, No]
+ *                   description: Estado de la nueva área
  *       400:
  *         description: Solicitud inválida
  *       500:
@@ -135,9 +151,13 @@ router.post('/', createArea);
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Nom_Area:
  *                 type: string
  *                 description: Nuevo nombre del área
+ *               estado:
+ *                 type: string
+ *                 enum: [Sí, No]
+ *                 description: Nuevo estado del área
  *     responses:
  *       200:
  *         description: Área actualizada
@@ -146,12 +166,16 @@ router.post('/', createArea);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Area:
  *                   type: integer
  *                   description: ID del área
- *                 nombre:
+ *                 Nom_Area:
  *                   type: string
  *                   description: Nombre actualizado del área
+ *                 estado:
+ *                   type: string
+ *                   enum: [Sí, No]
+ *                   description: Estado actualizado del área
  *       400:
  *         description: Solicitud inválida
  *       404:

@@ -2,7 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 
-const Responsable = sequelize.define('Responsable', {
+const Responsable = sequelize.define('responsable', {
   Id_Responsable: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -15,11 +15,11 @@ const Responsable = sequelize.define('Responsable', {
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
     allowNull: false,
-    defaultValue: 'No',
   },
 }, {
-  tableName: 'responsable',
   timestamps: true,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
 });
 
 module.exports = Responsable;

@@ -1,7 +1,7 @@
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
-import clieteAxios from "./config/axios";
+import clieteAxios from "../../config/axios.jsx";
 import { ReactSession } from 'react-client-session';
 
 const Pagination = ({ URI, setDesde, setHasta }) => {

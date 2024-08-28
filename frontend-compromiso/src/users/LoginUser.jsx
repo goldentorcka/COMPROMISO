@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Alerta from "../components/Alerta";
-import clientAxios from "../config/axios";
+import Alerta from "../components/Alert/Alerta.jsx";
+import clientAxios from "../config/axios.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
-import "../css/stylesLoginUserAdmin.css";
-import "bootstrap/dist/css/bootstrap.min.css";  // Importar estilos de Bootstrap
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const LoginFormAdmin = () => {
-  const [Cor_User, setCor_User] = useState("");
+  const [Cor_Usuario, setCor_Usuario] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
   const navigate = useNavigate();
@@ -18,91 +16,114 @@ const LoginFormAdmin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if ([Cor_User, password].includes("")) {
+    if ([Cor_Usuario, password].includes("")) {
       setAlerta({
         msg: "Todos los campos son obligatorios!",
         error: true,
       });
       return;
     }
-    
+
+    if (!Cor_Usuario.includes("@")) {
+      setAlerta({
+        msg: "El correo debe contener un '@'.",
+        error: true,
+      });
+      return;
+    }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setAlerta({
+        msg: "La contraseña es débil. Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.",
+        error: true,
+      });
+      return;
+    }
+
     try {
-      const url = "/api/usuarios/login";
+      const url = "/api/usuarios/login"; // Ruta de la API para iniciar sesión
       const { data } = await clientAxios.post(url, {
-        Cor_User: Cor_User,
-        password: password,
+        Cor_Usuario,
+        password,
       });
 
-      // Guardar el token en la sesión
       ReactSession.set("token", data.token);
-
-      // Guardar la información del usuario en el estado global
       setAuth(data);
 
-      // Verificar si el usuario es administrador
-      if (data.isAdmin) {
-        navigate("/admin");
+      if (data.rol === "Administrador") {
+        navigate("/admin"); // Redirige a la página de admin si el rol es "Administrador"
       } else {
         setAlerta({
           msg: "No tienes permisos para acceder al panel de administración.",
           error: true,
         });
       }
-
     } catch (error) {
-      console.log(error);
       setAlerta({
-        msg: error.response.data.msg || "Error al iniciar sesión",
+        msg: error.response?.data?.error || "Hubo un error, intenta nuevamente",
         error: true,
       });
     }
   };
+
   const { msg } = alerta;
+
   return (
-    <div className="container mt-5">
-      <h1 className="title">
+    <div className="container mt-5 login-container">
+      <h1 className="text-center mb-4 login-title">
         Inicia Sesión
-        <span> en el Aplicativo COMPROMISO SENA</span>
+        <span className="d-block">en el Aplicativo COMPROMISO SENA</span>
       </h1>
-      <div className="form-container">
-        {msg && <Alerta alerta={alerta} />}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Correo:</label>
-            <input
-              type="email"
-              placeholder="Aquí su Correo"
-              value={Cor_User}
-              onChange={(e) => setCor_User(e.target.value)}
-              className="form-control"
-            />
-          </div>
-          <div className="form-group">
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              placeholder="Aquí su Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-control"
-            />
-          </div>
-          <button type="submit" className="btn btn-success w-100 mt-3">
-            Iniciar Sesión
-          </button>
-        </form>
-        <nav>
-          <Link to="/auth/registrar" className="d-block mt-3 text-decoration-none text-primary">
-            ¿No tienes una Cuenta? Regístrate
-          </Link>
-          <Link to="/olvide-password" className="d-block mt-2 text-decoration-none text-primary">
-            Olvidé mi Contraseña
-          </Link>
-        </nav>
+      <div className="row justify-content-center">
+        <div className="col-md-12">
+          {msg && <Alerta alerta={alerta} />}
+          <form onSubmit={handleSubmit} className="card p-4 shadow login-card">
+            <div className="form-group mb-3">
+              <label htmlFor="email" className="form-label">
+                Correo:
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="Aquí su Correo"
+                value={Cor_Usuario}
+                onChange={(e) => setCor_Usuario(e.target.value)}
+                className="form-control login-input"
+              />
+            </div>
+            <div className="form-group mb-3">
+              <label htmlFor="password" className="form-label">
+                Contraseña:
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Aquí su Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-control login-input"
+              />
+            </div>
+            <div className="d-flex justify-content-between align-items-center">
+              <button type="submit" className="btn login-button mt-3">
+                Iniciar Sesión
+              </button>
+              <Link to="/" className="btn login-back-button mt-3">
+                &#8592; Volver
+              </Link>
+            </div>
+          </form>
+          <nav className="text-center mt-4">
+            <Link to="/auth/registrar" className="d-block login-link">
+              ¿No tienes una Cuenta? Regístrate
+            </Link>
+            <Link to="/auth/olvide-password" className="d-block login-link">
+              Olvidé mi Contraseña
+            </Link>
+          </nav>
+        </div>
       </div>
-      <Link to="/" className="btn btn-primary mt-4 back-button">
-        &#8592; Volver
-      </Link>
     </div>
   );
 };

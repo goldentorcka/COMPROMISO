@@ -2,6 +2,9 @@
 // models/formato.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
+const Responsable = require('../../responsable/models/responsibleModel.js');
+const Procedimiento = require('../../procedimiento/models/procedimientoModel.js');
+const Unidad = require('../../unidad/models/unidadModel.js');
 
 const Formato = sequelize.define('Formato', {
   Id_Formato: {
@@ -22,9 +25,15 @@ const Formato = sequelize.define('Formato', {
     allowNull: false,
   },
   Est_Formato: {
-    type: DataTypes.ENUM('Sí', 'No'),
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
-    defaultValue: 'No',
+  },
+  Id_Responsable: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Responsable,
+      key: 'Id_Responsable',
+    },
   },
   Nom_Formato: {
     type: DataTypes.STRING,
@@ -36,15 +45,30 @@ const Formato = sequelize.define('Formato', {
   },
   Id_Procedimiento: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    references: {
+      model: Procedimiento,
+      key: 'Id_Procedimiento',
+    },
   },
   Id_Unidad: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    references: {
+      model: Unidad,
+      key: 'Id_Unidad',
+    },
   },
 }, {
-  tableName: 'formato',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
 });
+
+Responsable.hasMany(Formato, { foreignKey: 'Id_Responsable' });
+Procedimiento.hasMany(Formato, { foreignKey: 'Id_Procedimiento' });
+Unidad.hasMany(Formato, { foreignKey: 'Id_Unidad' });
+
+Formato.belongsTo(Responsable, { foreignKey: 'Id_Responsable' });
+Formato.belongsTo(Procedimiento, { foreignKey: 'Id_Procedimiento' });
+Formato.belongsTo(Unidad, { foreignKey: 'Id_Unidad' });
 
 module.exports = Formato;

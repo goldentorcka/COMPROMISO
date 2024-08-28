@@ -1,10 +1,12 @@
-// @ts-nocheck
-module.exports = {
-  settings: {
-    cors: {
-      enabled: true,
-      origin: ['http://localhost:1337', 'http://localhost:1337/api/procesos', 'http://localhost:1337/api/procedimientos', 'http://localhost:1337/api/responsables', 'http://localhost:1337/api/areas', 'http://localhost:1337/api/unidades'], // Permite múltiples orígenes
-    },
-    // Agrega otros middlewares aquí según sea necesario
+const allowedOrigins = ['http://localhost:5173', 'http://localshost:3000'];
+app.use(cors({
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Origen no permitido por CORS'));
+    }
   },
-};
+  methods: 'GET,POST,PUT,DELETE',
+  allowedHeaders: 'Content-Type, Authorization',
+}));

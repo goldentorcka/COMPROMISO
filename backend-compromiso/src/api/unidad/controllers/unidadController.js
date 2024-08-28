@@ -16,9 +16,6 @@ exports.getUnidades = async (req, res) => {
   }
 };
 
-
-
-
 exports.getUnidadById = async (req, res) => {
   try {
     const unidad = await Unidad.findByPk(req.params.id);
@@ -35,6 +32,9 @@ exports.getUnidadById = async (req, res) => {
 
 exports.createUnidad = async (req, res) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Datos insuficientes para crear la unidad' });
+    }
     const unidad = await Unidad.create(req.body);
     res.status(201).json(unidad);
   } catch (error) {
@@ -45,6 +45,9 @@ exports.createUnidad = async (req, res) => {
 
 exports.updateUnidad = async (req, res) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Datos insuficientes para actualizar la unidad' });
+    }
     const [updated] = await Unidad.update(req.body, {
       where: { Id_Unidad: req.params.id },
     });

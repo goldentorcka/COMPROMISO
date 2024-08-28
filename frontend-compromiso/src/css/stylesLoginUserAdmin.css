@@ -1,135 +1,104 @@
-/* Reset para eliminar márgenes y paddings predeterminados */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Estilo general para centrar todo el contenido */
 body {
-  background-color: #f9fafb;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
   margin: 0;
-  flex-direction: column; /* Alinea los elementos verticalmente */
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-/* Contenedor principal */
 .container {
+  max-width: 360px;
+  width: 100%;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-  max-width: 900px; /* Combina un tamaño más amplio */
-  width: 100%;
-  margin: 1rem; /* Añade un pequeño margen para separación */
-  position: relative;
 }
 
-/* Estilo del título */
-.title, .container h1 {
-  color: #78716c;
-  font-weight: 900;
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1877f2;
 }
 
-.title span, .container h1 span {
-  color: #047857;
+.title span {
+  display: block;
+  font-size: 16px;
+  font-weight: 400;
+  color: #606770;
 }
 
-/* Estilo del formulario */
 .form-container {
-  margin-top: 2.5rem;
-  padding: 2rem;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  border-radius: 0.75rem;
-  background-color: #ffffff;
-  max-width: 28rem;
-  width: 100%;
+  margin-top: 20px;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 15px;
 }
 
 .form-group label {
   display: block;
-  text-transform: uppercase;
-  color: #57534e;
-  font-weight: bold;
-  font-size: 1.125rem;
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .form-group input {
   width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.5rem;
-  background-color: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.75rem;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-/* Estilo del botón */
 .submit-button {
-  background-color: #065f46;
   width: 100%;
-  padding: 0.75rem;
-  border-radius: 0.75rem;
-  color: #ffffff;
-  text-transform: uppercase;
-  font-weight: bold;
+  padding: 10px;
+  background-color: #1877f2;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
 .submit-button:hover {
-  background-color: #064e3b;
+  background-color: #165eab;
 }
 
-/* Estilo de los enlaces de navegación */
+nav {
+  margin-top: 15px;
+}
+
 .nav-link {
   display: block;
-  margin-top: 2rem;
-  color: #6b7280;
+  font-size: 14px;
+  color: #1877f2;
   text-decoration: none;
-  margin-bottom: 1rem;
+  margin: 5px 0;
 }
 
 .nav-link:hover {
   text-decoration: underline;
 }
 
-/* Estilo para el botón de volver */
-.back-button {
-  display: inline-block;
-  margin-top: 2rem;
-  padding: 0.75rem 1.5rem;
-  background-color: #2563eb;
-  color: #ffffff;
-  text-transform: uppercase;
-  font-weight: bold;
-  border-radius: 0.75rem;
-  text-decoration: none;
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, background-color 0.3s ease;
+.alerta {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 4px;
 }
 
-.back-button:hover {
-  background-color: #1d4ed8;
-  transform: translateX(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+.alerta.error {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 
-/* Animación personalizada para el botón de volver */
-.back-button {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-}
-
-.back-button:hover {
-  transform: translateX(-5px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.alerta.success {
+  background-color: #d4edda;
+  color: #155724;
 }

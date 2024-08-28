@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../context/authProvider'; // Contexto de autenticación
-import NavMenuPrivate from '../components/NavMenuPrivate'; // Componente del menú privado
+import NavMenuPrivate from '../components/Nav/NavMenuPrivate'; // Componente del menú privado
 
 const RutaProtegida = () => {
   const { isAuthenticated } = useContext(AuthContext); // Obtiene el estado de autenticación del contexto

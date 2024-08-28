@@ -1,6 +1,6 @@
 // @ts-nocheck
-const Responsable = require('../models/responsibleModel.js');
-const logger = require('../../../../config/logger.js');
+const Responsable = require('../models/responsibleModel.js'); // Ruta ajustada
+const logger = require('../../../../config/logger.js'); // Ruta ajustada
 
 const getResponsables = async (req, res) => {
   try {
@@ -16,8 +16,6 @@ const getResponsables = async (req, res) => {
   }
 };
 
-
-
 const getResponsableById = async (req, res) => {
   try {
     const responsable = await Responsable.findByPk(req.params.id);
@@ -31,8 +29,6 @@ const getResponsableById = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
-
 
 const createResponsable = async (req, res) => {
   try {
@@ -66,8 +62,6 @@ const createResponsable = async (req, res) => {
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
-
 
 const updateResponsable = async (req, res) => {
   try {

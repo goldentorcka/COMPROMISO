@@ -6,9 +6,9 @@ import Swal from "sweetalert2";
 import FormUsers from "./formUsers.jsx";
 import FormQueryUsers from "./formQueryUsers.jsx";
 // import ModalDialog from "./modalDialog.jsx";
-import Pagination from "../pagination.jsx";
+import Pagination from "../components/Pagination/pagination.jsx";
 // import ImportarCSV from "./importarCSV.jsx";
-import Alerta from "../components/Alerta.jsx";
+import Alerta from "../components/Alert/Alerta.jsx";
 
 // import { MdDeleteOutline } from "react-icons/md";
 // import { FaRegEdit } from "react-icons/fa";

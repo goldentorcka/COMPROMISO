@@ -1,7 +1,7 @@
 // frontend-compromiso/src/api.js
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3002';
+const API_URL = 'http://localhost:5173/';
 
 export const fetchData = async (token) => {
   try {

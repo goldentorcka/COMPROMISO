@@ -1,66 +1,57 @@
 // @ts-nocheck
 // models/usuarioModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database'); // Configuración de la base de datos
+const sequelize = require('../../../../config/database.js'); // Configuración de la base de datos
 
-const Usuario = sequelize.define('Usuario', {
+const Usuario = sequelize.define('compromiso.usuario', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true
+    primaryKey: true,
   },
   Nom_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Ape_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Cod_Usuario: {
-    type: DataTypes.STRING(50),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Cor_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Nde_Usuario: {
-    type: DataTypes.STRING(20),
-    allowNull: true
+    type: DataTypes.STRING,
+    allowNull: false,
   },
   Fec_Usuario: {
     type: DataTypes.DATE,
-    allowNull: true
+    allowNull: false,
   },
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
-    defaultValue: 'Sí'
-  },
-  createdAt: {
-    type: DataTypes.TIMESTAMP,
-    defaultValue: DataTypes.NOW
-  },
-  updatedAt: {
-    type: DataTypes.TIMESTAMP,
-    defaultValue: DataTypes.NOW,
-    onUpdate: DataTypes.NOW
+    allowNull: false,
   },
   rol: {
     type: DataTypes.ENUM('Administrador'),
-    defaultValue: 'Administrador'
+    allowNull: false,
   },
   token: {
-    type: DataTypes.STRING(255),
-    allowNull: true
+    type: DataTypes.STRING,
   },
   password: {
-    type: DataTypes.STRING(255),
-    allowNull: false
-  }
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
-  tableName: 'usuario',
-  timestamps: true
+  timestamps: true,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
 });
 
 module.exports = Usuario;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import NavMenuPublic from '../components/NavMenuPublic';
+import NavMenuPublic from '../components/Nav/NavMenuPublic.jsx';
 
 const AuthLayout = () => {
   return (
