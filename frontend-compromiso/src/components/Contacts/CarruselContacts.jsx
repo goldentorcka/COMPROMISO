@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import NavMenuPublic from '../Nav/NavMenuPublic.jsx';
-import imgJulian from '../../../src/Public/images/IMG_Julian_Montaña.jpeg';
-import imgMarlon from '../../../src/Public/images/IMG_Marlon_Cumbe.jpeg';
-import imgSofia from '../../../src/Public/images/IMG_Sofia_Solano.jpeg';
+import imgJulian from '../../../src/Public/images/ImagesMenbersGroup/IMG_Julian_Montaña.jpeg';
+import imgMarlon from '../../../src/Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.jpeg';
+import imgSofia from '../../../src/Public/images/ImagesMenbersGroup/IMG_Sofia_Solano.jpeg';
 import DetailsModal from '../Modal/DetailsModal.jsx'; // Asegúrate de ajustar la ruta según la ubicación del archivo
 
 const ContactUs = () => {

@@ -70,15 +70,41 @@ const LoginFormAdmin = () => {
   const { msg } = alerta;
 
   return (
-    <div className="container mt-5 login-container">
-      <h1 className="text-center mb-4 login-title">
+    <div
+      className="container mt-5"
+      style={{ animation: "fadeIn 1.2s ease-in-out" }}
+    >
+      <h1
+        className="text-center mb-4"
+        style={{
+          fontSize: "2rem",
+          color: "#007bff",
+          fontWeight: "bold",
+          animation: "slideInDown 1s ease-out",
+        }}
+      >
         Inicia Sesión
         <span className="d-block">en el Aplicativo COMPROMISO SENA</span>
       </h1>
       <div className="row justify-content-center">
         <div className="col-md-12">
           {msg && <Alerta alerta={alerta} />}
-          <form onSubmit={handleSubmit} className="card p-4 shadow login-card">
+          <form
+            onSubmit={handleSubmit}
+            className="card p-4 shadow"
+            style={{
+              backgroundColor: "#ffffff",
+              borderRadius: "10px",
+              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+              transition: "transform 0.3s ease-in-out",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = "translateY(-10px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
+          >
             <div className="form-group mb-3">
               <label htmlFor="email" className="form-label">
                 Correo:
@@ -89,7 +115,8 @@ const LoginFormAdmin = () => {
                 placeholder="Aquí su Correo"
                 value={Cor_Usuario}
                 onChange={(e) => setCor_Usuario(e.target.value)}
-                className="form-control login-input"
+                className="form-control"
+                style={{ borderRadius: "5px" }}
               />
             </div>
             <div className="form-group mb-3">
@@ -102,23 +129,80 @@ const LoginFormAdmin = () => {
                 placeholder="Aquí su Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="form-control login-input"
+                className="form-control"
+                style={{ borderRadius: "5px" }}
               />
             </div>
             <div className="d-flex justify-content-between align-items-center">
-              <button type="submit" className="btn login-button mt-3">
+              <button
+                type="submit"
+                className="btn mt-3"
+                style={{
+                  backgroundColor: "#007bff",
+                  color: "#ffffff",
+                  borderRadius: "5px",
+                  transition: "background-color 0.3s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#0056b3";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#007bff";
+                }}
+              >
                 Iniciar Sesión
               </button>
-              <Link to="/" className="btn login-back-button mt-3">
+              <Link
+                to="/"
+                className="btn mt-3"
+                style={{
+                  backgroundColor: "#6c757d",
+                  color: "#ffffff",
+                  borderRadius: "5px",
+                  transition: "background-color 0.3s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#5a6268";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#6c757d";
+                }}
+              >
                 &#8592; Volver
               </Link>
             </div>
           </form>
           <nav className="text-center mt-4">
-            <Link to="/auth/registrar" className="d-block login-link">
+            <Link
+              to="/registrar"
+              className="d-block"
+              style={{
+                color: "#007bff",
+                transition: "color 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#0056b3";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#007bff";
+              }}
+            >
               ¿No tienes una Cuenta? Regístrate
             </Link>
-            <Link to="/auth/olvide-password" className="d-block login-link">
+            <Link
+              to="/olvide-password"
+              className="d-block"
+              style={{
+                color: "#007bff",
+                transition: "color 0.3s",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = "#0056b3";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = "#007bff";
+              }}
+            >
               Olvidé mi Contraseña
             </Link>
           </nav>

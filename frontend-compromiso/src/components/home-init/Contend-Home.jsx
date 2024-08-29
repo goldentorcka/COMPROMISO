@@ -1,7 +1,7 @@
 import React from 'react';
-
+import NavBarAdministrator from "../Admin/NavBarAdmin.jsx"
 const Home_init = () => {
-    const imageBasePath = '/src/Public/images/';
+    const imageBasePath = '/src/Public/images/imagenHome-Init/';
     const images = [
         `${imageBasePath}imagen1.jpeg`,
         `${imageBasePath}imagen2.jpeg`,
@@ -50,6 +50,7 @@ const Home_init = () => {
 
     return (
         <>
+        <NavBarAdministrator />
             <div className="container my-5">
                 <div className="position-relative p-5 text-muted bg-body border border-dashed rounded-5">
                     <svg className="bi mt-5 mb-3" width="48" height="48">
