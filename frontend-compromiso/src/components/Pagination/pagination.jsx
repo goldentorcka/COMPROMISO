@@ -1,7 +1,6 @@
-
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useEffect, useState } from "react";
-import clieteAxios from "../../config/axios.jsx";
+import clienteAxios from "../../config/axios.jsx";
 import { ReactSession } from 'react-client-session';
 
 const Pagination = ({ URI, setDesde, setHasta }) => {
@@ -20,13 +19,13 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
       },
     };
     try {
-      const response = await clieteAxios(URI, config);
+      const response = await clienteAxios.get(URI, config);
       const cantidadRegistros = response.data.length;
       setNumRegistros(cantidadRegistros);
       const pages = Math.ceil(cantidadRegistros / registrosPorPagina);
       setPaginas(pages);
     } catch (error) {
-      console.error(error);
+      console.error("Error al obtener los registros:", error);
     }
   };
 
@@ -35,7 +34,9 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
   }, []);
 
   useEffect(() => {
-    paginar(paginaActual);
+    if (paginas > 0) {
+      paginar(paginaActual);
+    }
   }, [paginas, paginaActual]);
 
   const paginar = (pagina) => {
@@ -44,17 +45,12 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
     const desdePagina = (pagina - 1) * registrosPorPagina;
     setDesde(desdePagina);
 
-    const hastaPagina = pagina * registrosPorPagina;
+    const hastaPagina = Math.min(pagina * registrosPorPagina, numRegistros);
     setHasta(hastaPagina);
 
-    const arregloAuxiliar = [];
-    for (let i = 0; i < paginas; i++) {
-      if (i + 1 === pagina) {
-        arregloAuxiliar[i] = "bg-green-600 text-white";
-      } else {
-        arregloAuxiliar[i] = "bg-white";
-      }
-    }
+    const arregloAuxiliar = Array.from({ length: paginas }, (_, i) =>
+      i + 1 === pagina ? "bg-green-600 text-white" : "bg-white text-gray-800"
+    );
     setBotones(arregloAuxiliar);
   };
 
@@ -108,6 +104,7 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
             <button
               className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               onClick={anterior}
+              disabled={paginaActual === 1}
             >
               <span className="sr-only">Anterior</span>
               <ChevronLeftIcon aria-hidden="true" className="h-5 w-5" />
@@ -124,6 +121,7 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
             <button
               className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               onClick={siguiente}
+              disabled={paginaActual === paginas}
             >
               <span className="sr-only">Siguiente</span>
               <ChevronRightIcon aria-hidden="true" className="h-5 w-5" />

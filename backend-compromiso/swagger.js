@@ -1,5 +1,3 @@
-// swagger.js
-// @ts-nocheck
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
@@ -12,12 +10,18 @@ const options = {
       description: 'Documentación de la API usando Swagger',
     },
   },
-  apis: ['./src/api/**/*.js'], // Ajusta esta ruta según la ubicación real de tus archivos de rutas
+  apis: ['./index.js'], // Ruta correcta según la ubicación del archivo index.js
 };
 
-const specs = swaggerJsdoc(options);
+let specs;
+try {
+  specs = swaggerJsdoc(options);
+} catch (error) {
+  console.error('Error al generar la documentación de Swagger:', error);
+  process.exit(1);
+}
 
-const swaggerSetup = swaggerUi.setup(specs);
 const swaggerDocs = swaggerUi.serve;
+const swaggerSetup = swaggerUi.setup(specs);
 
 module.exports = { swaggerDocs, swaggerSetup };

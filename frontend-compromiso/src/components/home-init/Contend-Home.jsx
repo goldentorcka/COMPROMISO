@@ -50,7 +50,6 @@ const Home_init = () => {
 
     return (
         <>
-        <NavBarAdministrator />
             <div className="container my-5">
                 <div className="position-relative p-5 text-muted bg-body border border-dashed rounded-5">
                     <svg className="bi mt-5 mb-3" width="48" height="48">

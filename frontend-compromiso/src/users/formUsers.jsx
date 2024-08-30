@@ -1,57 +1,51 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import clienteAxios from '../config/axios';
 import Alerta from '../components/Alert/Alerta.jsx';
-import {ReactSession} from 'react-client-session';
+import { ReactSession } from 'react-client-session';
 import '../css/stylesFormUsers.css';
 import Swal from 'sweetalert2';
 
-const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
-  const [Nombre, setNombre] = useState ('');
-  const [Apellido, setApellido] = useState ('');
-  const [Codigo, setCodigo] = useState ('');
-  const [Email, setEmail] = useState ('');
-  const [Telefono, setTelefono] = useState ('');
-  const [Fecha, setFecha] = useState ('');
-  const [Estado, setEstado] = useState ('Sí'); // Valor por defecto
-  const [Rol, setRol] = useState ('Administrador');
-  const [Password, setPassword] = useState (''); // Campo para la contraseña
-  const [alerta, setAlerta] = useState ({});
-  const [message, setMessage] = useState ('');
-  const [messageType, setMessageType] = useState ('');
+const FormUsers = ({ buttonForm, user, getAllUsers }) => {
+  const [Nombre, setNombre] = useState('');
+  const [Apellido, setApellido] = useState('');
+  const [Codigo, setCodigo] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Telefono, setTelefono] = useState('');
+  const [Fecha, setFecha] = useState('');
+  const [Estado, setEstado] = useState('Sí'); // Valor por defecto
+  const [Rol, setRol] = useState('Administrador');
+  const [Password, setPassword] = useState(''); // Campo para la contraseña
+  const [alerta, setAlerta] = useState({});
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-  useEffect (
-    () => {
-      if (user) {
-        setNombre (user.Nom_Usuario);
-        setApellido (user.Ape_Usuario);
-        setCodigo (user.Cod_Usuario);
-        setEmail (user.Cor_Usuario);
-        setTelefono (user.Nde_Usuario);
-        setFecha (user.Fec_Usuario);
-        setEstado (user.estado);
-        setRol (user.rol);
-      }
-    },
-    [user]
-  );
+  useEffect(() => {
+    if (user) {
+      setNombre(user.Nom_Usuario || '');
+      setApellido(user.Ape_Usuario || '');
+      setCodigo(user.Cod_Usuario || '');
+      setEmail(user.Cor_Usuario || '');
+      setTelefono(user.Nde_Usuario || '');
+      setFecha(user.Fec_Usuario || '');
+      setEstado(user.estado || 'Sí');
+      setRol(user.rol || 'Administrador');
+    }
+  }, [user]);
 
-  useEffect (
-    () => {
-      if (message) {
-        const timer = setTimeout (() => {
-          setMessage ('');
-          setMessageType ('');
-        }, 5000);
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('');
+        setMessageType('');
+      }, 5000);
 
-        return () => clearTimeout (timer);
-      }
-    },
-    [message]
-  );
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
 
-  const sendForm = async e => {
-    e.preventDefault ();
-    const token = ReactSession.get ('token');
+  const sendForm = async (e) => {
+    e.preventDefault();
+    const token = ReactSession.get('token');
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -59,58 +53,73 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
       },
     };
 
+    const userData = {
+      Nom_Usuario: Nombre,
+      Ape_Usuario: Apellido,
+      Cod_Usuario: Codigo,
+      Cor_Usuario: Email,
+      Nde_Usuario: Telefono,
+      Fec_Usuario: Fecha,
+      estado: Estado,
+      rol: Rol,
+      password: Password,
+    };
+
     try {
       let responseApi;
-      const userData = {
-        Nom_Usuario: Nombre,
-        Ape_Usuario: Apellido,
-        Cod_Usuario: Codigo,
-        Cor_Usuario: Email,
-        Nde_Usuario: Telefono,
-        Fec_Usuario: Fecha,
-        estado: Estado,
-        rol: Rol,
-        password: Password, // Añadimos el campo de contraseña
-      };
-
       if (buttonForm === 'Actualizar') {
-        responseApi = await clienteAxios.put (
-          `/api/users/${user.id}`,
-          userData,
-          config
-        );
-        setMessage ('Usuario actualizado correctamente');
-        setMessageType ('success');
+        responseApi = await clienteAxios.put(`/usuarios/${user.id}`, userData, config);
+        Swal.fire({
+          title: 'Actualización Exitosa',
+          text: 'Usuario actualizado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       } else {
-        responseApi = await clienteAxios.post ('/api/users', userData, config);
-        setMessage ('Usuario creado correctamente');
-        setMessageType ('success');
+        responseApi = await clienteAxios.post('/usuarios', userData, config);
+        Swal.fire({
+          title: 'Registro Exitoso',
+          text: 'Usuario registrado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       }
 
-      getAllUsers (); // Llamamos a la función para obtener todos los usuarios
-      resetForm ();
+      // Actualiza la tabla con los datos más recientes
+      await getAllUsers(); // Asegúrate de que esta función sea una función asíncrona
+
+      // Limpia el formulario después de la actualización o registro
+      resetForm();
     } catch (error) {
-      setMessage ('Error al procesar la solicitud');
-      setMessageType ('error');
+      console.error('Error en la solicitud:', error); // Añadido para depuración
+      if (error.response) {
+        setMessage(`Error: ${error.response.data.message || 'Error al procesar la solicitud'}`);
+      } else if (error.request) {
+        setMessage('Error: No se recibió respuesta del servidor');
+      } else {
+        setMessage('Error al procesar la solicitud');
+      }
+      setMessageType('error');
     }
   };
 
   const resetForm = () => {
-    setNombre ('');
-    setApellido ('');
-    setCodigo ('');
-    setEmail ('');
-    setTelefono ('');
-    setFecha ('');
-    setEstado ('Sí');
-    setRol ('Administrador');
-    setPassword ('');
+    setNombre('');
+    setApellido('');
+    setCodigo('');
+    setEmail('');
+    setTelefono('');
+    setFecha('');
+    setEstado('Sí');
+    setRol('Administrador');
+    setPassword('');
   };
 
   return (
     <div className="form-container">
       {message && <Alerta message={message} type={messageType} />}
-      <form onSubmit={sendForm}>
+      <form onSubmit={sendForm} className="formUser">
+        <h2 className="formTitle">Formulario de Usuario</h2>
         <div className="mb-3">
           <label className="text-gray-700 uppercase font-bold">Nombre</label>
           <input
@@ -118,8 +127,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             id="nombre"
             placeholder="Nombre"
             value={Nombre}
-            onChange={e => setNombre (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setNombre(e.target.value)}
+            className="inputField"
             required
           />
         </div>
@@ -131,8 +140,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             id="apellido"
             placeholder="Apellido"
             value={Apellido}
-            onChange={e => setApellido (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setApellido(e.target.value)}
+            className="inputField"
             required
           />
         </div>
@@ -144,8 +153,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             id="codigo"
             placeholder="Código"
             value={Codigo}
-            onChange={e => setCodigo (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setCodigo(e.target.value)}
+            className="inputField"
             required
           />
         </div>
@@ -157,8 +166,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             id="email"
             placeholder="Email"
             value={Email}
-            onChange={e => setEmail (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setEmail(e.target.value)}
+            className="inputField"
             required
           />
         </div>
@@ -170,8 +179,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             id="telefono"
             placeholder="Teléfono"
             value={Telefono}
-            onChange={e => setTelefono (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setTelefono(e.target.value)}
+            className="inputField"
           />
         </div>
 
@@ -183,8 +192,8 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             type="date"
             id="fecha"
             value={Fecha}
-            onChange={e => setFecha (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setFecha(e.target.value)}
+            className="inputField"
           />
         </div>
 
@@ -193,10 +202,9 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
           <select
             id="estado"
             value={Estado}
-            onChange={e => setEstado (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setEstado(e.target.value)}
+            className="inputField"
           >
-            <option value="">Seleccione un estado</option>
             <option value="Sí">Sí</option>
             <option value="No">No</option>
           </select>
@@ -210,27 +218,26 @@ const FormUsers = ({buttonForm, user, updateTextButton, getAllUsers}) => {
             placeholder="Rol"
             value={Rol}
             readOnly
-            className="w-full p-2 border rounded"
+            className="inputField"
           />
         </div>
 
         <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">
-            Contraseña
-          </label>
+          <label className="text-gray-700 uppercase font-bold">Contraseña</label>
           <input
             type="password"
             id="password"
             placeholder="Contraseña"
             value={Password}
-            onChange={e => setPassword (e.target.value)}
-            className="w-full p-2 border rounded"
+            onChange={(e) => setPassword(e.target.value)}
+            className="inputField"
+            required // Asegúrate de que la contraseña sea obligatoria si es necesario
           />
         </div>
 
         <button
           type="submit"
-          className={`w-full py-2 px-4 rounded ${buttonForm === 'Actualizar' ? 'bg-[#85c1e9] hover:bg-[#7db8d8]' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+          className={`submitButton ${buttonForm === 'Actualizar' ? 'updateButton' : 'createButton'}`}
         >
           {buttonForm}
         </button>

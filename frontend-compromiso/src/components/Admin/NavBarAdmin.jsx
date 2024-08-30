@@ -3,62 +3,37 @@ import React from "react";
 const NavBarAdministrator = () => {
     return (
         <>
-            {/* <div className="navbar-custom">
+            <div className="navbar-custom bg-light border-bottom">
                 <div className="topbar container-fluid">
                     <div className="d-flex align-items-center gap-lg-2 gap-1">
                         <div className="logo-topbar">
                             <a href="index.html" className="logo-light">
-                                <span className="logo-lg">
-                                    <img src="assets/images/logo.png" alt="logo" />
-                                </span>
-                                <span className="logo-sm">
-                                    <img src="assets/images/logo-sm.png" alt="small logo" />
-                                </span>
+                                <span className="logo-lg">Logo</span>
                             </a>
 
                             <a href="index.html" className="logo-dark">
-                                <span className="logo-lg">
-                                    <img src="assets/images/logo-dark.png" alt="dark logo" />
-                                </span>
-                                <span className="logo-sm">
-                                    <img src="assets/images/logo-dark-sm.png" alt="small logo" />
-                                </span>
+                                <span className="logo-lg">Dark Logo</span>
                             </a>
                         </div>
 
-                        <button className="button-toggle-menu">
+                        <button className="button-toggle-menu bg-secondary text-light">
                             <i className="mdi mdi-menu"></i>
                         </button>
 
                         <button
-                            className="navbar-toggle"
+                            className="navbar-toggle bg-secondary text-light"
                             data-bs-toggle="collapse"
                             data-bs-target="#topnav-menu-content"
                         >
                             <div className="lines">
-                                <span></span>
-                                <span></span>
-                                <span></span>
+                                <span className="line bg-light"></span>
+                                <span className="line bg-light"></span>
+                                <span className="line bg-light"></span>
                             </div>
                         </button>
 
                         <div className="app-search dropdown d-none d-lg-block">
-                            <form>
-                                <div className="input-group">
-                                    <input
-                                        type="search"
-                                        className="form-control dropdown-toggle"
-                                        placeholder="Search..."
-                                        id="top-search"
-                                    />
-                                    <span className="mdi mdi-magnify search-icon"></span>
-                                    <button className="input-group-text btn btn-primary" type="submit">
-                                        Search
-                                    </button>
-                                </div>
-                            </form>
-
-                            <div className="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
+                            <div className="dropdown-menu dropdown-menu-animated dropdown-lg">
                                 <div className="dropdown-header noti-title">
                                     <h5 className="text-overflow mb-2">
                                         Found <span className="text-danger">17</span> results
@@ -87,12 +62,6 @@ const NavBarAdministrator = () => {
                                 <div className="notification-list">
                                     <a href="javascript:void(0);" className="dropdown-item notify-item">
                                         <div className="d-flex">
-                                            <img
-                                                className="d-flex me-2 rounded-circle"
-                                                src="assets/images/users/avatar-2.jpg"
-                                                alt="User Avatar"
-                                                height="32"
-                                            />
                                             <div className="w-100">
                                                 <h5 className="m-0 font-14">Erwin Brown</h5>
                                                 <span className="font-12 mb-0">UI Designer</span>
@@ -102,12 +71,6 @@ const NavBarAdministrator = () => {
 
                                     <a href="javascript:void(0);" className="dropdown-item notify-item">
                                         <div className="d-flex">
-                                            <img
-                                                className="d-flex me-2 rounded-circle"
-                                                src="assets/images/users/avatar-5.jpg"
-                                                alt="User Avatar"
-                                                height="32"
-                                            />
                                             <div className="w-100">
                                                 <h5 className="m-0 font-14">Jacob Deo</h5>
                                                 <span className="font-12 mb-0">Developer</span>
@@ -131,16 +94,6 @@ const NavBarAdministrator = () => {
                             >
                                 <i className="ri-search-line font-22"></i>
                             </a>
-                            <div className="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
-                                <form className="p-3">
-                                    <input
-                                        type="search"
-                                        className="form-control"
-                                        placeholder="Search ..."
-                                        aria-label="Search"
-                                    />
-                                </form>
-                            </div>
                         </li>
 
                         <li className="dropdown">
@@ -152,53 +105,23 @@ const NavBarAdministrator = () => {
                                 aria-haspopup="false"
                                 aria-expanded="false"
                             >
-                                <img
-                                    src="assets/images/flags/us.jpg"
-                                    alt="Language Flag"
-                                    className="me-0 me-sm-1"
-                                    height="12"
-                                />
-                                <span className="align-middle d-none d-lg-inline-block">English</span>
+                                <span className="align-middle d-none d-lg-inline-block">Language</span>
                                 <i className="mdi mdi-chevron-down d-none d-sm-inline-block align-middle"></i>
                             </a>
                             <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated">
                                 <a href="javascript:void(0);" className="dropdown-item">
-                                    <img
-                                        src="assets/images/flags/germany.jpg"
-                                        alt="German Flag"
-                                        className="me-1"
-                                        height="12"
-                                    />
                                     <span className="align-middle">German</span>
                                 </a>
 
                                 <a href="javascript:void(0);" className="dropdown-item">
-                                    <img
-                                        src="assets/images/flags/italy.jpg"
-                                        alt="Italian Flag"
-                                        className="me-1"
-                                        height="12"
-                                    />
                                     <span className="align-middle">Italian</span>
                                 </a>
 
                                 <a href="javascript:void(0);" className="dropdown-item">
-                                    <img
-                                        src="assets/images/flags/spain.jpg"
-                                        alt="Spanish Flag"
-                                        className="me-1"
-                                        height="12"
-                                    />
                                     <span className="align-middle">Spanish</span>
                                 </a>
 
                                 <a href="javascript:void(0);" className="dropdown-item">
-                                    <img
-                                        src="assets/images/flags/russia.jpg"
-                                        alt="Russian Flag"
-                                        className="me-1"
-                                        height="12"
-                                    />
                                     <span className="align-middle">Russian</span>
                                 </a>
                             </div>
@@ -247,24 +170,29 @@ const NavBarAdministrator = () => {
                                                             </div>
                                                         </div>
                                                         <div className="flex-grow-1 text-truncate ms-2">
-                                                            <h6 className="m-0">New comment on your post</h6>
-                                                            <span className="text-muted font-12">10 min ago</span>
+                                                            <h5 className="noti-item-title fw-semibold font-14">Datacorp <small className="fw-normal text-muted ms-1">1 min ago</small></h5>
+                                                            <small className="noti-item-subtitle text-muted">Caleb Flakelar commented on Admin</small>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </a>
 
-                                            <a href="javascript:void(0);" className="dropdown-item p-0 notify-item card shadow-none mb-2">
+                                            <h5 className="text-muted font-13 fw-normal mt-0">Yesterday</h5>
+
+                                            <a href="javascript:void(0);" className="dropdown-item p-0 notify-item card read-noti shadow-none mb-2">
                                                 <div className="card-body">
+                                                    <span className="float-end noti-close-btn text-muted">
+                                                        <i className="mdi mdi-close"></i>
+                                                    </span>
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-shrink-0">
-                                                            <div className="notify-icon bg-secondary">
-                                                                <i className="mdi mdi-account-circle"></i>
+                                                            <div className="notify-icon bg-info">
+                                                                <i className="mdi mdi-thumb-up"></i>
                                                             </div>
                                                         </div>
                                                         <div className="flex-grow-1 text-truncate ms-2">
-                                                            <h6 className="m-0">New user registered</h6>
-                                                            <span className="text-muted font-12">1 hour ago</span>
+                                                            <h5 className="noti-item-title fw-semibold font-14">Admin <small className="fw-normal text-muted ms-1">2 days ago</small></h5>
+                                                            <small className="noti-item-subtitle text-muted">Your recent admin rights have been updated</small>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -272,13 +200,51 @@ const NavBarAdministrator = () => {
                                         </div>
                                     </div>
                                 </div>
+
+                                <a href="javascript:void(0);" className="dropdown-item text-center text-primary notify-item notify-all">
+                                    View all <i className="mdi mdi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </li>
+
+                        <li className="dropdown">
+                            <a
+                                className="nav-link dropdown-toggle nav-user me-0"
+                                data-bs-toggle="dropdown"
+                                href="#"
+                                role="button"
+                                aria-haspopup="false"
+                                aria-expanded="false"
+                            >
+                                <span className="pro-user-name ms-1">Nowak <i className="mdi mdi-chevron-down"></i></span>
+                            </a>
+                            <div className="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown">
+                                <div className="dropdown-header noti-title">
+                                    <h6 className="text-overflow mb-2">Welcome !</h6>
+                                </div>
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="mdi mdi-account-circle"></i>
+                                    <span>My Account</span>
+                                </a>
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="mdi mdi-settings"></i>
+                                    <span>Settings</span>
+                                </a>
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="mdi mdi-lock"></i>
+                                    <span>Lock screen</span>
+                                </a>
+                                <a href="javascript:void(0);" className="dropdown-item notify-item">
+                                    <i className="mdi mdi-logout"></i>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </li>
                     </ul>
                 </div>
-            </div> */}
+            </div>
         </>
     );
-};
+}
 
 export default NavBarAdministrator;

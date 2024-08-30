@@ -9,7 +9,7 @@ const {
   loginUsuario
 } = require('../controllers/usuarioController.js');
 const logger = require('../../../../config/logger.js');
-const checkAuth = require('../../../../middlewares/authMiddleware.js');
+// const checkAuth = require('../../../../middlewares/authMiddleware.js');
 
 const router = express.Router();
 
@@ -33,7 +33,7 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               email:
+ *               Cor_Usuario:
  *                 type: string
  *                 description: Correo electrónico del usuario
  *               password:
@@ -73,19 +73,19 @@ router.post('/login', loginUsuario);
  *               items:
  *                 type: object
  *                 properties:
- *                   id:
+ *                   Id_Usuario:
  *                     type: integer
  *                     description: ID del usuario
- *                   nombre:
+ *                   Nom_Usuario:
  *                     type: string
  *                     description: Nombre del usuario
- *                   email:
+ *                   Cor_Usuario:
  *                     type: string
  *                     description: Correo electrónico del usuario
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/', checkAuth, getUsuarios);
+router.get('/', getUsuarios);
 
 /**
  * @swagger
@@ -108,13 +108,13 @@ router.get('/', checkAuth, getUsuarios);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Usuario:
  *                   type: integer
  *                   description: ID del usuario
- *                 nombre:
+ *                 Nom_Usuario:
  *                   type: string
  *                   description: Nombre del usuario
- *                 email:
+ *                 Cor_Usuario:
  *                   type: string
  *                   description: Correo electrónico del usuario
  *       404:
@@ -122,7 +122,7 @@ router.get('/', checkAuth, getUsuarios);
  *       500:
  *         description: Error interno del servidor
  */
-router.get('/:id', checkAuth, getUsuarioById);
+router.get('/:id', getUsuarioById);
 
 /**
  * @swagger
@@ -137,10 +137,10 @@ router.get('/:id', checkAuth, getUsuarioById);
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Nom_Usuario:
  *                 type: string
  *                 description: Nombre del usuario
- *               email:
+ *               Cor_Usuario:
  *                 type: string
  *                 description: Correo electrónico del usuario
  *               password:
@@ -154,13 +154,13 @@ router.get('/:id', checkAuth, getUsuarioById);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Usuario:
  *                   type: integer
  *                   description: ID del nuevo usuario
- *                 nombre:
+ *                 Nom_Usuario:
  *                   type: string
  *                   description: Nombre del nuevo usuario
- *                 email:
+ *                 Cor_Usuario:
  *                   type: string
  *                   description: Correo electrónico del nuevo usuario
  *       400:
@@ -168,7 +168,7 @@ router.get('/:id', checkAuth, getUsuarioById);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/', checkAuth, createUsuario);
+router.post('/', createUsuario);
 
 /**
  * @swagger
@@ -190,10 +190,10 @@ router.post('/', checkAuth, createUsuario);
  *           schema:
  *             type: object
  *             properties:
- *               nombre:
+ *               Nom_Usuario:
  *                 type: string
  *                 description: Nuevo nombre del usuario
- *               email:
+ *               Cor_Usuario:
  *                 type: string
  *                 description: Nuevo correo electrónico del usuario
  *               password:
@@ -207,13 +207,13 @@ router.post('/', checkAuth, createUsuario);
  *             schema:
  *               type: object
  *               properties:
- *                 id:
+ *                 Id_Usuario:
  *                   type: integer
  *                   description: ID del usuario
- *                 nombre:
+ *                 Nom_Usuario:
  *                   type: string
  *                   description: Nombre actualizado del usuario
- *                 email:
+ *                 Cor_Usuario:
  *                   type: string
  *                   description: Correo electrónico actualizado del usuario
  *       400:
@@ -223,7 +223,7 @@ router.post('/', checkAuth, createUsuario);
  *       500:
  *         description: Error interno del servidor
  */
-router.put('/:id', checkAuth, updateUsuario);
+router.put('/:id', updateUsuario);
 
 /**
  * @swagger
@@ -246,12 +246,12 @@ router.put('/:id', checkAuth, updateUsuario);
  *       500:
  *         description: Error interno del servidor
  */
-router.delete('/:id', checkAuth, deleteUsuario);
+router.delete('/:id', deleteUsuario);
 
-// Middleware para capturar errores
+// Middleware de manejo de errores
 router.use((err, req, res, next) => {
   if (err) {
-    logger.error(`Error: ${err.message}, Ruta: ${req.originalUrl}`);
+    logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
     res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
   } else {
     next();

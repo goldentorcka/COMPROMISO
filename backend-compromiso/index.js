@@ -14,13 +14,13 @@ const areasRouter = require('./src/api/area/routes/areaRoutes.js');
 const unidadesRouter = require('./src/api/unidad/routes/unidadRoutes.js');
 const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
 const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
-// const authRoutes = require('./src/api/auth/routes/authRoutes.js');
+// Nota: La ruta de autenticación ha sido eliminada
 
-// Importa Swagger
+// // Importa Swagger
 const { swaggerDocs, swaggerSetup } = require('./swagger.js');
 
 const app = express();
-const port = process.env.PORT || 3000; 
+const port = process.env.PORT || 3001; 
 
 // Configura CORS
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
@@ -43,11 +43,12 @@ app.get('/', (req, res) => {
   res.send('Bienvenido al API de Compromiso!');
 });
 
-// Ruta de documentación Swagger (sin autenticación)
-app.use('/api-docs', swaggerSetup); // Middleware para servir la interfaz de Swagger
-app.get('/api-docs', swaggerDocs);  // Ruta para acceder a la documentación de Swagger
 
-// Rutas protegidas (con autenticación)
+
+app.use('/api-docs', swaggerDocs, swaggerSetup);
+
+
+// Rutas de la API
 app.use('/api/responsables', responsablesRouter);
 app.use('/api/procesos', procesosRouter);
 app.use('/api/procedimientos', procedimientosRouter);

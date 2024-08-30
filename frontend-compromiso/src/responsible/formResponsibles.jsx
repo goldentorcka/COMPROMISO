@@ -1,22 +1,28 @@
-import { useState, useEffect } from "react";
-import clienteAxios from "../config/axios"; // Corregido el nombre de la importación
-import Alerta from "../components/Alerta";
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../config/axios';
+import Alerta from '../components/Alert/Alerta.jsx';
 import { ReactSession } from 'react-client-session';
+import Swal from 'sweetalert2';
 
-const FormResponsables = ({ buttonForm, responsable, updateTextButton, getAllResponsables }) => {
-  const [Nombre, setNombre] = useState("");
-  const [Estado, setEstado] = useState("");
+const FormResponsables = ({ buttonForm, responsable, getAllResponsables }) => {
+  const [Nom_Responsable, setNom_Responsable] = useState('');
+  const [estado, setEstado] = useState('Sí'); // Valor por defecto
   const [alerta, setAlerta] = useState({});
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-  // Estado para mensajes
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // 'success' o 'error'
+  useEffect(() => {
+    if (responsable) {
+      setNom_Responsable(responsable.Nom_Responsable || '');
+      setEstado(responsable.estado || 'Sí');
+    }
+  }, [responsable]);
 
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
-        setMessage("");
-        setMessageType("");
+        setMessage('');
+        setMessageType('');
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -25,141 +31,102 @@ const FormResponsables = ({ buttonForm, responsable, updateTextButton, getAllRes
 
   const sendForm = async (e) => {
     e.preventDefault();
-    const token = ReactSession.get("token");
+    const token = ReactSession.get('token');
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     };
 
+    const responsableData = {
+      Nom_Responsable,
+      estado,
+    };
+
     try {
       let responseApi;
-      if (buttonForm === "Actualizar") {
-        responseApi = await clienteAxios.put(
-          `/responsables/${responsable.Id_Responsable}`,
-          {
-            Nom_Responsable: Nombre,
-            Estado,
-          },
-          config
-        );
-      } else if (buttonForm === "Enviar") {
-        responseApi = await clienteAxios.post(
-          `/responsables`,
-          {
-            Nom_Responsable: Nombre,
-            Estado,
-          },
-          config
-        );
-      }
-
-      if (responseApi.status === 201 || responseApi.status === 200) {
-        setMessage("Responsable registrado correctamente!");
-        setMessageType("success");
-        clearForm();
-        getAllResponsables();
-        updateTextButton("Enviar");
+      if (buttonForm === 'Actualizar') {
+        responseApi = await clienteAxios.put(`/responsables/${responsable.id}`, responsableData, config);
+        Swal.fire({
+          title: 'Actualización Exitosa',
+          text: 'Responsable actualizado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       } else {
-        setMessage(responseApi.error.message || "Error al registrar el responsable.");
-        setMessageType("error");
+        responseApi = await clienteAxios.post('/responsables', responsableData, config);
+        Swal.fire({
+          title: 'Registro Exitoso',
+          text: 'Responsable registrado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       }
+
+      // Actualiza la tabla con los datos más recientes
+      await getAllResponsables(); // Asegúrate de que esta función sea una función asíncrona
+
+      // Limpia el formulario después de la actualización o registro
+      resetForm();
     } catch (error) {
-      setAlerta({
-        msg: "Todos los campos son obligatorios!",
-        error: true,
-      });
-      setMessageType("error");
+      console.error('Error en la solicitud:', error); // Añadido para depuración
+      if (error.response) {
+        setMessage(`Error: ${error.response.data.message || 'Error al procesar la solicitud'}`);
+      } else if (error.request) {
+        setMessage('Error: No se recibió respuesta del servidor');
+      } else {
+        setMessage('Error al procesar la solicitud');
+      }
+      setMessageType('error');
     }
   };
 
-  const clearForm = () => {
-    setNombre("");
-    setEstado("");
+  const resetForm = () => {
+    setNom_Responsable('');
+    setEstado('Sí');
   };
-
-  const setData = () => {
-    if (responsable) {
-      setNombre(responsable.Nom_Responsable || "");
-      setEstado(responsable.Estado || "");
-    }
-  };
-
-  useEffect(() => {
-    setData();
-  }, [responsable]);
-
-  const { msg } = alerta;
 
   return (
-    <>
-      <div className="flex justify-center items-center min-h-screen bg-gray-100 content-center w-full">
-        <form
-          id="responsableForm"
-          onSubmit={sendForm}
-          className="bg-white shadow-2xl rounded-2xl px-14 pt-6 pb-8 mb-4 max-w-3xl w-full mt-10"
+    <div className="form-container">
+      {message && <Alerta message={message} type={messageType} />}
+      <form onSubmit={sendForm} className="formResponsable">
+        <h2 className="formTitle">Formulario de Responsable</h2>
+        
+        <div className="mb-3">
+          <label className="text-gray-700 uppercase font-bold">Nombre del Responsable</label>
+          <input
+            type="text"
+            id="nom_responsable"
+            placeholder="Nombre del Responsable"
+            value={Nom_Responsable}
+            onChange={(e) => setNom_Responsable(e.target.value)}
+            className="inputField"
+            required
+          />
+        </div>
+
+        <div className="mb-3">
+          <label className="text-gray-700 uppercase font-bold">Estado</label>
+          <select
+            id="estado"
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
+            className="inputField"
+          >
+            <option value="Sí">Sí</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className={`submitButton ${buttonForm === 'Actualizar' ? 'updateButton' : 'createButton'}`}
         >
-          {msg && <Alerta alerta={alerta} />}
-          <h1 className="font-bold text-green-600 text-3xl uppercase text-center my-5">
-            Registrar Responsables
-          </h1>
-
-          {message && (
-            <div className={`p-4 mb-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
-              {message}
-            </div>
-          )}
-
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Nombre
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              placeholder="Nombre"
-              value={Nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
-
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Estado:
-            </label>
-            <select
-              id="estado"
-              value={Estado}
-              onChange={(e) => setEstado(e.target.value)}
-              className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-            >
-              <option value="">Seleccione un Estado:</option>
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
-
-          <div className="flex justify-around">
-            <input
-              type="submit"
-              id="button"
-              value={buttonForm}
-              className="bg-green-600 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-green-700 md:w-auto"
-            />
-            <input
-              type="button"
-              id="button"
-              value="Limpiar"
-              onClick={() => clearForm()}
-              className="bg-yellow-400 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-yellow-500 md:w-auto"
-              aria-label="Limpiar"
-            />
-          </div>
-        </form>
-      </div>
-    </>
+          {buttonForm}
+        </button>
+      </form>
+    </div>
   );
 };
 

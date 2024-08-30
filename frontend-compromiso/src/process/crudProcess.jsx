@@ -1,251 +1,186 @@
-import clienteAxios from "../config/axios.jsx";
-import { useState, useEffect } from "react";
-import { ReactSession } from 'react-client-session';
-import Swal from "sweetalert2";
-import FormProcesses from "../process/formProcess.jsx"; // Asegúrate de tener un componente similar para procesos
-import FormQueryProcesses from "../process/formQueryProcess.jsx"; // Componente para buscar procesos
-import Pagination from "../pagination.jsx";
-import Alerta from "../components/Alerta.jsx";
-
-const URI = "procesos"; // Cambiado el endpoint a 'procesos'
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../api'; // Ajusta la ruta según la ubicación de tu archivo api.js
+import Swal from 'sweetalert2';
+import FormProcesses from './formProcess.jsx';
+import Pagination from '../components/Pagination/Pagination';
 
 const CrudProcesses = () => {
-  const [processList, setProcessList] = useState([]);
-  const [processQuery, setProcessQuery] = useState([]);
-  const [buttonForm, setButtonForm] = useState("Enviar");
-  const [stateAddProcess, setStateAddProcess] = useState(false);
-  const [desde, setDesde] = useState(0);
-  const [hasta, setHasta] = useState(0);
-  const [alerta, setAlerta] = useState({});
-
-  const [process, setProcess] = useState({
+  const [procesosList, setProcesosList] = useState([]);
+  const [proceso, setProceso] = useState({
     Nom_Proceso: "",
     Id_Responsable: "",
-    estado: "",
+    estado: "Sí",
   });
+  const [buttonForm, setButtonForm] = useState("Enviar");
+  const [stateAddProceso, setStateAddProceso] = useState(true);
+  const [desde, setDesde] = useState(0);
+  const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
-    getAllProcesses();
-  }, []);
+    getAllProcesos();
+  }, [desde, hasta]);
 
-  const getAllProcesses = async () => {
-    const token = ReactSession.get("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const getAllProcesos = async () => {
     try {
-      const responseApi = await clienteAxios.get(URI, config); // Ajustado el método a .get
-      if (responseApi.status === 200) {
-        setProcessList(responseApi.data);
-      } else {
-        setAlerta({
-          msg: "Error al cargar los registros!",
-          error: true,
-        });
-      }
+      const response = await clienteAxios.get('/procesos');
+      setProcesosList(response.data);
     } catch (error) {
-      setAlerta({
-        msg: "Error al cargar los registros!",
-        error: true,
-      });
-      console.error(error);
+      console.error("Error al obtener los procesos:", error);
     }
   };
 
-  const getProcess = async (Id_Proceso) => {
-    setButtonForm("Actualizar");
-    const token = ReactSession.get("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const getProceso = async (Id_Proceso) => {
     try {
-      const responseApi = await clienteAxios.get(`${URI}/${Id_Proceso}`, config); // Ajustado el método a .get
-      if (responseApi.status === 200) {
-        setProcess({
-          ...responseApi.data,
-        });
-      } else {
-        setAlerta({
-          msg: "Error al cargar el registro!",
-          error: true,
-        });
-      }
+      const response = await clienteAxios.get(`/procesos/${Id_Proceso}`);
+      setProceso(response.data);
+      setButtonForm("Actualizar");
+      setStateAddProceso(true);
     } catch (error) {
-      setAlerta({
-        msg: "Error al cargar el registro!",
-        error: true,
-      });
-      console.error(error);
+      console.error("Error al obtener el proceso:", error);
     }
   };
 
-  const deleteProcess = (Id_Proceso) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "No podrás revertir esto!",
-      icon: "warning",
+  const deleteProceso = async (Id_Proceso) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás recuperar este registro!",
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, Borrar!",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const token = ReactSession.get("token");
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        try {
-          const responseApi = await clienteAxios.delete(
-            `/${URI}/${Id_Proceso}`,
-            config
-          );
-          if (responseApi.status === 200) {
-            getAllProcesses(); // Refrescar la lista después de borrar
-            Swal.fire({
-              title: "Borrado!",
-              text: "El registro ha sido borrado.",
-              icon: "success",
-            });
-          } else {
-            alert(responseApi.data.message);
-          }
-        } catch (error) {
-          Swal.fire({
-            title: "Error!",
-            text: "Hubo un problema al intentar borrar el registro.",
-            icon: "error",
-          });
-          console.error(error);
-        }
-      }
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo!'
     });
+
+    if (result.isConfirmed) {
+      try {
+        await clienteAxios.delete(`/procesos/${Id_Proceso}`);
+        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+        getAllProcesos();
+      } catch (error) {
+        console.error("Error al eliminar el proceso:", error);
+      }
+    }
   };
 
-  const updateTextButton = (text) => {
-    setButtonForm(text);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (buttonForm === "Enviar") {
+        await clienteAxios.post('/procesos', proceso);
+        Swal.fire('Agregado!', 'El proceso ha sido agregado.', 'success');
+      } else {
+        await clienteAxios.put(`/procesos/${proceso.Id_Proceso}`, proceso);
+        Swal.fire('Actualizado!', 'El proceso ha sido actualizado.', 'success');
+      }
+      resetForm();
+      getAllProcesos();
+      setStateAddProceso(false);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+    }
   };
 
-  const { msg } = alerta;
+  const resetForm = () => {
+    setProceso({
+      Nom_Proceso: "",
+      Id_Responsable: "",
+      estado: "Sí",
+    });
+    setButtonForm("Enviar");
+  };
 
   return (
-    <>
-      <div className="flex justify-end pb-3">
-        <button
-          className="bg-green-600 px-6 py-2 rounded-xl text-white font-bold m-4 flex items-center hover:bg-green-800"
-          onClick={() => {
-            setStateAddProcess(!stateAddProcess);
-          }}
-        >
-          {stateAddProcess ? (
-            <AiOutlineMinusCircle size={16} className="me-2" />
-          ) : (
-            <IoMdPersonAdd size={16} className="me-2" />
-          )}
-          {stateAddProcess ? "Ocultar" : "Agregar"}
-        </button>
-      </div>
-      <div className="overflow-x-auto">
-        <div className="flex justify-between">
-          <div>
-            <h1 className="font-semibold text-lg text-gray-700">
-              Buscar Por Nombre...
-            </h1>
-            <FormQueryProcesses
-              getProcess={getProcess}
-              deleteProcess={deleteProcess}
+    <div style={styles.crudContainer}>
+      <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Procesos</h1>
+      <div style={styles.mainContent}>
+        <div style={styles.contentWrapper}>
+          {stateAddProceso && (
+            <FormProcesses
+              proceso={proceso}
+              setProceso={setProceso}
+              handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              processQuery={processQuery}
-              setProcessQuery={setProcessQuery}
             />
-          </div>
+          )}
+          <table style={styles.procesoTable}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Responsable</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(procesosList) && procesosList.slice(desde, hasta).map((proceso) => (
+                <tr key={proceso.Id_Proceso}>
+                  <td>{proceso.Id_Proceso}</td>
+                  <td>{proceso.Nom_Proceso}</td>
+                  <td>{proceso.Id_Responsable}</td>
+                  <td>{proceso.estado}</td>
+                  <td>
+                    <button style={styles.editButton} onClick={() => getProceso(proceso.Id_Proceso)}>✏️</button>
+                    <button style={styles.deleteButton} onClick={() => deleteProceso(proceso.Id_Proceso)}>🗑️</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Pagination
+            URI="/procesos"
+            setDesde={setDesde}
+            setHasta={setHasta}
+          />
         </div>
-        <hr />
-        {msg && <Alerta alerta={alerta} />}
-        <table className="min-w-full bg-white text-center text-sm">
-          <thead className="text-white bg-green-700">
-            <tr>
-              <th className="py-2 px-4 border-2 border-b-gray-500">ID</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Nombre</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Responsable</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Estado</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(processQuery.length ? processQuery : processList).map(
-              (process, indice) =>
-                indice >= desde && indice < hasta ? (
-                  <tr
-                    key={process.Id_Proceso}
-                    className="odd:bg-white even:bg-gray-100 select-none"
-                  >
-                    <td className="py-2 px-4 border-b">
-                      {process.Id_Proceso}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {process.Nom_Proceso}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {process.Id_Responsable}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {process.estado}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      <button
-                        onClick={() => [
-                          getProcess(process.Id_Proceso),
-                          setStateAddProcess(true),
-                        ]}
-                        className="text-blue-500 hover:text-blue-700 hover:border hover:border-blue-500 mr-3 p-1 rounded"
-                      >
-                        <FaRegEdit />
-                      </button>
-                      <button
-                        onClick={() => deleteProcess(process.Id_Proceso)}
-                        className="text-red-500 hover:text-red-700 hover:border hover:border-red-500 p-1 rounded"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </td>
-                  </tr>
-                ) : null
-            )}
-          </tbody>
-        </table>
       </div>
-      <div className="flex justify-center mt-4">
-        <Pagination
-          desde={desde}
-          setDesde={setDesde}
-          hasta={hasta}
-          setHasta={setHasta}
-          max={processList.length}
-        />
-      </div>
-      {stateAddProcess ? (
-        <FormProcesses
-          process={process}
-          setProcess={setProcess}
-          updateTextButton={updateTextButton}
-          buttonForm={buttonForm}
-          getAllProcesses={getAllProcesses}
-          setStateAddProcess={setStateAddProcess}
-        />
-      ) : null}
-      <Outlet />
-    </>
+    </div>
   );
+};
+
+const styles = {
+  crudContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
+  },
+  mainContent: {
+    width: '100%',
+    maxWidth: '1200px',
+    margin: '0 auto',
+  },
+  contentWrapper: {
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '20px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+  },
+  pageTitle: {
+    fontSize: '32px',
+    fontWeight: 'bold',
+    marginBottom: '20px',
+    textAlign: 'center',
+  },
+  procesoTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    marginBottom: '20px',
+  },
+  editButton: {
+    background: 'none',
+    border: 'none',
+    color: '#3085d6',
+    cursor: 'pointer',
+  },
+  deleteButton: {
+    background: 'none',
+    border: 'none',
+    color: '#d33',
+    cursor: 'pointer',
+    marginLeft: '10px',
+  },
 };
 
 export default CrudProcesses;

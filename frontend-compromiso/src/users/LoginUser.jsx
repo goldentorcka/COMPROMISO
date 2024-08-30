@@ -5,6 +5,8 @@ import clientAxios from "../config/axios.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import { ReactSession } from "react-client-session";
 import "bootstrap/dist/css/bootstrap.min.css";
+import userIcon from "../Public/images/IconLogin/Correo.svg"; 
+import lockIcon from "../Public/images/iconLogin/Password.svg"; 
 
 const LoginFormAdmin = () => {
   const [Cor_Usuario, setCor_Usuario] = useState("");
@@ -42,7 +44,7 @@ const LoginFormAdmin = () => {
     }
 
     try {
-      const url = "/api/usuarios/login"; // Ruta de la API para iniciar sesión
+      const url = "api/usuarios/login"; // Ruta de la API para iniciar sesión
       const { data } = await clientAxios.post(url, {
         Cor_Usuario,
         password,
@@ -52,7 +54,7 @@ const LoginFormAdmin = () => {
       setAuth(data);
 
       if (data.rol === "Administrador") {
-        navigate("/admin"); // Redirige a la página de admin si el rol es "Administrador"
+        navigate("/Administrator"); 
       } else {
         setAlerta({
           msg: "No tienes permisos para acceder al panel de administración.",
@@ -105,7 +107,7 @@ const LoginFormAdmin = () => {
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            <div className="form-group mb-3">
+            <div className="form-group mb-3 position-relative">
               <label htmlFor="email" className="form-label">
                 Correo:
               </label>
@@ -115,11 +117,17 @@ const LoginFormAdmin = () => {
                 placeholder="Aquí su Correo"
                 value={Cor_Usuario}
                 onChange={(e) => setCor_Usuario(e.target.value)}
-                className="form-control"
-                style={{ borderRadius: "5px" }}
+                className="form-control ps-5" // Padding start para el icono
+                style={{ borderRadius: "5px", paddingLeft: "40px" }} // Ajusta el padding-left para el icono
+              />
+              <img
+                src={userIcon}
+                alt="Usuario"
+                className="position-absolute top-50 start-0 translate-middle-y ms-2"
+                style={{ width: "20px", height: "20px", left: "15px" }} // Ajusta la posición y el tamaño del ícono
               />
             </div>
-            <div className="form-group mb-3">
+            <div className="form-group mb-3 position-relative">
               <label htmlFor="password" className="form-label">
                 Contraseña:
               </label>
@@ -129,8 +137,14 @@ const LoginFormAdmin = () => {
                 placeholder="Aquí su Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="form-control"
-                style={{ borderRadius: "5px" }}
+                className="form-control ps-5" // Padding start para el icono
+                style={{ borderRadius: "5px", paddingLeft: "40px" }} // Ajusta el padding-left para el icono
+              />
+              <img
+                src={lockIcon}
+                alt="Contraseña"
+                className="position-absolute top-50 start-0 translate-middle-y ms-2"
+                style={{ width: "20px", height: "20px", left: "10px" }} // Ajusta la posición y el tamaño del ícono
               />
             </div>
             <div className="d-flex justify-content-between align-items-center">
@@ -153,7 +167,7 @@ const LoginFormAdmin = () => {
                 Iniciar Sesión
               </button>
               <Link
-                to="/"
+                to="/Administrator"
                 className="btn mt-3"
                 style={{
                   backgroundColor: "#6c757d",

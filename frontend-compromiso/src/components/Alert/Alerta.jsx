@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import Swal from 'sweetalert2'; // Importar SweetAlert2
+import React, { useEffect } from "react";
+import Swal from "sweetalert2";
 
 function Alerta({ alerta }) {
     useEffect(() => {
-        if (alerta.msg) {
+        if (alerta && alerta.msg) {
             Swal.fire({
                 title: alerta.msg,
                 width: 600,
@@ -16,19 +16,19 @@ function Alerta({ alerta }) {
                   left top
                   no-repeat
                 `,
-                timer: 3000, // Mostrar la alerta por 5 segundos
+                timer: 3000, // Mostrar la alerta por 3 segundos
                 timerProgressBar: true,
                 didOpen: () => {
-                    Swal.showLoading()
+                    Swal.showLoading();
                 },
                 willClose: () => {
-                    Swal.hideLoading()
+                    Swal.hideLoading();
                 }
             });
         }
     }, [alerta]);
 
-    return null; // No es necesario renderizar nada en el componente
+    return null;
 }
 
 export default Alerta;
