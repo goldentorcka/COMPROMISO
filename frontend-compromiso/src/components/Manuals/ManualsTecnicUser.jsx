@@ -3,16 +3,30 @@ import PdfViewer from '../pdf/PdfViewer.jsx';
 import NavMenuPublic from '../Nav/NavMenuPublic'; 
 
 const ManualViewer = ({ techManual, userManual }) => {
+  // Estilos en línea
+  const styles = {
+    manualViewer: {
+      padding: '20px',
+      marginTop: '80px',
+    },
+    manualSection: {
+      marginBottom: '40px',
+    },
+    sectionTitle: {
+      marginBottom: '20px',
+    }
+  };
+
   return (
     <>
       <NavMenuPublic />
-      <div className="manual-viewer" style={{ padding: '20px', marginTop: '80px' }}>
-        <div className="manual-section" style={{ marginBottom: '40px' }}>
-          <h1 style={{ marginBottom: '20px' }}>Manual Técnico</h1>
+      <div style={styles.manualViewer}>
+        <div style={styles.manualSection}>
+          <h1 style={styles.sectionTitle}>Manual Técnico</h1>
           <PdfViewer pdfUrl={techManual} />
         </div>
-        <div className="manual-section">
-          <h1 style={{ marginBottom: '20px' }}>Manual de Usuario</h1>
+        <div style={styles.manualSection}>
+          <h1 style={styles.sectionTitle}>Manual de Usuario</h1>
           <PdfViewer pdfUrl={userManual} />
         </div>
       </div>

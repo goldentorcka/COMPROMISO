@@ -200,7 +200,7 @@ const styles = {
   deleteButton: {
     background: 'none',
     border: 'none',
-    color: '#d33',
+    color: '#d33', 
     cursor: 'pointer',
     marginLeft: '10px',
   },
