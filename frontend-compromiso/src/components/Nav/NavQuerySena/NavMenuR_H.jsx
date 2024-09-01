@@ -44,6 +44,7 @@ const NavMenuReseña = () => {
             color: '#555',
             animation: 'fadeInRight 1s ease-in-out',
             marginBottom: '1rem',
+            textAlign: 'justify',  // Añadido para justificar el texto
         },
         imageContainer: {
             display: 'flex',
@@ -149,17 +150,18 @@ const NavMenuReseña = () => {
                     
                     <p style={styles.paragraph}>
                     Un año después el Centro Agroindustrial del Meta, conformó unos grupos de trabajo para visitar y conocer este modelo en los Centros Agropecuario "La Granja" en el Tolima, La Angostura y Yamboró en el Huila.
-
+                    <br></br>
                     Con estas experiencias se debatió y se diseñó una propuesta de modelo de Sena Empresa con base en la logística y especialidades que tenía el centro, por ello se formaron las Sena empresas de: Agrícola, Pecuaria, Agroindustria, Gestión y de Mecanización.
+                    <br></br>
 
                     La Sena empresa Agrícola, desarrolla diferentes proyectos para hacer las practicas requeridas de las especialidades de Producción Agrícola, Administración de Empresas Agropecuarias y otras especialidades que tienen competencias en estas áreas. Las unidades que actualmente maneja el proceso Sena Empresa son: Anón, Bioinsumos, Cacao, Guadua, Guanábana, Guayaba, Hortalizas, Laboratorio de Biotecnología, Pasifloras, Piña, Postcosecha, Vivero y Yuca.
-
+                    <br></br>
                     La Sena empresa Pecuaria, desarrolla diferentes proyectos para hacer las practicas requeridas de las especialidades de Producción Pecuaria, Administración de Empresas Agropecuarias y otras especialidades que tienen competencias en estas áreas. Las unidades que actualmente maneja el proceso Sena Empresa son: Apicultura, Avicultura, Especies Menores, Ganadería, Laboratorio de Reproducción Animal, Ovinos, Piscicultura y Porcinos.
-
+                    <br></br>
                     La Sena empresa Agroindustria, desarrolla diferentes proyectos para hacer las practicas requeridas de las especialidades de Producción Agroindustria, Control y Calidad y otras especialidades que tienen competencias en estas áreas. Las unidades que actualmente maneja el proceso Sena Empresa son las plantas de: Aguas, Almacén, Cárnicos, Control y Calidad, Frutas, Lácteos y Panificación.
-
+                    <br></br>
                     La Sena empresa Gestión, desarrolla diferentes proyectos para hacer las practicas requeridas de las especialidades de Administración de Empresas Agropecuarias. Las Divisiones que actualmente maneja el proceso Sena Empresa son: Gerente Administrativo y Líder del Sistema de Gestión de la Calidad, Gerente Técnico y Lideres de Producción (Agrícola, Pecuaria, Agroindustria, Mecanización), Líder de Talento Humano y sus Gestores de Talento Humano (Agrícola, Pecuaria, Agroindustria, Mecanización), Líder de Contabilidad y Finanzas, Líder de Mercadeo y De Ventas.
-
+                    <br></br>
                     La Sena empresa Mecanización, desarrolla diferentes proyectos para hacer las practicas requeridas de las especialidades de Mecanización Agrícola. Las unidades que actualmente maneja el proceso Sena Empresa son: Cultivo y Transporte.
 
                     </p>

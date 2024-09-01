@@ -1,23 +1,92 @@
 import React, { useState } from 'react';
 import NavMenuPublic from '../Nav/NavMenuPublic.jsx';
 import imgJulian from '../../../src/Public/images/ImagesMenbersGroup/IMG_Julian_Montaña.jpeg';
-import imgMarlon from '../../../src/Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.png';
-import imgSofia from '../../../src/Public/images/ImagesMenbersGroup/IMG_Sofia_Solano.png';
-import DetailsModal from '../Modal/DetailsModal.jsx'; // Asegúrate de ajustar la ruta según la ubicación del archivo
+import imgMarlon from '../../../src/Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.jpeg';
+import imgSofia1 from '../../../src/Public/images/ImagesMenbersGroup/sofia1.jpeg';
+import imgSofia2 from '../../../src/Public/images/ImagesMenbersGroup/sofia2.jpeg';
+import imgSofia3 from '../../../src/Public/images/ImagesMenbersGroup/sofia3.jpeg';
+import imgJulian1 from '../../../src/Public/images/ImagesMenbersGroup/julia1.jpeg';
+import imgJulian2 from '../../../src/Public/images/ImagesMenbersGroup/julian2.jpeg';
+import imgMarlon2 from '../../../src/Public/images/ImagesMenbersGroup/cumbe.jpeg';
+import imgMarlon3 from '../../../src/Public/images/ImagesMenbersGroup/cumbe2.jpeg';
+import DetailsModal from '../Modal/DetailsModal.jsx';
 
 const ContactUs = () => {
   const [showModal, setShowModal] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
 
-  const handleShow = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+  const handleShow = (member) => {
+    setSelectedMember(member);
+    setShowModal(true);
+  };
 
-  // Array de imágenes para mostrar en el modal
-  const images = [
-    imgJulian,
-    imgMarlon,
-    imgSofia,
-    imgJulian,
-    imgMarlon,
+  const handleClose = () => {
+    setShowModal(false);
+    setSelectedMember(null);
+  };
+
+  // Datos de los miembros
+  const members = [
+    {
+      name: 'Julian Felipe Montaña Ruiz',
+      description: 'ANALISTA Y DESARROLLADOR',
+      carouselItems: [
+        {
+          img: imgJulian,
+          caption: 'Tiene un gran sentido del humor y siempre sabe cómo levantar el ánimo de los demás',
+        },
+        {
+          img: imgJulian1,
+          caption: 'Tiene una personalidad calmada y es el tipo de persona soñada',
+        },
+        {
+          img: imgJulian2,
+          caption: 'Es un apasionado del fitness y la vida saludable.',
+        },
+      ],
+      facebook: 'https://www.facebook.com/share/jq5Ny1Y7GnczcEwM/?mibextid=qi2Omg',
+      instagram: 'https://www.instagram.com/julian_mr18?igsh=MWQ1dXVlOWViM2oxZg==',
+    },
+    {
+      name: 'Marlon Cumbe',
+      description: 'GERENTE',
+      carouselItems: [
+        {
+          img: imgMarlon,
+          caption: ': Es una persona muy organizada y meticulosa',
+        },
+        {
+          img: imgMarlon2,
+          caption: 'Es un gran fanático de la tecnología y siempre está al tanto de las últimas innovaciones.',
+        },
+        {
+          img: imgMarlon3,
+          caption: 'También aprecia pasar tiempo desconectado, disfrutando de la naturaleza y las caminatas largas.',
+        },
+      ],
+      facebook: 'https://www.facebook.com/profile.php?id=61561011352009&mibextid=ZbWKwL',
+      instagram: 'https://www.instagram.com/marlxon69?igsh=MXI4bHo2bjdlZHAxag==',
+    },
+    {
+      name: 'Sofía Solano',
+      description: 'ANALISTA Y DESARROLLADORA',
+      carouselItems: [
+        {
+          img: imgSofia1,
+          caption: 'Es una entusiasta del aprendizaje continuo.',
+        },
+        {
+          img: imgSofia2,
+          caption: ' Es muy intuitiva y tiene una gran habilidad para escuchar a los demás',
+        },
+        {
+          img: imgSofia3,
+          caption: 'Es una persona que se desvive por sus amigos y familiares.',
+        },
+      ],
+      facebook: 'https://www.facebook.com/profile.php?id=61551864178712&mibextid=ZbWKwL',
+      instagram: 'https://www.instagram.com/sofia_ass23?igsh=MTBqYTgxejdiOW44YQ==',
+    }
   ];
 
   return (
@@ -37,217 +106,115 @@ const ContactUs = () => {
           Nuestros Integrantes
         </h1>
         <div className="row">
-          {/* Julian Felipe Montaña Ruiz */}
-          <div className="col-lg-4">
-            <div
-              className="member-card"
-              style={{
-                textAlign: 'center',
-                padding: '20px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                marginBottom: '20px',
-              }}
-            >
-              <img
-                src={imgJulian}
-                alt="Julian Felipe Montaña Ruiz"
-                width="140"
-                height="140"
+          {members.map((member, index) => (
+            <div className="col-lg-4" key={index}>
+              <div
+                className="member-card"
                 style={{
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  backgroundColor: '#e9ecef',
-                  transition: 'background-color 0.3s ease',
-                }}
-              />
-              <h2
-                className="fw-normal"
-                style={{
-                  fontSize: '1.5rem',
-                  marginTop: '15px',
-                  color: '#333',
+                  textAlign: 'center',
+                  padding: '20px',
+                  border: '1px solid #ddd',
+                  borderRadius: '10px',
+                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                  marginBottom: '20px',
                 }}
               >
-                Julian Felipe Montaña Ruiz
-              </h2>
-              <p
-                style={{
-                  color: '#666',
-                  fontSize: '0.9rem',
-                  lineHeight: '1.5',
-                  marginBottom: '15px',
-                }}
-              >
-                Descripción breve del primer integrante del proyecto. Detalles relevantes y funciones.
-              </p>
-              <p>
-                <a
-                  className="btn btn-secondary"
-                  onClick={handleShow}
+                <img
+                  src={member.carouselItems[0].img}
+                  alt={member.name}
+                  width="140"
+                  height="140"
                   style={{
-                    display: 'inline-block',
-                    padding: '10px 20px',
-                    fontSize: '0.9rem',
-                    textDecoration: 'none',
-                    color: '#fff',
-                    backgroundColor: '#007bff',
-                    borderRadius: '5px',
+                    borderRadius: '50%',
+                    objectFit: 'cover',
+                    backgroundColor: '#e9ecef',
                     transition: 'background-color 0.3s ease',
                   }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+                />
+                <h2
+                  className="fw-normal"
+                  style={{
+                    fontSize: '1.5rem',
+                    marginTop: '15px',
+                    color: '#333',
+                  }}
                 >
-                  Ver detalles »
-                </a>
-              </p>
-            </div>
-          </div>
+                  {member.name}
+                </h2>
+                <p
+                  style={{
+                    color: '#666',
+                    fontSize: '0.9rem',
+                    lineHeight: '1.5',
+                    marginBottom: '15px',
+                  }}
+                >
+                  {member.description}
+                </p>
+                <div className="social-buttons" style={{ marginBottom: '15px', textAlign: 'center' }}>
+                  <a 
+                    href={member.facebook} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-block', margin: '0 5px' }}
+                  >
+                    <img 
+                      src="src/Public/images/icons/facebook.png" 
+                      width="30" 
+                      height="30" 
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      alt="Facebook"
+                    />
+                  </a>
+                  <a 
+                    href={member.instagram} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-block', margin: '0 5px' }}
+                  >
+                    <img 
+                      src="src/Public/images/icons/instagram.png" 
+                      width="30" 
+                      height="30" 
+                      style={{ borderRadius: '50%', objectFit: 'cover' }}
+                      alt="Instagram"
+                    />
+                  </a>
+                </div>
 
-          {/* Marlon Cumbe */}
-          <div className="col-lg-4">
-            <div
-              className="member-card"
-              style={{
-                textAlign: 'center',
-                padding: '20px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                marginBottom: '20px',
-              }}
-            >
-              <img
-                src={imgMarlon}
-                alt="Marlon Cumbe"
-                width="140"
-                height="140"
-                style={{
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  backgroundColor: '#e9ecef',
-                  transition: 'background-color 0.3s ease',
-                }}
-              />
-              <h2
-                className="fw-normal"
-                style={{
-                  fontSize: '1.5rem',
-                  marginTop: '15px',
-                  color: '#333',
-                }}
-              >
-                Marlon Cumbe
-              </h2>
-              <p
-                style={{
-                  color: '#666',
-                  fontSize: '0.9rem',
-                  lineHeight: '1.5',
-                  marginBottom: '15px',
-                }}
-              >
-                Descripción breve del segundo integrante del proyecto. Información adicional y responsabilidades.
-              </p>
-              <p>
-                <a
-                  className="btn btn-secondary"
-                  onClick={handleShow}
-                  style={{
-                    display: 'inline-block',
-                    padding: '10px 20px',
-                    fontSize: '0.9rem',
-                    textDecoration: 'none',
-                    color: '#fff',
-                    backgroundColor: '#007bff',
-                    borderRadius: '5px',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-                >
-                  Ver detalles »
-                </a>
-              </p>
+                <p>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleShow(member)}
+                    style={{
+                      display: 'inline-block',
+                      padding: '10px 20px',
+                      fontSize: '0.9rem',
+                      textDecoration: 'none',
+                      color: '#fff',
+                      backgroundColor: '#007bff',
+                      borderRadius: '5px',
+                      transition: 'background-color 0.3s ease',
+                    }}
+                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
+                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
+                  >
+                    Ver detalles »
+                  </button>
+                </p>
+              </div>
             </div>
-          </div>
-
-          {/* Sofía Solano */}
-          <div className="col-lg-4">
-            <div
-              className="member-card"
-              style={{
-                textAlign: 'center',
-                padding: '20px',
-                border: '1px solid #ddd',
-                borderRadius: '10px',
-                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                marginBottom: '20px',
-              }}
-            >
-              <img
-                src={imgSofia}
-                alt="Sofía Solano"
-                width="140"
-                height="140"
-                style={{
-                  borderRadius: '50%',
-                  objectFit: 'cover',
-                  backgroundColor: '#e9ecef',
-                  transition: 'background-color 0.3s ease',
-                }}
-              />
-              <h2
-                className="fw-normal"
-                style={{
-                  fontSize: '1.5rem',
-                  marginTop: '15px',
-                  color: '#333',
-                }}
-              >
-                Sofía Solano
-              </h2>
-              <p
-                style={{
-                  color: '#666',
-                  fontSize: '0.9rem',
-                  lineHeight: '1.5',
-                  marginBottom: '15px',
-                }}
-              >
-                Descripción breve del tercer integrante del proyecto. Experiencia y aportaciones.
-              </p>
-              <p>
-                <a
-                  className="btn btn-secondary"
-                  onClick={handleShow}
-                  style={{
-                    display: 'inline-block',
-                    padding: '10px 20px',
-                    fontSize: '0.9rem',
-                    textDecoration: 'none',
-                    color: '#fff',
-                    backgroundColor: '#007bff',
-                    borderRadius: '5px',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                  onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                  onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-                >
-                  Ver detalles »
-                </a>
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
-
-      {/* Modal para mostrar las imágenes */}
-      <DetailsModal show={showModal} handleClose={handleClose} images={images} />
+      {selectedMember && (
+        <DetailsModal 
+          showModal={showModal} 
+          handleClose={handleClose} 
+          member={selectedMember} 
+        />
+      )}
     </>
   );
 };

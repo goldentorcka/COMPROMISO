@@ -48,10 +48,26 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
     const hastaPagina = Math.min(pagina * registrosPorPagina, numRegistros);
     setHasta(hastaPagina);
 
-    const arregloAuxiliar = Array.from({ length: paginas }, (_, i) =>
-      i + 1 === pagina ? "bg-green-600 text-white" : "bg-white text-gray-800"
-    );
-    setBotones(arregloAuxiliar);
+    // Calcular los botones de paginación a mostrar
+    const rango = 3;
+    let inicio, fin;
+
+    if (paginas <= rango) {
+      inicio = 1;
+      fin = paginas;
+    } else if (pagina <= Math.ceil(rango / 2)) {
+      inicio = 1;
+      fin = rango;
+    } else if (pagina > paginas - Math.floor(rango / 2)) {
+      inicio = paginas - rango + 1;
+      fin = paginas;
+    } else {
+      inicio = pagina - Math.floor(rango / 2);
+      fin = pagina + Math.floor(rango / 2);
+    }
+
+    const botonesArray = Array.from({ length: fin - inicio + 1 }, (_, i) => inicio + i);
+    setBotones(botonesArray);
   };
 
   const anterior = () => {
@@ -67,68 +83,34 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
   };
 
   return (
-    <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-      <div className="flex flex-1 justify-between sm:hidden">
-        <button
-          className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          onClick={anterior}
-        >
-          Anterior
-        </button>
-        <button
-          className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          onClick={siguiente}
-        >
-          Siguiente
-        </button>
-      </div>
-      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-        <div>
-          <p className="text-sm text-gray-700">
-            Mostrando{" "}
-            <span className="font-medium">
-              {(paginaActual - 1) * registrosPorPagina + 1}
-            </span>{" "}
-            a{" "}
-            <span className="font-medium">
-              {Math.min(paginaActual * registrosPorPagina, numRegistros)}
-            </span>{" "}
-            de <span className="font-medium">{numRegistros}</span> registros.
-          </p>
-        </div>
-        <div>
-          <nav
-            aria-label="Pagination"
-            className="isolate inline-flex -space-x-px rounded-md shadow-sm"
+    <div className="flex items-center justify-between px-4 py-3">
+      <button
+        className="relative inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={anterior}
+        disabled={paginaActual === 1}
+      >
+        <ChevronLeftIcon className="h-5 w-5" />
+        <span className="sr-only">Anterior</span>
+      </button>
+      <div className="flex items-center space-x-1">
+        {botones.map((numero) => (
+          <button
+            key={numero}
+            className={`relative inline-flex items-center px-3 py-1.5 text-sm font-medium ${numero === paginaActual ? "bg-green-600 text-white" : "bg-white text-gray-800"} ring-1 ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600`}
+            onClick={() => paginar(numero)}
           >
-            <button
-              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-              onClick={anterior}
-              disabled={paginaActual === 1}
-            >
-              <span className="sr-only">Anterior</span>
-              <ChevronLeftIcon aria-hidden="true" className="h-5 w-5" />
-            </button>
-            {botones.map((valorDeClase, key) => (
-              <li
-                key={key}
-                className={`relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold ${valorDeClase} focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 cursor-pointer ring-1 ring-inset ring-gray-300`}
-                onClick={() => paginar(key + 1)}
-              >
-                {key + 1}
-              </li>
-            ))}
-            <button
-              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-              onClick={siguiente}
-              disabled={paginaActual === paginas}
-            >
-              <span className="sr-only">Siguiente</span>
-              <ChevronRightIcon aria-hidden="true" className="h-5 w-5" />
-            </button>
-          </nav>
-        </div>
+            {numero}
+          </button>
+        ))}
       </div>
+      <button
+        className="relative inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        onClick={siguiente}
+        disabled={paginaActual === paginas}
+      >
+        <ChevronRightIcon className="h-5 w-5" />
+        <span className="sr-only">Siguiente</span>
+      </button>
     </div>
   );
 };

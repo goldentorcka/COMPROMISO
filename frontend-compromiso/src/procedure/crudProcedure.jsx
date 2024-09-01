@@ -4,10 +4,12 @@ import FormProcedure from './formProcedure.jsx';
 
 const CrudProcedure = () => {
   const [procedimientos, setProcedimientos] = useState([]);
+  const [procesos, setProcesos] = useState([]);
   const [current, setCurrent] = useState(null);
 
   useEffect(() => {
     fetchProcedimientos();
+    fetchProcesos(); // Cargar procesos para el formulario
   }, []);
 
   const fetchProcedimientos = async () => {
@@ -23,6 +25,22 @@ const CrudProcedure = () => {
     } catch (error) {
       console.error('Error fetching procedimientos:', error);
       setProcedimientos([]); // Resetea el estado en caso de error
+    }
+  };
+
+  const fetchProcesos = async () => {
+    try {
+      const response = await axios.get('/api/procesos');
+      console.log('Procesos fetched:', response.data);
+      if (Array.isArray(response.data)) {
+        setProcesos(response.data);
+      } else {
+        console.error('La respuesta de la API no es un array');
+        setProcesos([]); // Resetea el estado si la respuesta no es válida
+      }
+    } catch (error) {
+      console.error('Error fetching procesos:', error);
+      setProcesos([]); // Resetea el estado en caso de error
     }
   };
 
@@ -59,6 +77,7 @@ const CrudProcedure = () => {
       <FormProcedure
         current={current}
         onSubmit={handleFormSubmit}
+        procesos={procesos} // Pasar la lista de procesos al formulario
       />
       <table className="procedimiento-table">
         <thead>

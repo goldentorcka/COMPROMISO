@@ -6,11 +6,11 @@ const FormQueryArea = ({ getArea, deleteArea, buttonForm, areaQuery, setAreaQuer
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      // Aquí podrías hacer una llamada a la API para buscar áreas por nombre
+      // Filtra las áreas por nombre en el estado
       const result = areaQuery.filter(a => a.Nom_Area.toLowerCase().includes(search.toLowerCase()));
       setAreaQuery(result);
     } catch (error) {
-      console.error(error);
+      console.error("Error en la búsqueda:", error);
     }
   };
 

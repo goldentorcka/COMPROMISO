@@ -4,8 +4,8 @@ import { ReactSession } from 'react-client-session';
 import Swal from "sweetalert2";
 import FormUnidades from "../unit/formUnits.jsx"; // Componente para el formulario de unidades
 import FormQueryUnidades from "../unit/formQueryUnits.jsx"; // Componente para buscar unidades
-import Pagination from "../pagination.jsx";
-import Alerta from "../components/Alerta.jsx";
+import Pagination from '../components/Pagination/Pagination';
+
 import { AiOutlineMinusCircle } from "react-icons/ai";
 import { IoMdPersonAdd } from "react-icons/io";
 import { FaRegEdit } from "react-icons/fa";
@@ -21,7 +21,6 @@ const CrudUnidades = () => {
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(0);
   const [alerta, setAlerta] = useState({});
-
   const [unidad, setUnidad] = useState({
     Nom_Unidad: "",
     Id_Area: "",
@@ -206,17 +205,17 @@ const CrudUnidades = () => {
                       <button
                         onClick={() => [
                           getUnidad(unidad.Id_Unidad),
-                          setStateAddUnidad(true),
+                          updateTextButton("Actualizar"),
                         ]}
-                        className="text-blue-500 hover:text-blue-700 hover:border hover:border-blue-500 mr-3 p-1 rounded"
+                        className="text-blue-500 hover:text-blue-700 mx-2"
                       >
-                        <FaRegEdit />
+                        <FaRegEdit size={16} />
                       </button>
                       <button
                         onClick={() => deleteUnidad(unidad.Id_Unidad)}
-                        className="text-red-500 hover:text-red-700 hover:border hover:border-red-500 p-1 rounded"
+                        className="text-red-500 hover:text-red-700"
                       >
-                        <MdDeleteOutline />
+                        <MdDeleteOutline size={16} />
                       </button>
                     </td>
                   </tr>
@@ -224,24 +223,22 @@ const CrudUnidades = () => {
             )}
           </tbody>
         </table>
-      </div>
-      <div className="flex justify-center mt-4">
         <Pagination
+          data={unidadQuery.length ? unidadQuery : unidadList}
           desde={desde}
-          setDesde={setDesde}
           hasta={hasta}
+          setDesde={setDesde}
           setHasta={setHasta}
-          max={unidadList.length}
         />
       </div>
       {stateAddUnidad && (
         <FormUnidades
-          unidad={unidad}
           setUnidad={setUnidad}
-          updateTextButton={updateTextButton}
-          buttonForm={buttonForm}
-          getAllUnidades={getAllUnidades}
+          unidad={unidad}
           setStateAddUnidad={setStateAddUnidad}
+          buttonForm={buttonForm}
+          setButtonForm={setButtonForm}
+          getAllUnidades={getAllUnidades}
         />
       )}
     </>

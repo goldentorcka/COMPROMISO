@@ -44,7 +44,8 @@ const LoginFormAdmin = () => {
     }
 
     try {
-      const { data } = await clientAxios.post("/api/usuarios/login", {
+      const url = "/api/usuarios/login"; // Asegúrate de que la ruta esté correctamente configurada en tu servidor
+      const { data } = await clientAxios.post(url, {
         Cor_Usuario,
         password,
       });

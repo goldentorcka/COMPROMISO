@@ -1,7 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 
-const FormProcedure = ({ current, onSubmit }) => {
+const FormProcedure = ({ current, onSubmit, procesos }) => {
   const [formData, setFormData] = useState({
     Nom_Procedimiento: '',
     Id_Proceso: '',
@@ -50,13 +49,19 @@ const FormProcedure = ({ current, onSubmit }) => {
         </div>
         <div className="form-group">
           <label>ID del Proceso:</label>
-          <input
-            type="number"
+          <select
             name="Id_Proceso"
             value={formData.Id_Proceso}
             onChange={handleInputChange}
             required
-          />
+          >
+            <option value="">Selecciona un proceso</option>
+            {procesos.map((proceso) => (
+              <option key={proceso.Id_Proceso} value={proceso.Id_Proceso}>
+                {proceso.Nom_Proceso}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label>Estado:</label>

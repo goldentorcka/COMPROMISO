@@ -1,12 +1,11 @@
 import { useState } from "react";
 
-const FormQueryProcedure = ({ getProcedure, deleteProcedure, buttonForm, procedureQuery, setProcedureQuery }) => {
+const FormQueryProcedure = ({ procedureQuery, setProcedureQuery }) => {
   const [search, setSearch] = useState("");
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     try {
-      // Aquí podrías hacer una llamada a la API para buscar procedimientos por nombre
       const result = procedureQuery.filter(p => p.Nom_Procedimiento.toLowerCase().includes(search.toLowerCase()));
       setProcedureQuery(result);
     } catch (error) {

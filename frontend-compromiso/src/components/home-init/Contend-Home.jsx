@@ -1,5 +1,6 @@
 import React from 'react';
-import NavBarAdministrator from "../Admin/NavBarAdmin.jsx"
+import NavBarAdministrator from "../Admin/NavBarAdmin.jsx";
+
 const Home_init = () => {
     const imageBasePath = '/src/Public/images/imagenHome-Init/';
     const images = [
@@ -45,6 +46,9 @@ const Home_init = () => {
                 opacity: 1,
                 transform: 'translateY(0)',
             }
+        },
+        justifyText: {
+            textAlign: 'justify',
         }
     };
 
@@ -56,12 +60,8 @@ const Home_init = () => {
                         <use xlinkHref="#check2-circle"></use>
                     </svg>
                     <h1 className="text-body-emphasis">¡Bienvenidos!</h1>
-                    <p className="col-lg-6 mx-auto mb-4">
-                        El centro agropecuario “la granja” del SENA Espinal Regional Tolima maneja una gran variedad de formatos para la gestión de la información. Al interior de todas las unidades productivas del centro para los diferentes procesos que maneja. Cuenta con 6 áreas, cada una de estas áreas para la contabilización de la información. Trabaja con subcentros de costos.
-                        En el marco de la estrategia de Sena empresa a la cual convergen todas (ver cuadro No.1) las áreas y unidades productivas del centro en fuente propia, donde cada unidad para sus procesos utiliza formatos, han generado inconvenientes debido a que se maneja de forma aislada e independiente, ocasionando que muchas veces se utilicen formatos desactualizados o 
-                        varias versiones de un mismo formato, por ejemplo cuando una persona del centro requiere un formato tiene que dirigirse a Sena empresa y si no está la persona encargada, no puede obtenerlo, generando que si utiliza un formato a su criterio sin tener cuidado de verificar si es el correcto o la última versión. Otro problema es que hay formatos que se usan en 
-                        físico y otros digital, ocasionando confusión a la hora de requerirlos y usarlos. Por tal razón se decide desarrollar el software “CALGDOCS” en el marco de proyecto formativo del programa Análisis y desarrollo de Software, de la ficha 2671143, como una herramienta que permita dar solución a esta problemática, permitiendo contar con formatos actualizados y 
-                        en línea para que estén disponibles para toda la comunidad del centro.
+                    <p className="col-lg-6 mx-auto mb-4" style={styles.justifyText}>
+                        El centro agropecuario "La Granja" del SENA Espinal Regional Tolima maneja diversos formatos para la gestión de información en sus áreas y unidades productivas. Este manejo disperso genera problemas como el uso de formatos desactualizados y versiones múltiples. Para resolverlo, se ha desarrollado el software "CALGDOCS", una herramienta que centraliza y actualiza los formatos, asegurando su disponibilidad y correcta versión en línea para toda la comunidad del centro.
                     </p>
                     <div style={styles.imageContainer}>
                         {images.map((src, index) => (

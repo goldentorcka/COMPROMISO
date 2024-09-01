@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import clienteAxios from "../config/axios.jsx";
-import { ReactSession } from 'react-client-session';
 import Swal from "sweetalert2";
-import { useEffect } from "react";
-import Alerta from "../components/Alerta.jsx";
+import Alerta from "../components/Alerta.jsx"; // Verifica que esta ruta sea correcta
+import clienteAxios from "../config/axios.jsx"; // Asegúrate de que esta ruta también sea correcta
+import { ReactSession } from "react-client-session"; // Verifica que esta importación esté correcta
 
 const FormUnidades = ({ unidad, setUnidad, updateTextButton, buttonForm, getAllUnidades, setStateAddUnidad }) => {
   const [alerta, setAlerta] = useState({});

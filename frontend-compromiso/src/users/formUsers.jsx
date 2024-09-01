@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clienteAxios from '../config/axios';
 import Alerta from '../components/Alert/Alerta.jsx';
 import { ReactSession } from 'react-client-session';
+import '../css/stylesFormUsers.css';
 import Swal from 'sweetalert2';
 
 const FormUsers = ({ buttonForm, user, getAllUsers }) => {

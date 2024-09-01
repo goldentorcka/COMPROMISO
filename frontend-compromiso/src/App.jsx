@@ -15,7 +15,7 @@ import Init_Admin from "./components/Admin/init-Admin.jsx";
 import CrudResponsables from "./responsible/crudResponsibles.jsx";
 import CrudProcesses from "./process/crudProcess.jsx";
 import CrudProcedure from "./procedure/crudProcedure.jsx";
-import CrudAreas from "./area/crudAreas.jsx";
+import CrudAreas from './area/CrudAreas';
 
 function App() {
   // Actualiza las URLs de los PDFs si están en la carpeta public
@@ -40,6 +40,7 @@ function App() {
           <Route path="/Mision-Vision" element={<NavMenuSE />} />
           <Route path="/Reseña-Historica" element={<ContendR_H />} />
           <Route path="/Administrator" element={<Init_Admin />} />
+
         </Routes>
       </AuthProvider>
     </BrowserRouter>

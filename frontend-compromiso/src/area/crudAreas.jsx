@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api.js'; // Ajusta la ruta según la ubicación de tu archivo api.js
+import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
 import FormAreas from './FormAreas.jsx';
 import Pagination from '../components/Pagination/Pagination';
+import FormQueryArea from './formQueryArea.jsx';
 
 const CrudAreas = () => {
   const [areaList, setAreaList] = useState([]);
@@ -12,6 +13,7 @@ const CrudAreas = () => {
   });
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [stateAddArea, setStateAddArea] = useState(true);
+  const [stateAreaQuery, setStateAreaQuery] = useState([]);
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
 
@@ -23,6 +25,7 @@ const CrudAreas = () => {
     try {
       const response = await clienteAxios.get('/areas');
       setAreaList(response.data);
+      setStateAreaQuery(response.data);
     } catch (error) {
       console.error("Error al obtener las áreas:", error);
     }
@@ -84,23 +87,30 @@ const CrudAreas = () => {
       estado: "Sí",
     });
     setButtonForm("Enviar");
-    setStateAddArea(false); // Oculta el formulario
+    setStateAddArea(false);
   };
 
   return (
-    <>
-      <div style={styles.crudContainer}>
-        <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Áreas</h1>
-        <div style={styles.mainContent}>
-          <div style={styles.contentWrapper}>
-            {stateAddArea && (
-              <FormAreas
-                area={area}
-                setArea={setArea}
-                handleSubmit={handleSubmit}
-                buttonForm={buttonForm}
-              />
-            )}
+    <div style={styles.crudContainer}>
+      <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Áreas</h1>
+      <div style={styles.mainContent}>
+        <div style={styles.contentWrapper}>
+          <FormQueryArea 
+            getArea={getArea} 
+            deleteArea={deleteArea}
+            buttonForm={buttonForm} 
+            areaQuery={stateAreaQuery} 
+            setAreaQuery={setStateAreaQuery}
+          />
+          {stateAddArea && (
+            <FormAreas
+              area={area}
+              setArea={setArea}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+            />
+          )}
+          <div style={styles.tableWrapper}>
             <table style={styles.areaTable}>
               <thead>
                 <tr>
@@ -111,7 +121,7 @@ const CrudAreas = () => {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(areaList) && areaList.slice(desde, hasta).map((area) => (
+                {Array.isArray(stateAreaQuery) && stateAreaQuery.slice(desde, hasta).map((area) => (
                   <tr key={area.Id_Area}>
                     <td>{area.Id_Area}</td>
                     <td>{area.Nom_Area}</td>
@@ -132,8 +142,7 @@ const CrudAreas = () => {
           </div>
         </div>
       </div>
-    </>
-    
+    </div>
   );
 };
 
@@ -143,11 +152,14 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     padding: '20px',
+    backgroundColor: '#f4f4f9',
+    minHeight: '100vh',
   },
   mainContent: {
     width: '100%',
     maxWidth: '1200px',
     margin: '0 auto',
+    padding: '20px',
   },
   contentWrapper: {
     border: '1px solid #ddd',
@@ -161,24 +173,63 @@ const styles = {
     fontWeight: 'bold',
     marginBottom: '20px',
     textAlign: 'center',
+    color: '#333',
+  },
+  tableWrapper: {
+    marginTop: '20px',
   },
   areaTable: {
     width: '100%',
     borderCollapse: 'collapse',
     marginBottom: '20px',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+  },
+  areaTableHeader: {
+    backgroundColor: '#f5f5f5',
+    color: '#333',
+    fontWeight: 'bold',
+  },
+  areaTableRow: {
+    borderBottom: '1px solid #ddd',
+  },
+  areaTableCell: {
+    padding: '12px',
+    textAlign: 'left',
   },
   editButton: {
-    background: 'none',
+    backgroundColor: '#4caf50',
     border: 'none',
-    color: '#3085d6',
+    color: 'white',
+    padding: '8px 12px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    borderRadius: '4px',
     cursor: 'pointer',
+    marginRight: '5px',
+    transition: 'background-color 0.3s',
   },
   deleteButton: {
-    background: 'none',
+    backgroundColor: '#f44336',
     border: 'none',
-    color: '#d33',
+    color: 'white',
+    padding: '8px 12px',
+    textAlign: 'center',
+    textDecoration: 'none',
+    display: 'inline-block',
+    fontSize: '16px',
+    borderRadius: '4px',
     cursor: 'pointer',
-    marginLeft: '10px',
+    transition: 'background-color 0.3s',
+  },
+  buttonHover: {
+    backgroundColor: '#45a049', // Color para el botón editar en hover
+  },
+  buttonHoverDelete: {
+    backgroundColor: '#e53935', // Color para el botón eliminar en hover
   },
 };
 

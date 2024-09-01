@@ -1,30 +1,35 @@
 import React from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Carousel } from 'react-bootstrap';
+import './DetailsModal.css'; // Asegúrate de importar el archivo CSS
 
+const DetailsModal = ({ showModal, handleClose, member }) => {
+  if (!member) return null;
 
-const DetailsModal = ({ show, handleClose, images }) => {
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={showModal} onHide={handleClose} size="lg" centered>
       <Modal.Header closeButton>
-        <Modal.Title>Detalles de Julian Felipe Montaña Ruiz</Modal.Title>
+        <Modal.Title>{member.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <div className="d-flex flex-wrap justify-content-center">
-          {images.map((img, index) => (
-            <div key={index} style={{ margin: '10px' }}>
-              <img
-                src={img}
-                alt={`Detalle ${index + 1}`}
-                width="150"
-                height="150"
-                style={{
-                  borderRadius: '10px',
-                  objectFit: 'cover',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                }}
-              />
-            </div>
+        {/* Carrusel con deslizamiento automático */}
+        <Carousel interval={3000} controls={false} indicators={true} pause={false}>
+          {member.carouselItems.map((item, index) => (
+            <Carousel.Item key={index}>
+              <div className="carousel-image-container">
+                <img
+                  className="carousel-image"
+                  src={item.img}
+                  alt={`Slide ${index}`}
+                />
+                <div className="carousel-description">
+                  {item.caption}
+                </div>
+              </div>
+            </Carousel.Item>
           ))}
+        </Carousel>
+        <div className="member-info" style={{ marginTop: '20px' }}>
+          {/* Esta parte muestra la descripción del miembro */}
         </div>
       </Modal.Body>
       <Modal.Footer>
