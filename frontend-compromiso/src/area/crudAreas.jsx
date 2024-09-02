@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormAreas from './FormAreas.jsx';
 import Pagination from '../components/Pagination/Pagination';
-import FormQueryArea from './formQueryArea.jsx';
+import FormAreas from './FormAreas.jsx';
+import FormQueryArea from './FormQueryArea.jsx';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
 
 const CrudAreas = () => {
   const [areaList, setAreaList] = useState([]);
   const [area, setArea] = useState({
-    Nom_Area: "",
-    estado: "Sí",
+    Nom_Area: '',
+    estado: 'Sí',
   });
-  const [buttonForm, setButtonForm] = useState("Enviar");
-  const [stateAddArea, setStateAddArea] = useState(true);
-  const [stateAreaQuery, setStateAreaQuery] = useState([]);
+  const [areaQuery, setAreaQuery] = useState([]);
+  const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
 
@@ -25,9 +25,9 @@ const CrudAreas = () => {
     try {
       const response = await clienteAxios.get('/areas');
       setAreaList(response.data);
-      setStateAreaQuery(response.data);
+      setAreaQuery(response.data); // Inicializar areaQuery con todas las áreas
     } catch (error) {
-      console.error("Error al obtener las áreas:", error);
+      console.error('Error al obtener las áreas:', error);
     }
   };
 
@@ -35,17 +35,16 @@ const CrudAreas = () => {
     try {
       const response = await clienteAxios.get(`/areas/${Id_Area}`);
       setArea(response.data);
-      setButtonForm("Actualizar");
-      setStateAddArea(true);
+      setButtonForm('Actualizar');
     } catch (error) {
-      console.error("Error al obtener el área:", error);
+      console.error('Error al obtener el área:', error);
     }
   };
 
   const deleteArea = async (Id_Area) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
-      text: "¡No podrás recuperar este registro!",
+      text: '¡No podrás recuperar este registro!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -59,7 +58,7 @@ const CrudAreas = () => {
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllAreas();
       } catch (error) {
-        console.error("Error al eliminar el área:", error);
+        console.error('Error al eliminar el área:', error);
       }
     }
   };
@@ -67,7 +66,7 @@ const CrudAreas = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (buttonForm === "Enviar") {
+      if (buttonForm === 'Enviar') {
         await clienteAxios.post('/areas', area);
         Swal.fire('Agregado!', 'El área ha sido agregada.', 'success');
       } else {
@@ -77,40 +76,36 @@ const CrudAreas = () => {
       resetForm();
       getAllAreas();
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
+      console.error('Error al enviar el formulario:', error);
     }
   };
 
   const resetForm = () => {
     setArea({
-      Nom_Area: "",
-      estado: "Sí",
+      Nom_Area: '',
+      estado: 'Sí',
     });
-    setButtonForm("Enviar");
-    setStateAddArea(false);
+    setButtonForm('Enviar');
   };
 
   return (
     <div style={styles.crudContainer}>
-      <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Áreas</h1>
+      <SidebarAdministrator />
       <div style={styles.mainContent}>
+        <h1 style={styles.pageTitle}>Gestión de Áreas</h1>
         <div style={styles.contentWrapper}>
-          <FormQueryArea 
-            getArea={getArea} 
-            deleteArea={deleteArea}
-            buttonForm={buttonForm} 
-            areaQuery={stateAreaQuery} 
-            setAreaQuery={setStateAreaQuery}
+          <FormAreas
+            area={area}
+            setArea={setArea}
+            handleSubmit={handleSubmit}
+            buttonForm={buttonForm}
+            resetForm={resetForm}
           />
-          {stateAddArea && (
-            <FormAreas
-              area={area}
-              setArea={setArea}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-            />
-          )}
           <div style={styles.tableWrapper}>
+            <FormQueryArea
+              areaQuery={areaQuery}
+              setAreaQuery={setAreaQuery}
+            />
             <table style={styles.areaTable}>
               <thead>
                 <tr>
@@ -121,17 +116,28 @@ const CrudAreas = () => {
                 </tr>
               </thead>
               <tbody>
-                {Array.isArray(stateAreaQuery) && stateAreaQuery.slice(desde, hasta).map((area) => (
-                  <tr key={area.Id_Area}>
-                    <td>{area.Id_Area}</td>
-                    <td>{area.Nom_Area}</td>
-                    <td>{area.estado}</td>
-                    <td>
-                      <button style={styles.editButton} onClick={() => getArea(area.Id_Area)}>✏️</button>
-                      <button style={styles.deleteButton} onClick={() => deleteArea(area.Id_Area)}>🗑️</button>
-                    </td>
-                  </tr>
-                ))}
+                {Array.isArray(areaQuery) &&
+                  areaQuery.slice(desde, hasta).map((area) => (
+                    <tr key={area.Id_Area}>
+                      <td>{area.Id_Area}</td>
+                      <td>{area.Nom_Area}</td>
+                      <td>{area.estado}</td>
+                      <td>
+                        <button
+                          style={styles.editButton}
+                          onClick={() => getArea(area.Id_Area)}
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          style={styles.deleteButton}
+                          onClick={() => deleteArea(area.Id_Area)}
+                        >
+                          🗑️
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
             <Pagination
@@ -149,24 +155,12 @@ const CrudAreas = () => {
 const styles = {
   crudContainer: {
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+  },
+  mainContent: {
+    flex: 1,
     padding: '20px',
     backgroundColor: '#f4f4f9',
     minHeight: '100vh',
-  },
-  mainContent: {
-    width: '100%',
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '20px',
-  },
-  contentWrapper: {
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    padding: '20px',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   },
   pageTitle: {
     fontSize: '32px',
@@ -174,6 +168,13 @@ const styles = {
     marginBottom: '20px',
     textAlign: 'center',
     color: '#333',
+  },
+  contentWrapper: {
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '20px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
   },
   tableWrapper: {
     marginTop: '20px',
@@ -185,18 +186,6 @@ const styles = {
     borderRadius: '8px',
     overflow: 'hidden',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-  },
-  areaTableHeader: {
-    backgroundColor: '#f5f5f5',
-    color: '#333',
-    fontWeight: 'bold',
-  },
-  areaTableRow: {
-    borderBottom: '1px solid #ddd',
-  },
-  areaTableCell: {
-    padding: '12px',
-    textAlign: 'left',
   },
   editButton: {
     backgroundColor: '#4caf50',
@@ -224,12 +213,6 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     transition: 'background-color 0.3s',
-  },
-  buttonHover: {
-    backgroundColor: '#45a049', // Color para el botón editar en hover
-  },
-  buttonHoverDelete: {
-    backgroundColor: '#e53935', // Color para el botón eliminar en hover
   },
 };
 

@@ -9,7 +9,6 @@ const {
   loginUsuario
 } = require('../controllers/usuarioController.js');
 const logger = require('../../../../config/logger.js');
-// const checkAuth = require('../../../../middlewares/authMiddleware.js');
 
 const router = express.Router();
 
@@ -55,7 +54,25 @@ const router = express.Router();
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', loginUsuario);
+router.post('/login', async (req, res) => {
+  const { Cor_Usuario, password } = req.body;
+
+  try {
+    // Llamar al controlador de login para validar las credenciales
+    const usuario = await loginUsuario(Cor_Usuario, password);
+
+    if (usuario) {
+      // Redirigir a la página del admin si las credenciales son correctas
+      res.redirect('/admin');
+    } else {
+      // Enviar mensaje de error si las credenciales son incorrectas
+      res.status(401).json({ error: 'Credenciales inválidas' });
+    }
+  } catch (err) {
+    logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
+    res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
+  }
+});
 
 /**
  * @swagger

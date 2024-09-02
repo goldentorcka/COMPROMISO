@@ -5,7 +5,7 @@ import { ReactSession } from 'react-client-session';
 import '../css/stylesFormUsers.css';
 import Swal from 'sweetalert2';
 
-const FormUsers = ({ buttonForm, user, getAllUsers }) => {
+const FormUser = ({ buttonForm, user, getAllUsers }) => {
   const [Nombre, setNombre] = useState('');
   const [Apellido, setApellido] = useState('');
   const [Codigo, setCodigo] = useState('');
@@ -85,10 +85,8 @@ const FormUsers = ({ buttonForm, user, getAllUsers }) => {
         });
       }
 
-      // Actualiza la tabla con los datos más recientes
       await getAllUsers(); // Asegúrate de que esta función sea una función asíncrona
 
-      // Limpia el formulario después de la actualización o registro
       resetForm();
     } catch (error) {
       console.error('Error en la solicitud:', error); // Añadido para depuración
@@ -246,4 +244,4 @@ const FormUsers = ({ buttonForm, user, getAllUsers }) => {
   );
 };
 
-export default FormUsers;
+export default FormUser;

@@ -1,11 +1,11 @@
 import Ract from "react"
 import SidebarAdministrator from "./SidebarAdministrator.jsx"
-import NavBarAdministrator from "./NavBarAdmin.jsx"
+// import NavBarAdministrator from "./NavBarAdmin.jsx"
 const Init_Admin = () => {
     return(
         <>  
             <div className="">
-                <NavBarAdministrator/>
+                {/* <NavBarAdministrator/> */}
                 <SidebarAdministrator />
             </div>
         </>

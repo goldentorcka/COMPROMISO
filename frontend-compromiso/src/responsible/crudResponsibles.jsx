@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js'; // Ajusta la ruta según la ubicación de tu archivo api.js
 import Swal from 'sweetalert2';
-import FormResponsables from './formResponsibles.jsx'; // Asegúrate de tener un componente similar para el formulario
-import Pagination from '../components/Pagination/pagination.jsx';
+import FormQueryResponsables from './formQueryResponsibles.jsx'; // Asegúrate de tener un componente de formulario para responsables
+import Pagination from '../components/Pagination/Pagination';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
   const [responsable, setResponsable] = useState({
     Nom_Responsable: "",
-    estado: "Sí", // Valor predeterminado
+    estado: "Sí", // Valor predeterminado para el estado
   });
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [stateAddResponsable, setStateAddResponsable] = useState(true);
@@ -82,52 +83,55 @@ const CrudResponsables = () => {
   const resetForm = () => {
     setResponsable({
       Nom_Responsable: "",
-      estado: "Sí", // Valor predeterminado
+      estado: "Sí",
     });
     setButtonForm("Enviar");
   };
 
   return (
-    <div style={styles.crudContainer}>
-      <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Responsables</h1>
-      <div style={styles.mainContent}>
-        <div style={styles.contentWrapper}>
-          {stateAddResponsable && (
-            <FormResponsables
-              responsable={responsable}
-              setResponsable={setResponsable}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-            />
-          )}
-          <table style={styles.responsableTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(responsableList) && responsableList.slice(desde, hasta).map((resp) => (
-                <tr key={resp.Id_Responsable}>
-                  <td>{resp.Id_Responsable}</td>
-                  <td>{resp.Nom_Responsable}</td>
-                  <td>{resp.estado}</td>
-                  <td>
-                    <button style={styles.editButton} onClick={() => getResponsable(resp.Id_Responsable)}>✏️</button>
-                    <button style={styles.deleteButton} onClick={() => deleteResponsable(resp.Id_Responsable)}>🗑️</button>
-                  </td>
+    <div style={{ display: 'flex' }}>
+      <SidebarAdministrator />
+      <div style={styles.crudContainer}>
+        <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Responsables</h1>
+        <div style={styles.mainContent}>
+          <div style={styles.contentWrapper}>
+            {stateAddResponsable && (
+              <FormQueryResponsables
+                responsable={responsable}
+                setResponsable={setResponsable}
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+              />
+            )}
+            <table style={styles.responsableTable}>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre Responsable</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            URI="/responsables"
-            setDesde={setDesde}
-            setHasta={setHasta}
-          />
+              </thead>
+              <tbody>
+                {Array.isArray(responsableList) && responsableList.slice(desde, hasta).map((responsable) => (
+                  <tr key={responsable.Id_Responsable}>
+                    <td>{responsable.Id_Responsable}</td>
+                    <td>{responsable.Nom_Responsable}</td>
+                    <td>{responsable.estado}</td>
+                    <td>
+                      <button style={styles.editButton} onClick={() => getResponsable(responsable.Id_Responsable)}>✏️</button>
+                      <button style={styles.deleteButton} onClick={() => deleteResponsable(responsable.Id_Responsable)}>🗑️</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <Pagination
+              URI="/responsables"
+              setDesde={setDesde}
+              setHasta={setHasta}
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -136,9 +140,7 @@ const CrudResponsables = () => {
 
 const styles = {
   crudContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    flex: 1,
     padding: '20px',
   },
   mainContent: {
@@ -173,7 +175,7 @@ const styles = {
   deleteButton: {
     background: 'none',
     border: 'none',
-    color: '#d33',
+    color: '#d33', 
     cursor: 'pointer',
     marginLeft: '10px',
   },

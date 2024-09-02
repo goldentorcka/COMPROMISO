@@ -11,7 +11,7 @@ const sidebarStyle = {
 
 const navLinkStyle = {
   color: '#ffffff',
-  transition: 'background-color 0.3s, color 0.3s',
+  transition: 'background-color 0.3s, color 0.3s, transform 0.3s',
   display: 'flex',
   alignItems: 'center',
   gap: '10px',
@@ -22,15 +22,17 @@ const navLinkStyle = {
 const navLinkHoverStyle = {
   backgroundColor: '#61dafb',
   color: '#282c34',
+  transform: 'translateX(10px)',
 };
 
 const iconStyle = {
   color: '#ffffff',
-  transition: 'color 0.3s',
+  transition: 'color 0.3s, transform 0.3s',
 };
 
 const iconHoverStyle = {
   color: '#282c34',
+  transform: 'scale(1.2)',
 };
 
 const offcanvasHeaderStyle = {
@@ -58,50 +60,50 @@ const SidebarAdministrator = () => {
           <div className="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
             <ul className="nav flex-column">
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2 active" to="/" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faTachometerAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2 active" to="/" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faTachometerAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   Dashboard
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/CrudUsers" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faUsers} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/CrudUsers" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faUsers} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD USUARIOS
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Responsables" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faUserShield} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Responsables" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faUserShield} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD RESPONSABLES
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Areas" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faBuilding} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Areas" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faBuilding} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD AREAS
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Unidades" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faLayerGroup} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Unidades" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faLayerGroup} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD UNIDADES
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Procesos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faProjectDiagram} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Procesos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faProjectDiagram} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD PROCESOS
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Procedimientos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faFileAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Procedimientos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faFileAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD PROCEDIMIENTO
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="/Formatos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faCogs} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/Formatos" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faCogs} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   CRUD FORMATOS
                 </Link>
               </li>
@@ -111,14 +113,14 @@ const SidebarAdministrator = () => {
 
             <ul className="nav flex-column mb-auto">
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="#" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faCogs} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="#" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faCogs} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   Settings
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link d-flex align-items-center gap-2" to="login-admin" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}}>
-                  <FontAwesomeIcon icon={faSignOutAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} />
+                <Link className="nav-link d-flex align-items-center gap-2" to="/login-admin" style={navLinkStyle} onMouseEnter={(e) => e.currentTarget.style = {...navLinkStyle, ...navLinkHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = navLinkStyle}>
+                  <FontAwesomeIcon icon={faSignOutAlt} style={iconStyle} onMouseEnter={(e) => e.currentTarget.style = {...iconStyle, ...iconHoverStyle}} onMouseLeave={(e) => e.currentTarget.style = iconStyle} />
                   Sign out
                 </Link>
               </li>
@@ -126,7 +128,7 @@ const SidebarAdministrator = () => {
           </div>
         </div>
       </div>
-    </>  
+    </>
   );
 };
 

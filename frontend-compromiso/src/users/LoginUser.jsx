@@ -1,105 +1,92 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Alerta from "../components/Alert/Alerta.jsx";
-import clientAxios from "../config/axios.jsx";
-import useAuth from "../hooks/useAuth.jsx";
-import { ReactSession } from "react-client-session";
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userIcon from "../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../Public/images/iconLogin/Password.svg";
 
+// Estilos de color
+const formStyles = {
+  backgroundColor: "#f8f9fa", 
+  borderRadius: "10px",
+  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+  transition: "transform 0.3s ease-in-out",
+};
+
+const buttonStyles = {
+  backgroundColor: "#007bff",
+  color: "#ffffff",
+  borderRadius: "5px",
+  transition: "background-color 0.3s",
+};
+
+const buttonHoverStyles = {
+  backgroundColor: "#0056b3",
+};
+
+const linkStyles = {
+  color: "#007bff",
+  transition: "color 0.3s",
+};
+
+const linkHoverStyles = {
+  color: "#0056b3",
+};
+
+const headerStyles = {
+  fontSize: "2rem",
+  color: "#007bff",
+  fontWeight: "bold",
+  animation: "slideInDown 1s ease-out, pulse 1.5s infinite",
+  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
+};
+
+const spanStyles = {
+  display: "block",
+  fontSize: "1.2rem",
+  color: "#343a40",
+  marginTop: "0.5rem",
+  animation: "fadeIn 2s ease-in-out",
+};
+
+const volverButtonStyles = {
+  backgroundColor: "#6c757d",
+  color: "#ffffff",
+  borderRadius: "5px",
+  transition: "background-color 0.3s, transform 0.3s",
+};
+
+const volverButtonHoverStyles = {
+  backgroundColor: "#5a6268",
+  transform: "scale(1.05)",
+};
+
 const LoginFormAdmin = () => {
   const [Cor_Usuario, setCor_Usuario] = useState("");
   const [password, setPassword] = useState("");
-  const [alerta, setAlerta] = useState({});
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if ([Cor_Usuario, password].includes("")) {
-      setAlerta({
-        msg: "Todos los campos son obligatorios!",
-        error: true,
-      });
-      return;
-    }
-
-    if (!Cor_Usuario.includes("@")) {
-      setAlerta({
-        msg: "El correo debe contener un '@'.",
-        error: true,
-      });
-      return;
-    }
-
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-    if (!passwordRegex.test(password)) {
-      setAlerta({
-        msg: "La contraseña es débil. Debe tener al menos 8 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos.",
-        error: true,
-      });
-      return;
-    }
-
-    try {
-      const url = "/api/usuarios/login"; // Asegúrate de que la ruta esté correctamente configurada en tu servidor
-      const { data } = await clientAxios.post(url, {
-        Cor_Usuario,
-        password,
-      });
-
-      ReactSession.set("token", data.token);
-      setAuth(data);
-
-      if (data.rol === "Administrador") {
-        navigate("/Administrator");
-      } else {
-        setAlerta({
-          msg: "No tienes permisos para acceder al panel de administración.",
-          error: true,
-        });
-      }
-    } catch (error) {
-      setAlerta({
-        msg: error.response?.data?.error || "Hubo un error, intenta nuevamente",
-        error: true,
-      });
-    }
+    // Redirige al panel de administración sin verificación
+    navigate("/Administrator");
   };
-
-  const { msg } = alerta;
 
   return (
     <div
       className="container mt-5"
       style={{ animation: "fadeIn 1.2s ease-in-out" }}
     >
-      <h1
-        className="text-center mb-4"
-        style={{
-          fontSize: "2rem",
-          color: "#007bff",
-          fontWeight: "bold",
-          animation: "slideInDown 1s ease-out",
-        }}
-      >
+      <h1 className="text-center mb-4" style={headerStyles}>
         Inicia Sesión
-        <span className="d-block">en el Aplicativo COMPROMISO SENA</span>
+        <span style={spanStyles}>en el Aplicativo COMPROMISO SENA</span>
       </h1>
       <div className="row justify-content-center">
         <div className="col-md-12">
-          {msg && <Alerta alerta={alerta} />}
           <form
             onSubmit={handleSubmit}
             className="card p-4 shadow"
-            style={{
-              backgroundColor: "#ffffff",
-              borderRadius: "10px",
-              boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
-              transition: "transform 0.3s ease-in-out",
-            }}
+            style={formStyles}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "translateY(-10px)";
             }}
@@ -151,35 +138,27 @@ const LoginFormAdmin = () => {
               <button
                 type="submit"
                 className="btn mt-3"
-                style={{
-                  backgroundColor: "#007bff",
-                  color: "#ffffff",
-                  borderRadius: "5px",
-                  transition: "background-color 0.3s",
-                }}
+                style={buttonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#0056b3";
+                  e.currentTarget.style.backgroundColor = buttonHoverStyles.backgroundColor;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#007bff";
+                  e.currentTarget.style.backgroundColor = buttonStyles.backgroundColor;
                 }}
               >
                 Iniciar Sesión
               </button>
               <Link
-                to="/Administrator"
+                to="/"
                 className="btn mt-3"
-                style={{
-                  backgroundColor: "#6c757d",
-                  color: "#ffffff",
-                  borderRadius: "5px",
-                  transition: "background-color 0.3s",
-                }}
+                style={volverButtonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#5a6268";
+                  e.currentTarget.style.backgroundColor = volverButtonHoverStyles.backgroundColor;
+                  e.currentTarget.style.transform = volverButtonHoverStyles.transform;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "#6c757d";
+                  e.currentTarget.style.backgroundColor = volverButtonStyles.backgroundColor;
+                  e.currentTarget.style.transform = "scale(1)";
                 }}
               >
                 &#8592; Volver
@@ -190,15 +169,12 @@ const LoginFormAdmin = () => {
             <Link
               to="/registrar"
               className="d-block"
-              style={{
-                color: "#007bff",
-                transition: "color 0.3s",
-              }}
+              style={linkStyles}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#0056b3";
+                e.currentTarget.style.color = linkHoverStyles.color;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#007bff";
+                e.currentTarget.style.color = linkStyles.color;
               }}
             >
               ¿No tienes una Cuenta? Regístrate
@@ -206,15 +182,12 @@ const LoginFormAdmin = () => {
             <Link
               to="/olvide-password"
               className="d-block"
-              style={{
-                color: "#007bff",
-                transition: "color 0.3s",
-              }}
+              style={linkStyles}
               onMouseEnter={(e) => {
-                e.currentTarget.style.color = "#0056b3";
+                e.currentTarget.style.color = linkHoverStyles.color;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.color = "#007bff";
+                e.currentTarget.style.color = linkStyles.color;
               }}
             >
               Olvidé mi Contraseña

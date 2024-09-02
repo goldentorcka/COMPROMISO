@@ -15,7 +15,7 @@ const FormQueryResponsables = ({ buttonForm, setResponsableQuery }) => {
         },
       };
 
-      const URI = `/responsables/nombre/${query}`; // Cambiado el endpoint para consultar responsables
+      const URI = `/api/responsables/{id}${query}`; // Cambiado el endpoint para consultar responsables
       try {
         const respuesta = await clienteAxios.get(URI, config);
         if (respuesta.status === 200) {

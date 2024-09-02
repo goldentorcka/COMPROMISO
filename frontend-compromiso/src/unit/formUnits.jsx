@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import Alerta from "../components/Alerta.jsx"; // Verifica que esta ruta sea correcta
+import Alerta from "../components/Alert/Alerta.jsx"; // Verifica que esta ruta sea correcta
 import clienteAxios from "../config/axios.jsx"; // Asegúrate de que esta ruta también sea correcta
 import { ReactSession } from "react-client-session"; // Verifica que esta importación esté correcta
 

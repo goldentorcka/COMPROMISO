@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api.js'; // Ajusta la ruta según la ubicación de tu archivo api.js
+import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
 import FormUsers from './formUsers.jsx';
 import Pagination from '../components/Pagination/Pagination';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
@@ -61,7 +62,7 @@ const CrudUsers = () => {
       try {
         await clienteAxios.delete(`/usuarios/${Id_Usuario}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-        getAllUsers();
+        getAllUsers(); // Actualiza la lista de usuarios después de eliminar
       } catch (error) {
         console.error("Error al eliminar el usuario:", error);
       }
@@ -79,8 +80,8 @@ const CrudUsers = () => {
         await clienteAxios.put(`/usuarios/${user.Id_Usuario}`, user);
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
-      resetForm();
-      getAllUsers();
+      resetForm(); // Limpia el formulario
+      getAllUsers(); // Actualiza la lista de usuarios
       setStateAddUser(false);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
@@ -103,58 +104,64 @@ const CrudUsers = () => {
   };
 
   return (
-    <div style={styles.crudContainer}>
-      <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Usuarios</h1>
-      <div style={styles.mainContent}>
-        <div style={styles.contentWrapper}>
-          {stateAddUser && (
-            <FormUsers
-              user={user}
-              setUser={setUser}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
+    <div style={{ display: 'flex' }}>
+      <SidebarAdministrator />
+      <div style={styles.crudContainer}>
+        <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Usuarios</h1>
+        <div style={styles.mainContent}>
+          <div style={styles.contentWrapper}>
+            {stateAddUser && (
+              <FormUsers
+                user={user}
+                setUser={setUser}
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+              />
+            )}
+            <div style={styles.tableWrapper}>
+              <table style={styles.userTable}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Código</th>
+                    <th>Correo</th>
+                    <th>Número de Documento</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(userList) && userList.slice(desde, hasta).map((user) => (
+                    <tr key={user.Id_Usuario}>
+                      <td>{user.Id_Usuario}</td>
+                      <td>{user.Nom_Usuario}</td>
+                      <td>{user.Ape_Usuario}</td>
+                      <td>{user.Cod_Usuario}</td>
+                      <td>{user.Cor_Usuario}</td>
+                      <td>{user.Nde_Usuario}</td>
+                      <td>{user.Fec_Usuario}</td>
+                      <td>{user.estado}</td>
+                      <td>{user.rol}</td>
+                      <td>
+                        <button style={styles.editButton} onClick={() => getUser(user.Id_Usuario)}>✏️</button>
+                        <button style={styles.deleteButton} onClick={() => deleteUser(user.Id_Usuario)}>🗑️</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              URI="/usuarios"
+              setDesde={setDesde}
+              setHasta={setHasta}
             />
-          )}
-          <table style={styles.userTable}>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Código</th>
-                <th>Correo</th>
-                <th>Número de Documento</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Estado</th>
-                <th>Rol</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {Array.isArray(userList) && userList.slice(desde, hasta).map((user) => (
-                <tr key={user.Id_Usuario}>
-                  <td>{user.Id_Usuario}</td>
-                  <td>{user.Nom_Usuario}</td>
-                  <td>{user.Ape_Usuario}</td>
-                  <td>{user.Cod_Usuario}</td>
-                  <td>{user.Cor_Usuario}</td>
-                  <td>{user.Nde_Usuario}</td>
-                  <td>{user.Fec_Usuario}</td>
-                  <td>{user.estado}</td>
-                  <td>{user.rol}</td>
-                  <td>
-                    <button style={styles.editButton} onClick={() => getUser(user.Id_Usuario)}>✏️</button>
-                    <button style={styles.deleteButton} onClick={() => deleteUser(user.Id_Usuario)}>🗑️</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            URI="/usuarios"
-            setDesde={setDesde}
-            setHasta={setHasta}
-          />
+            <button style={styles.consultButton}>Consultar</button>
+          </div>
         </div>
       </div>
     </div>
@@ -163,46 +170,77 @@ const CrudUsers = () => {
 
 const styles = {
   crudContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
+    flex: 1,
+    padding: '10px',
   },
   mainContent: {
-    width: '100%',
-    maxWidth: '1200px',
-    margin: '0 auto',
+    backgroundColor: '#f4f4f9',
+    minHeight: '100vh',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  pageTitle: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    textAlign: 'center',
+    color: '#333',
   },
   contentWrapper: {
     border: '1px solid #ddd',
     borderRadius: '8px',
-    padding: '20px',
+    padding: '10px',
     backgroundColor: '#fff',
     boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    height: 'calc(100vh - 80px)',
+    overflowY: 'auto',
   },
-  pageTitle: {
-    fontSize: '32px',
-    fontWeight: 'bold',
-    marginBottom: '20px',
-    textAlign: 'center',
+  tableWrapper: {
+    maxHeight: '300px',
+    overflowY: 'auto',
+    overflowX: 'auto',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
   },
   userTable: {
     width: '100%',
     borderCollapse: 'collapse',
-    marginBottom: '20px',
+    fontSize: '12px',
   },
   editButton: {
-    background: 'none',
+    backgroundColor: '#4caf50',
     border: 'none',
-    color: '#3085d6',
+    color: 'white',
+    padding: '6px 8px',
+    fontSize: '12px',
+    borderRadius: '4px',
     cursor: 'pointer',
+    marginRight: '5px',
+    transition: 'background-color 0.3s',
   },
   deleteButton: {
-    background: 'none',
+    backgroundColor: '#f44336',
     border: 'none',
-    color: '#d33', 
+    color: 'white',
+    padding: '6px 8px',
+    fontSize: '12px',
+    borderRadius: '4px',
     cursor: 'pointer',
-    marginLeft: '10px',
+    transition: 'background-color 0.3s',
+  },
+  consultButton: {
+    backgroundColor: '#008cba',
+    color: 'white',
+    padding: '8px 12px',
+    fontSize: '14px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    border: 'none',
+    display: 'inline-block',
+    transition: 'background-color 0.3s, transform 0.2s',
   },
 };
 
