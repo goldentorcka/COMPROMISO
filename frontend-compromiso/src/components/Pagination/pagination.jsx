@@ -1,7 +1,9 @@
+// Pagination.jsx
+import React, { useEffect, useState } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { useEffect, useState } from "react";
-import clienteAxios from "../../config/axios.jsx";
-import { ReactSession } from 'react-client-session';
+import axios from "../../config/axios.jsx"; // Ajusta la ruta según la ubicación de tu configuración de Axios
+import { ReactSession } from "react-client-session";
+import "./Pagination.css"; // Importa el archivo CSS para aplicar estilos
 
 const Pagination = ({ URI, setDesde, setHasta }) => {
   const [numRegistros, setNumRegistros] = useState(0);
@@ -9,6 +11,7 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
   const [paginaActual, setPaginaActual] = useState(1);
   const [paginas, setPaginas] = useState(0);
 
+  // Función para obtener todos los registros
   const GetAllUsers = async () => {
     const token = ReactSession.get("token");
     const config = {
@@ -18,10 +21,16 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
       },
     };
     try {
-      const response = await clienteAxios.get(URI, config);
-      const cantidadRegistros = response.data.length;
-      setNumRegistros(cantidadRegistros);
-      setPaginas(Math.ceil(cantidadRegistros / registrosPorPagina));
+      const response = await axios.get(URI, config);
+      const data = response.data;
+
+      if (Array.isArray(data)) {
+        const cantidadRegistros = data.length;
+        setNumRegistros(cantidadRegistros);
+        setPaginas(Math.ceil(cantidadRegistros / registrosPorPagina));
+      } else {
+        console.error("La respuesta de la API no es un array:", data);
+      }
     } catch (error) {
       console.error("Error al obtener los registros:", error);
     }
@@ -47,20 +56,22 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
   };
 
   return (
-    <div className="flex items-center justify-between px-4 py-3">
+    <div className="pagination-container">
       <button
-        className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="pagination-button"
         onClick={anterior}
         disabled={paginaActual === 1}
       >
-        <ChevronLeftIcon className="h-5 w-5" />
+        <ChevronLeftIcon className="pagination-icon" />
         <span className="sr-only">Anterior</span>
       </button>
-      <div className="flex items-center space-x-1">
+      <div className="pagination-pages">
         {[...Array(paginas).keys()].map((n) => (
           <button
             key={n + 1}
-            className={`relative inline-flex items-center px-3 py-1.5 text-sm font-medium ${n + 1 === paginaActual ? "bg-green-600 text-white" : "bg-white text-gray-800"} ring-1 ring-gray-300 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-600`}
+            className={`pagination-button ${
+              n + 1 === paginaActual ? "pagination-button-active" : ""
+            }`}
             onClick={() => setPaginaActual(n + 1)}
           >
             {n + 1}
@@ -68,11 +79,11 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
         ))}
       </div>
       <button
-        className="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-green-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="pagination-button"
         onClick={siguiente}
         disabled={paginaActual === paginas}
       >
-        <ChevronRightIcon className="h-5 w-5" />
+        <ChevronRightIcon className="pagination-icon" />
         <span className="sr-only">Siguiente</span>
       </button>
     </div>

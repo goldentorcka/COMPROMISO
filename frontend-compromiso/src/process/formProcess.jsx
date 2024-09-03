@@ -1,47 +1,64 @@
 import React from 'react';
+import './FormProcesses.css'; // Asegúrate de que la ruta sea correcta
 
-const FormProcesses = ({ handleSubmit, proceso, setProceso, buttonForm }) => {
+const FormProcesses = ({ handleSubmit, process, setProcess, buttonForm }) => {
   const handleChange = (e) => {
-    setProceso({ ...proceso, [e.target.name]: e.target.value });
+    setProcess({ ...process, [e.target.name]: e.target.value });
   };
 
   return (
-    <div>
-      <h2>{buttonForm === "Actualizar" ? "Actualizar Proceso" : "Nuevo Proceso"}</h2>
-      <form onSubmit={handleSubmit}>
+    <div className="form-container">
+      <h2 className="form-title">
+        {buttonForm === "Actualizar" ? "Actualizar Proceso" : "Nuevo Proceso"}
+      </h2>
+      <form onSubmit={handleSubmit} className="form">
         <div className="form-group">
-          <label>Nombre del Proceso:</label>
+          <label className="form-label">Nombre del Proceso:</label>
           <input
             type="text"
             name="Nom_Proceso"
-            value={proceso.Nom_Proceso}
+            value={process.Nom_Proceso || ''}
             onChange={handleChange}
             required
+            className="form-input"
           />
         </div>
         <div className="form-group">
-          <label>ID Responsable:</label>
+          <label className="form-label">Descripción:</label>
           <input
             type="text"
-            name="Id_Responsable"
-            value={proceso.Id_Responsable}
+            name="description"
+            value={process.description || ''}
             onChange={handleChange}
             required
+            className="form-input"
           />
         </div>
         <div className="form-group">
-          <label>Estado:</label>
-          <select
-            name="estado"
-            value={proceso.estado}
+          <label className="form-label">Fecha:</label>
+          <input
+            type="date"
+            name="date"
+            value={process.date || ''}
             onChange={handleChange}
             required
-          >
-            <option value="Sí">Sí</option>
-            <option value="No">No</option>
-          </select>
+            className="form-input"
+          />
         </div>
-        <button type="submit">{buttonForm}</button>
+        <div className="form-group">
+          <label className="form-label">Estado:</label>
+          <input
+            type="text"
+            name="status"
+            value={process.status || ''}
+            onChange={handleChange}
+            required
+            className="form-input"
+          />
+        </div>
+        <button type="submit" className="submit-button">
+          {buttonForm}
+        </button>
       </form>
     </div>
   );

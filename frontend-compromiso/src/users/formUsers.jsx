@@ -114,132 +114,125 @@ const FormUser = ({ buttonForm, user, getAllUsers }) => {
   };
 
   return (
-    <div className="form-container">
-      {message && <Alerta message={message} type={messageType} />}
-      <form onSubmit={sendForm} className="formUser">
-        <h2 className="formTitle">Formulario de Usuario</h2>
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Nombre</label>
-          <input
-            type="text"
-            id="nombre"
-            placeholder="Nombre"
-            value={Nombre}
-            onChange={(e) => setNombre(e.target.value)}
-            className="inputField"
-            required
-          />
-        </div>
+    <div className="crud-container">
+      <div className="main-content">
+        <div className="content-wrapper">
+          {message && <Alerta message={message} type={messageType} />}
+          <form onSubmit={sendForm} className="form">
+            <h2 className="page-title">Formulario de Usuario</h2>
+            <div className="form-group">
+              <label>Nombre</label>
+              <input
+                type="text"
+                id="nombre"
+                placeholder="Nombre"
+                value={Nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Apellido</label>
-          <input
-            type="text"
-            id="apellido"
-            placeholder="Apellido"
-            value={Apellido}
-            onChange={(e) => setApellido(e.target.value)}
-            className="inputField"
-            required
-          />
-        </div>
+            <div className="form-group">
+              <label>Apellido</label>
+              <input
+                type="text"
+                id="apellido"
+                placeholder="Apellido"
+                value={Apellido}
+                onChange={(e) => setApellido(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Código</label>
-          <input
-            type="text"
-            id="codigo"
-            placeholder="Código"
-            value={Codigo}
-            onChange={(e) => setCodigo(e.target.value)}
-            className="inputField"
-            required
-          />
-        </div>
+            <div className="form-group">
+              <label>Código</label>
+              <input
+                type="text"
+                id="codigo"
+                placeholder="Código"
+                value={Codigo}
+                onChange={(e) => setCodigo(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Email</label>
-          <input
-            type="email"
-            id="email"
-            placeholder="Email"
-            value={Email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="inputField"
-            required
-          />
-        </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                value={Email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Teléfono</label>
-          <input
-            type="tel"
-            id="telefono"
-            placeholder="Teléfono"
-            value={Telefono}
-            onChange={(e) => setTelefono(e.target.value)}
-            className="inputField"
-          />
-        </div>
+            <div className="form-group">
+              <label>Teléfono</label>
+              <input
+                type="tel"
+                id="telefono"
+                placeholder="Teléfono"
+                value={Telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">
-            Fecha de Registro
-          </label>
-          <input
-            type="date"
-            id="fecha"
-            value={Fecha}
-            onChange={(e) => setFecha(e.target.value)}
-            className="inputField"
-          />
-        </div>
+            <div className="form-group">
+              <label>Fecha de Registro</label>
+              <input
+                type="date"
+                id="fecha"
+                value={Fecha}
+                onChange={(e) => setFecha(e.target.value)}
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Estado</label>
-          <select
-            id="estado"
-            value={Estado}
-            onChange={(e) => setEstado(e.target.value)}
-            className="inputField"
-          >
-            <option value="Sí">Sí</option>
-            <option value="No">No</option>
-          </select>
-        </div>
+            <div className="form-group">
+              <label>Estado</label>
+              <select
+                id="estado"
+                value={Estado}
+                onChange={(e) => setEstado(e.target.value)}
+              >
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Rol</label>
-          <input
-            type="text"
-            id="rol"
-            placeholder="Rol"
-            value={Rol}
-            readOnly
-            className="inputField"
-          />
-        </div>
+            <div className="form-group">
+              <label>Rol</label>
+              <input
+                type="text"
+                id="rol"
+                placeholder="Rol"
+                value={Rol}
+                readOnly
+              />
+            </div>
 
-        <div className="mb-3">
-          <label className="text-gray-700 uppercase font-bold">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            placeholder="Contraseña"
-            value={Password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="inputField"
-            required // Asegúrate de que la contraseña sea obligatoria si es necesario
-          />
-        </div>
+            <div className="form-group">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                value={Password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
-        <button
-          type="submit"
-          className={`submitButton ${buttonForm === 'Actualizar' ? 'updateButton' : 'createButton'}`}
-        >
-          {buttonForm}
-        </button>
-      </form>
+            <button
+              type="submit"
+              className="submit-button"
+            >
+              {buttonForm}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

@@ -5,6 +5,7 @@ import Pagination from '../components/Pagination/Pagination';
 import FormAreas from './FormAreas.jsx';
 import FormQueryArea from './FormQueryArea.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
 const CrudAreas = () => {
   const [areaList, setAreaList] = useState([]);
@@ -89,11 +90,11 @@ const CrudAreas = () => {
   };
 
   return (
-    <div style={styles.crudContainer}>
+    <div className="crud-container">
       <SidebarAdministrator />
-      <div style={styles.mainContent}>
-        <h1 style={styles.pageTitle}>Gestión de Áreas</h1>
-        <div style={styles.contentWrapper}>
+      <div className="main-content">
+        <h1 className="page-title">Gestión de Áreas</h1>
+        <div className="content-wrapper">
           <FormAreas
             area={area}
             setArea={setArea}
@@ -101,12 +102,12 @@ const CrudAreas = () => {
             buttonForm={buttonForm}
             resetForm={resetForm}
           />
-          <div style={styles.tableWrapper}>
+          <div className="table-wrapper">
             <FormQueryArea
               areaQuery={areaQuery}
               setAreaQuery={setAreaQuery}
             />
-            <table style={styles.areaTable}>
+            <table className="area-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -123,18 +124,20 @@ const CrudAreas = () => {
                       <td>{area.Nom_Area}</td>
                       <td>{area.estado}</td>
                       <td>
-                        <button
-                          style={styles.editButton}
-                          onClick={() => getArea(area.Id_Area)}
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          style={styles.deleteButton}
-                          onClick={() => deleteArea(area.Id_Area)}
-                        >
-                          🗑️
-                        </button>
+                        <div className="action-buttons">
+                          <button
+                            className="edit-button"
+                            onClick={() => getArea(area.Id_Area)}
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={() => deleteArea(area.Id_Area)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -150,70 +153,6 @@ const CrudAreas = () => {
       </div>
     </div>
   );
-};
-
-const styles = {
-  crudContainer: {
-    display: 'flex',
-  },
-  mainContent: {
-    flex: 1,
-    padding: '20px',
-    backgroundColor: '#f4f4f9',
-    minHeight: '100vh',
-  },
-  pageTitle: {
-    fontSize: '32px',
-    fontWeight: 'bold',
-    marginBottom: '20px',
-    textAlign: 'center',
-    color: '#333',
-  },
-  contentWrapper: {
-    border: '1px solid #ddd',
-    borderRadius: '8px',
-    padding: '20px',
-    backgroundColor: '#fff',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-  },
-  tableWrapper: {
-    marginTop: '20px',
-  },
-  areaTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    marginBottom: '20px',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-  },
-  editButton: {
-    backgroundColor: '#4caf50',
-    border: 'none',
-    color: 'white',
-    padding: '8px 12px',
-    textAlign: 'center',
-    textDecoration: 'none',
-    display: 'inline-block',
-    fontSize: '16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    marginRight: '5px',
-    transition: 'background-color 0.3s',
-  },
-  deleteButton: {
-    backgroundColor: '#f44336',
-    border: 'none',
-    color: 'white',
-    padding: '8px 12px',
-    textAlign: 'center',
-    textDecoration: 'none',
-    display: 'inline-block',
-    fontSize: '16px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    transition: 'background-color 0.3s',
-  },
 };
 
 export default CrudAreas;
