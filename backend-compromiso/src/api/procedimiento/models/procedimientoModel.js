@@ -1,8 +1,10 @@
+// @ts-nocheck
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 const Proceso = require('../../proceso/models/procesoModel');
 
-const Procedimiento = sequelize.define('Procedimiento', {
+
+const Procedimiento = sequelize.define('procedimiento', {
   Id_Procedimiento: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -22,11 +24,14 @@ const Procedimiento = sequelize.define('Procedimiento', {
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
     allowNull: false,
-    defaultValue: 'No',
   },
 }, {
-  tableName: 'procedimiento',
   timestamps: true,
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
 });
+
+Proceso.hasMany(Procedimiento, { foreignKey: 'Id_Proceso' });
+Procedimiento.belongsTo(Proceso, { foreignKey: 'Id_Proceso' });
 
 module.exports = Procedimiento;

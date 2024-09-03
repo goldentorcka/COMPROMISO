@@ -1,0 +1,56 @@
+/* Tabla de procesos (similar a tabla de áreas) */
+.table-wrapper {
+    margin-top: 20px;
+  }
+  
+  .area-table,
+  .process-table { /* Aplica estilos a ambas tablas */
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .area-table th,
+  .area-table td,
+  .process-table th,
+  .process-table td { /* Aplica estilos a ambas tablas */
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .area-table th,
+  .process-table th { /* Aplica estilos a ambas tablas */
+    background-color: #f4f4f4;
+  }
+  
+  /* Botones */
+  .edit-button,
+  .delete-button {
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+  }
+  
+  .edit-button {
+    background-color: #4caf50;
+  }
+  
+  .edit-button:hover {
+    background-color: #ffffff;
+  }
+  
+  .delete-button {
+    background-color: #f44336;
+  }
+  
+  .delete-button:hover {
+    background-color: #e53935;
+  }
+  

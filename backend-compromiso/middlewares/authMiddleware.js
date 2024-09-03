@@ -1,31 +1,32 @@
-// middlewares/authMiddleware.js
+// @ts-nocheck
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const Usuario = require('../src/api/usuario/models/usuarioModel.js'); // Ajusta la ruta según tu estructura
 
-// Se asume que el secreto se guarda en una variable de entorno
-const SECRET_KEY = process.env.JWT_SECRET || '231232341';
+const checkAuth = async (req, res, next) => {
+  const { Cor_Usuario, password } = req.body;
 
-function checkAuth(req, res, next) {
-  // Obtén el token de los encabezados Authorization
-  const authHeader = req.headers.authorization;
+  try {
+    // Buscar usuario en la base de datos
+    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    // Extrae el token del encabezado
-    const token = authHeader.split(' ')[1];
+    if (!usuario || !usuario.comparePassword(password)) {
+      return res.status(401).json({ msg: 'Credenciales inválidas' });
+    }
 
-    // Verifica el token
-    jwt.verify(token, SECRET_KEY, (err, user) => {
-      if (err) {
-        return res.status(403).json({ error: 'Token inválido' });
-      }
+    // Generar token JWT
+    const token = jwt.sign(
+      { id: usuario.id, isAdmin: usuario.isAdmin }, 
+      process.env.JWT_SECRET, // Asegúrate de tener este secreto en tu .env
+      { expiresIn: '1h' }
+    );
 
-      // Guarda la información del usuario en el request
-      req.user = user;
-      next(); // Continua a la siguiente función middleware o ruta
-    });
-  } else {
-    res.status(401).json({ error: 'No autorizado' });
+    // Enviar token en la respuesta
+    res.json({ token, isAdmin: usuario.isAdmin });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error interno del servidor' });
   }
-}
+};
 
 module.exports = checkAuth;

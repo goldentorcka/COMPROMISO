@@ -1,251 +1,249 @@
-// import clienteAxios from "../config/axios.jsx";
-// import { useState, useEffect } from "react";
-// import { ReactSession } from 'react-client-session';
-// import Swal from "sweetalert2";
-// import FormUnidades from "../unit/formUnits.jsx"; // Componente para el formulario de unidades
-// import FormQueryUnidades from "../unit/formQueryUnits.jsx"; // Componente para buscar unidades
-// import Pagination from "../pagination.jsx";
-// import Alerta from "../components/Alerta.jsx";
-// import { AiOutlineMinusCircle } from "react-icons/ai";
-// import { IoMdPersonAdd } from "react-icons/io";
-// import { FaRegEdit } from "react-icons/fa";
-// import { MdDeleteOutline } from "react-icons/md";
+// src/components/CrudFormatos.jsx
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../api.js';
+import Swal from 'sweetalert2';
+import FormFormatos from './FormFormatos.jsx';
+import Pagination from '../components/Pagination/Pagination';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 
-// const URI = "unidades"; // Endpoint para unidades
+const CrudFormatos = () => {
+  const [formatoList, setFormatoList] = useState([]);
+  const [formato, setFormato] = useState({
+    Cod_Formato: "",
+    Fec_Actualizacion: "",
+    Ver_Formato: "",
+    Est_Formato: "Activo",
+    Id_Responsable: "",
+    Nom_Formato: "",
+    Nom_Magnetico: "",
+    Id_Procedimiento: "",
+    Id_Unidad: "",
+  });
+  const [buttonForm, setButtonForm] = useState("Enviar");
+  const [stateAddFormato, setStateAddFormato] = useState(true);
+  const [desde, setDesde] = useState(0);
+  const [hasta, setHasta] = useState(10);
 
-// const CrudUnidades = () => {
-//   const [unidadList, setUnidadList] = useState([]);
-//   const [unidadQuery, setUnidadQuery] = useState([]);
-//   const [buttonForm, setButtonForm] = useState("Enviar");
-//   const [stateAddUnidad, setStateAddUnidad] = useState(false);
-//   const [desde, setDesde] = useState(0);
-//   const [hasta, setHasta] = useState(0);
-//   const [alerta, setAlerta] = useState({});
+  useEffect(() => {
+    getAllFormatos();
+  }, [desde, hasta]);
 
-//   const [unidad, setUnidad] = useState({
-//     Nom_Unidad: "",
-//     Id_Area: "",
-//     estado: "",
-//   });
+  const getAllFormatos = async () => {
+    try {
+      const response = await clienteAxios.get('/formatos');
+      setFormatoList(response.data);
+    } catch (error) {
+      console.error("Error al obtener los formatos:", error);
+    }
+  };
 
-//   useEffect(() => {
-//     getAllUnidades();
-//   }, []);
+  const getFormato = async (Id_Formato) => {
+    try {
+      const response = await clienteAxios.get(`/formatos/${Id_Formato}`);
+      setFormato(response.data);
+      setButtonForm("Actualizar");
+      setStateAddFormato(true);
+    } catch (error) {
+      console.error("Error al obtener el formato:", error);
+    }
+  };
 
-//   const getAllUnidades = async () => {
-//     const token = ReactSession.get("token");
-//     const config = {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-//     try {
-//       const responseApi = await clienteAxios.get(URI, config);
-//       if (responseApi.status === 200) {
-//         setUnidadList(responseApi.data);
-//       } else {
-//         setAlerta({
-//           msg: "Error al cargar los registros!",
-//           error: true,
-//         });
-//       }
-//     } catch (error) {
-//       setAlerta({
-//         msg: "Error al cargar los registros!",
-//         error: true,
-//       });
-//       console.error(error);
-//     }
-//   };
+  const deleteFormato = async (Id_Formato) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás recuperar este registro!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo!'
+    });
 
-//   const getUnidad = async (Id_Unidad) => {
-//     setButtonForm("Actualizar");
-//     const token = ReactSession.get("token");
-//     const config = {
-//       headers: {
-//         "Content-Type": "application/json",
-//         Authorization: `Bearer ${token}`,
-//       },
-//     };
-//     try {
-//       const responseApi = await clienteAxios.get(`${URI}/${Id_Unidad}`, config);
-//       if (responseApi.status === 200) {
-//         setUnidad(responseApi.data);
-//       } else {
-//         setAlerta({
-//           msg: "Error al cargar el registro!",
-//           error: true,
-//         });
-//       }
-//     } catch (error) {
-//       setAlerta({
-//         msg: "Error al cargar el registro!",
-//         error: true,
-//       });
-//       console.error(error);
-//     }
-//   };
+    if (result.isConfirmed) {
+      try {
+        await clienteAxios.delete(`/formatos/${Id_Formato}`);
+        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+        getAllFormatos(); // Actualiza la lista de formatos después de eliminar
+      } catch (error) {
+        console.error("Error al eliminar el formato:", error);
+      }
+    }
+  };
 
-//   const deleteUnidad = (Id_Unidad) => {
-//     Swal.fire({
-//       title: "¿Estás seguro?",
-//       text: "No podrás revertir esto!",
-//       icon: "warning",
-//       showCancelButton: true,
-//       confirmButtonColor: "#3085d6",
-//       cancelButtonColor: "#d33",
-//       confirmButtonText: "Sí, Borrar!",
-//       cancelButtonText: "Cancelar",
-//     }).then(async (result) => {
-//       if (result.isConfirmed) {
-//         const token = ReactSession.get("token");
-//         const config = {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${token}`,
-//           },
-//         };
-//         try {
-//           const responseApi = await clienteAxios.delete(`${URI}/${Id_Unidad}`, config);
-//           if (responseApi.status === 200) {
-//             getAllUnidades(); // Refrescar la lista después de borrar
-//             Swal.fire({
-//               title: "Borrado!",
-//               text: "El registro ha sido borrado.",
-//               icon: "success",
-//             });
-//           } else {
-//             Swal.fire({
-//               title: "Error!",
-//               text: responseApi.data.message,
-//               icon: "error",
-//             });
-//           }
-//         } catch (error) {
-//           Swal.fire({
-//             title: "Error!",
-//             text: "Hubo un problema al intentar borrar el registro.",
-//             icon: "error",
-//           });
-//           console.error(error);
-//         }
-//       }
-//     });
-//   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (buttonForm === "Enviar") {
+        await clienteAxios.post('/formatos', formato);
+        Swal.fire('Agregado!', 'El formato ha sido agregado.', 'success');
+      } else {
+        await clienteAxios.put(`/formatos/${formato.Id_Formato}`, formato);
+        Swal.fire('Actualizado!', 'El formato ha sido actualizado.', 'success');
+      }
+      resetForm(); // Limpia el formulario
+      getAllFormatos(); // Actualiza la lista de formatos
+      setStateAddFormato(false);
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+    }
+  };
 
-//   const updateTextButton = (text) => {
-//     setButtonForm(text);
-//   };
+  const resetForm = () => {
+    setFormato({
+      Cod_Formato: "",
+      Fec_Actualizacion: "",
+      Ver_Formato: "",
+      Est_Formato: "Activo",
+      Id_Responsable: "",
+      Nom_Formato: "",
+      Nom_Magnetico: "",
+      Id_Procedimiento: "",
+      Id_Unidad: "",
+    });
+    setButtonForm("Enviar");
+  };
 
-//   const { msg } = alerta;
+  return (
+    <div style={{ display: 'flex' }}>
+      <SidebarAdministrator />
+      <div style={styles.crudContainer}>
+        <h1 style={styles.pageTitle} className="animatedTitle">Gestión de Formatos</h1>
+        <div style={styles.mainContent}>
+          <div style={styles.contentWrapper}>
+            {stateAddFormato && (
+              <FormFormatos
+                formato={formato}
+                setFormato={setFormato}
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+              />
+            )}
+            <div style={styles.tableWrapper}>
+              <table style={styles.userTable}>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Código</th>
+                    <th>Fecha Actualización</th>
+                    <th>Versión</th>
+                    <th>Estado</th>
+                    <th>Nombre</th>
+                    <th>Nombre Magnético</th>
+                    <th>Responsable</th>
+                    <th>Procedimiento</th>
+                    <th>Unidad</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(formatoList) && formatoList.slice(desde, hasta).map((formato) => (
+                    <tr key={formato.Id_Formato}>
+                      <td>{formato.Id_Formato}</td>
+                      <td>{formato.Cod_Formato}</td>
+                      <td>{new Date(formato.Fec_Actualizacion).toLocaleDateString()}</td>
+                      <td>{formato.Ver_Formato}</td>
+                      <td>{formato.Est_Formato}</td>
+                      <td>{formato.Nom_Formato}</td>
+                      <td>{formato.Nom_Magnetico}</td>
+                      <td>{formato.Id_Responsable}</td>
+                      <td>{formato.Id_Procedimiento}</td>
+                      <td>{formato.Id_Unidad}</td>
+                      <td>
+                        <button style={styles.editButton} onClick={() => getFormato(formato.Id_Formato)}>✏️</button>
+                        <button style={styles.deleteButton} onClick={() => deleteFormato(formato.Id_Formato)}>🗑️</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              URI="/formatos"
+              setDesde={setDesde}
+              setHasta={setHasta}
+            />
+            <button style={styles.consultButton}>Consultar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
-//   return (
-//     <>
-//       <div className="flex justify-end pb-3">
-//         <button
-//           className="bg-green-600 px-6 py-2 rounded-xl text-white font-bold m-4 flex items-center hover:bg-green-800"
-//           onClick={() => setStateAddUnidad(!stateAddUnidad)}
-//         >
-//           {stateAddUnidad ? (
-//             <AiOutlineMinusCircle size={16} className="me-2" />
-//           ) : (
-//             <IoMdPersonAdd size={16} className="me-2" />
-//           )}
-//           {stateAddUnidad ? "Ocultar" : "Agregar"}
-//         </button>
-//       </div>
-//       <div className="overflow-x-auto">
-//         <div className="flex justify-between">
-//           <div>
-//             <h1 className="font-semibold text-lg text-gray-700">
-//               Buscar Por Nombre...
-//             </h1>
-//             <FormQueryUnidades
-//               getUnidad={getUnidad}
-//               deleteUnidad={deleteUnidad}
-//               buttonForm={buttonForm}
-//               unidadQuery={unidadQuery}
-//               setUnidadQuery={setUnidadQuery}
-//             />
-//           </div>
-//         </div>
-//         <hr />
-//         {msg && <Alerta alerta={alerta} />}
-//         <table className="min-w-full bg-white text-center text-sm">
-//           <thead className="text-white bg-green-700">
-//             <tr>
-//               <th className="py-2 px-4 border-2 border-b-gray-500">ID</th>
-//               <th className="py-2 px-4 border-2 border-b-gray-500">Nombre</th>
-//               <th className="py-2 px-4 border-2 border-b-gray-500">Área</th>
-//               <th className="py-2 px-4 border-2 border-b-gray-500">Estado</th>
-//               <th className="py-2 px-4 border-2 border-b-gray-500">Acciones</th>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             {(unidadQuery.length ? unidadQuery : unidadList).map(
-//               (unidad, indice) =>
-//                 indice >= desde && indice < hasta ? (
-//                   <tr
-//                     key={unidad.Id_Unidad}
-//                     className="odd:bg-white even:bg-gray-100 select-none"
-//                   >
-//                     <td className="py-2 px-4 border-b">
-//                       {unidad.Id_Unidad}
-//                     </td>
-//                     <td className="py-2 px-4 border-b">
-//                       {unidad.Nom_Unidad}
-//                     </td>
-//                     <td className="py-2 px-4 border-b">
-//                       {unidad.Id_Area}
-//                     </td>
-//                     <td className="py-2 px-4 border-b">
-//                       {unidad.estado}
-//                     </td>
-//                     <td className="py-2 px-4 border-b">
-//                       <button
-//                         onClick={() => [
-//                           getUnidad(unidad.Id_Unidad),
-//                           setStateAddUnidad(true),
-//                         ]}
-//                         className="text-blue-500 hover:text-blue-700 hover:border hover:border-blue-500 mr-3 p-1 rounded"
-//                       >
-//                         <FaRegEdit />
-//                       </button>
-//                       <button
-//                         onClick={() => deleteUnidad(unidad.Id_Unidad)}
-//                         className="text-red-500 hover:text-red-700 hover:border hover:border-red-500 p-1 rounded"
-//                       >
-//                         <MdDeleteOutline />
-//                       </button>
-//                     </td>
-//                   </tr>
-//                 ) : null
-//             )}
-//           </tbody>
-//         </table>
-//       </div>
-//       <div className="flex justify-center mt-4">
-//         <Pagination
-//           desde={desde}
-//           setDesde={setDesde}
-//           hasta={hasta}
-//           setHasta={setHasta}
-//           max={unidadList.length}
-//         />
-//       </div>
-//       {stateAddUnidad && (
-//         <FormUnidades
-//           unidad={unidad}
-//           setUnidad={setUnidad}
-//           updateTextButton={updateTextButton}
-//           buttonForm={buttonForm}
-//           getAllUnidades={getAllUnidades}
-//           setStateAddUnidad={setStateAddUnidad}
-//         />
-//       )}
-//     </>
-//   );
-// };
+const styles = {
+  crudContainer: {
+    flex: 1,
+    padding: '10px',
+  },
+  mainContent: {
+    backgroundColor: '#f4f4f9',
+    minHeight: '100vh',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  pageTitle: {
+    fontSize: '24px',
+    fontWeight: 'bold',
+    marginBottom: '10px',
+    textAlign: 'center',
+    color: '#333',
+  },
+  contentWrapper: {
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    padding: '10px',
+    backgroundColor: '#fff',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    height: 'calc(100vh - 80px)',
+    overflowY: 'auto',
+  },
+  tableWrapper: {
+    maxHeight: '300px',
+    overflowY: 'auto',
+    overflowX: 'auto',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+  },
+  userTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: '12px',
+  },
+  editButton: {
+    backgroundColor: '#4caf50',
+    border: 'none',
+    color: 'white',
+    padding: '6px 8px',
+    fontSize: '12px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    marginRight: '5px',
+    transition: 'background-color 0.3s',
+  },
+  deleteButton: {
+    backgroundColor: '#f44336',
+    border: 'none',
+    color: 'white',
+    padding: '6px 8px',
+    fontSize: '12px',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+  },
+  consultButton: {
+    backgroundColor: '#008cba',
+    color: 'white',
+    padding: '8px 12px',
+    fontSize: '14px',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    border: 'none',
+    display: 'inline-block',
+    transition: 'background-color 0.3s, transform 0.2s',
+  },
+};
 
-// export default CrudUnidades;
+export default CrudFormatos;

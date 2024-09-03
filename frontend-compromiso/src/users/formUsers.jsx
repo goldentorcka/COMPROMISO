@@ -1,25 +1,42 @@
-import { useState, useEffect } from "react";
-import clieteAxios from "../config/axios";
-import Alerta from "../components/Alerta";
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../config/axios';
+import Alerta from '../components/Alert/Alerta.jsx';
 import { ReactSession } from 'react-client-session';
-import '../css/stylesFormUsers.css'
+import '../css/stylesFormUsers.css';
+import Swal from 'sweetalert2';
 
-const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
-  const [Nombre, setNombre] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Telefono, setTelefono] = useState("");
-  const [Estado, setEstado] = useState("");
+const FormUser = ({ buttonForm, user, getAllUsers }) => {
+  const [Nombre, setNombre] = useState('');
+  const [Apellido, setApellido] = useState('');
+  const [Codigo, setCodigo] = useState('');
+  const [Email, setEmail] = useState('');
+  const [Telefono, setTelefono] = useState('');
+  const [Fecha, setFecha] = useState('');
+  const [Estado, setEstado] = useState('Sí'); // Valor por defecto
+  const [Rol, setRol] = useState('Administrador');
+  const [Password, setPassword] = useState(''); // Campo para la contraseña
   const [alerta, setAlerta] = useState({});
+  const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('');
 
-  // Estado para mensajes
-  const [message, setMessage] = useState("");
-  const [messageType, setMessageType] = useState(""); // 'success' o 'error'
+  useEffect(() => {
+    if (user) {
+      setNombre(user.Nom_Usuario || '');
+      setApellido(user.Ape_Usuario || '');
+      setCodigo(user.Cod_Usuario || '');
+      setEmail(user.Cor_Usuario || '');
+      setTelefono(user.Nde_Usuario || '');
+      setFecha(user.Fec_Usuario || '');
+      setEstado(user.estado || 'Sí');
+      setRol(user.rol || 'Administrador');
+    }
+  }, [user]);
 
   useEffect(() => {
     if (message) {
       const timer = setTimeout(() => {
-        setMessage("");
-        setMessageType("");
+        setMessage('');
+        setMessageType('');
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -28,176 +45,196 @@ const FormUsers = ({ buttonForm, user, updateTextButton, getAllUsers }) => {
 
   const sendForm = async (e) => {
     e.preventDefault();
-    const token = ReactSession.get("token");
+    const token = ReactSession.get('token');
     const config = {
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     };
 
+    const userData = {
+      Nom_Usuario: Nombre,
+      Ape_Usuario: Apellido,
+      Cod_Usuario: Codigo,
+      Cor_Usuario: Email,
+      Nde_Usuario: Telefono,
+      Fec_Usuario: Fecha,
+      estado: Estado,
+      rol: Rol,
+      password: Password,
+    };
+
     try {
-      let respuestApi;
-      if (buttonForm === "Actualizar") {
-        respuestApi = await clieteAxios.put(
-          `/usuarios/${user.Id_Usuario}`,
-          {
-            Nombre,
-            Email,
-            Telefono,
-            Estado,
-          },
-          config
-        );
-      } else if (buttonForm === "Enviar") {
-        respuestApi = await clieteAxios.post(
-          `/usuarios`,
-          {
-            Nombre,
-            Email,
-            Telefono,
-            Estado,
-          },
-          config
-        );
+      let responseApi;
+      if (buttonForm === 'Actualizar') {
+        responseApi = await clienteAxios.put(`/usuarios/${user.id}`, userData, config);
+        Swal.fire({
+          title: 'Actualización Exitosa',
+          text: 'Usuario actualizado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
+      } else {
+        responseApi = await clienteAxios.post('/usuarios', userData, config);
+        Swal.fire({
+          title: 'Registro Exitoso',
+          text: 'Usuario registrado correctamente',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        });
       }
 
-      if (respuestApi.status === 201 || respuestApi.status === 200) {
-        setMessage("Usuario registrado correctamente!");
-        setMessageType("success");
-        clearForm();
-        getAllUsers();
-        updateTextButton("Enviar");
-      } else {
-        setMessage(respuestApi.error.message || "Error al registrar el usuario.");
-        setMessageType("error");
-      }
+      await getAllUsers(); // Asegúrate de que esta función sea una función asíncrona
+
+      resetForm();
     } catch (error) {
-      setAlerta({
-        msg: "Todos los campos son obligatorios!",
-        error: true,
-      });
-      setMessageType("error");
+      console.error('Error en la solicitud:', error); // Añadido para depuración
+      if (error.response) {
+        setMessage(`Error: ${error.response.data.message || 'Error al procesar la solicitud'}`);
+      } else if (error.request) {
+        setMessage('Error: No se recibió respuesta del servidor');
+      } else {
+        setMessage('Error al procesar la solicitud');
+      }
+      setMessageType('error');
     }
   };
 
-  const clearForm = () => {
-    setNombre("");
-    setEmail("");
-    setTelefono("");
-    setEstado("");
+  const resetForm = () => {
+    setNombre('');
+    setApellido('');
+    setCodigo('');
+    setEmail('');
+    setTelefono('');
+    setFecha('');
+    setEstado('Sí');
+    setRol('Administrador');
+    setPassword('');
   };
-
-  const setData = () => {
-    setNombre(user.Nombre);
-    setEmail(user.Email);
-    setTelefono(user.Telefono);
-    setEstado(user.Estado);
-  };
-
-  useEffect(() => {
-    setData();
-  }, [user]);
-
-  const { msg } = alerta;
 
   return (
-    <>
-      <div className="flex justify-center items-center min-h-screen bg-gray-100 content-center w-full">
-        <form
-          id="userForm"
-          onSubmit={sendForm}
-          className="bg-white shadow-2xl rounded-2xl px-14 pt-6 pb-8 mb-4 max-w-3xl w-full mt-10"
-        >
-          {msg && <Alerta alerta={alerta} />}
-          <h1 className="font-bold text-green-600 text-3xl uppercase text-center my-5">
-            Registrar Usuarios
-          </h1>
-
-          {message && (
-            <div className={`p-4 mb-4 text-white rounded-md ${messageType === 'success' ? 'bg-green-500' : 'bg-red-500'}`}>
-              {message}
+    <div className="crud-container">
+      <div className="main-content">
+        <div className="content-wrapper">
+          {message && <Alerta message={message} type={messageType} />}
+          <form onSubmit={sendForm} className="form">
+            <h2 className="page-title">Formulario de Usuario</h2>
+            <div className="form-group">
+              <label>Nombre</label>
+              <input
+                type="text"
+                id="nombre"
+                placeholder="Nombre"
+                value={Nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
             </div>
-          )}
 
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Nombre
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              placeholder="Nombre"
-              value={Nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+            <div className="form-group">
+              <label>Apellido</label>
+              <input
+                type="text"
+                id="apellido"
+                placeholder="Apellido"
+                value={Apellido}
+                onChange={(e) => setApellido(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              placeholder="Email"
-              value={Email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+            <div className="form-group">
+              <label>Código</label>
+              <input
+                type="text"
+                id="codigo"
+                placeholder="Código"
+                value={Codigo}
+                onChange={(e) => setCodigo(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Teléfono
-            </label>
-            <input
-              type="tel"
-              id="telefono"
-              placeholder="Teléfono"
-              value={Telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+            <div className="form-group">
+              <label>Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                value={Email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="mb-3">
-            <label className="text-gray-700 uppercase font-bold">
-              Estado:
-            </label>
-            <select
-              id="estado"
-              value={Estado}
-              onChange={(e) => setEstado(e.target.value)}
-              className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-            >
-              <option value="">Seleccione un Estado:</option>
-              <option value="Activo">Activo</option>
-              <option value="Inactivo">Inactivo</option>
-            </select>
-          </div>
+            <div className="form-group">
+              <label>Teléfono</label>
+              <input
+                type="tel"
+                id="telefono"
+                placeholder="Teléfono"
+                value={Telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
+            </div>
 
-          <div className="flex justify-around">
-            <input
+            <div className="form-group">
+              <label>Fecha de Registro</label>
+              <input
+                type="date"
+                id="fecha"
+                value={Fecha}
+                onChange={(e) => setFecha(e.target.value)}
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Estado</label>
+              <select
+                id="estado"
+                value={Estado}
+                onChange={(e) => setEstado(e.target.value)}
+              >
+                <option value="Sí">Sí</option>
+                <option value="No">No</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>Rol</label>
+              <input
+                type="text"
+                id="rol"
+                placeholder="Rol"
+                value={Rol}
+                readOnly
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Contraseña</label>
+              <input
+                type="password"
+                id="password"
+                placeholder="Contraseña"
+                value={Password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <button
               type="submit"
-              id="button"
-              value={buttonForm}
-              className="bg-green-600 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-green-700 md:w-auto"
-            />
-            <input
-              type="button"
-              id="button"
-              value="Limpiar"
-              onClick={() => clearForm()}
-              className="bg-yellow-400 w-full py-3 px-8 rounded-xl text-white mt-2 uppercase font-bold hover:cursor-pointer hover:bg-yellow-500 md:w-auto"
-              aria-label="Limpiar"
-            />
-          </div>
-        </form>
+              className="submit-button"
+            >
+              {buttonForm}
+            </button>
+          </form>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default FormUsers;
+export default FormUser;

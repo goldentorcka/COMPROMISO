@@ -1,66 +1,39 @@
-import { useEffect, useState } from "react";
-import clienteAxios from "../config/axios";
-import { ReactSession } from 'react-client-session';
+// FormQueryProcess.jsx
+import React, { useState } from 'react';
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
-const FormQueryProcesses = ({ buttonForm, setProcessQuery }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+const FormQueryProcess = ({ processQuery, setProcessQuery }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const sendFormQuery = async (query) => {
-    if (query) {
-      const token = ReactSession.get("token");
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const URI = `/procesos/nombre/${query}`; // Cambia el endpoint para consultar procesos
-      try {
-        const respuesta = await clienteAxios.get(URI, config);
-        if (respuesta.status === 200) {
-          setProcessQuery(respuesta.data); // Asigna la respuesta a `setProcessQuery`
-        } else {
-          console.log("Error: " + respuesta.status);
-          setProcessQuery([]);
-        }
-      } catch (error) {
-        console.error(error);
-        setProcessQuery([]);
-      }
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setProcessQuery(processQuery); // Mostrar todos los procesos si el término de búsqueda está vacío
     } else {
-      setProcessQuery([]);
+      const filteredProcesses = processQuery.filter((process) =>
+        process.Nom_Proceso.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setProcessQuery(filteredProcesses);
     }
   };
 
-  useEffect(() => {
-    setProcessQuery([]);
-    setSearchQuery("");
-  }, [buttonForm]);
-
   return (
-    <div className="flex content-center w-96">
-      <form
-        id="queryForm"
-        className="bg-white rounded-2xl max-w-3xl w-full"
+    <div className="search-wrapper">
+      <input
+        type="text"
+        placeholder="Buscar por nombre..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+      <button
+        type="button"
+        onClick={handleSearch}
+        className="search-button"
       >
-        <div className="mb-4">
-          <input
-            type="text"
-            id="processQuery"
-            placeholder="Buscar Procesos..."
-            className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-            value={searchQuery}
-            onChange={(e) => {
-              const { value } = e.target;
-              setSearchQuery(value);
-              sendFormQuery(value);
-            }}
-          />
-        </div>
-      </form>
+        Buscar
+      </button>
     </div>
   );
 };
 
-export default FormQueryProcesses;
+export default FormQueryProcess;

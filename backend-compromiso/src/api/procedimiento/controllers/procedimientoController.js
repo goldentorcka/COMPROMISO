@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Procedimiento = require('../models/procedimientoModel.js');
 const logger = require('../../../../config/logger.js');
 
@@ -15,7 +16,6 @@ const getProcedimientos = async (req, res) => {
   }
 };
 
-
 const getProcedimientoById = async (req, res) => {
   try {
     const procedimiento = await Procedimiento.findByPk(req.params.id);
@@ -32,11 +32,29 @@ const getProcedimientoById = async (req, res) => {
 
 const createProcedimiento = async (req, res) => {
   try {
-    const procedimiento = await Procedimiento.create(req.body);
+    const { Nom_Procedimiento, Id_Proceso, estado } = req.body;
+
+    // Validar que los campos requeridos estén presentes
+    if (!Nom_Procedimiento || !Id_Proceso || !estado) {
+      return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
+    }
+
+    // Validar que el estado sea 'Sí' o 'No'
+    if (estado !== 'Sí' && estado !== 'No') {
+      return res.status(400).json({ error: 'Estado inválido' });
+    }
+
+    // Crear el procedimiento si todas las validaciones son correctas
+    const procedimiento = await Procedimiento.create({ Nom_Procedimiento, Id_Proceso, estado });
     res.status(201).json(procedimiento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+
+    // Manejo de errores con un mensaje genérico
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: 'Error en el procesamiento de datos' });
+    }
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -45,6 +63,7 @@ const updateProcedimiento = async (req, res) => {
     const [updated] = await Procedimiento.update(req.body, {
       where: { Id_Procedimiento: req.params.id },
     });
+
     if (updated) {
       const updatedProcedimiento = await Procedimiento.findByPk(req.params.id);
       res.json(updatedProcedimiento);
@@ -62,6 +81,7 @@ const deleteProcedimiento = async (req, res) => {
     const deleted = await Procedimiento.destroy({
       where: { Id_Procedimiento: req.params.id },
     });
+
     if (deleted) {
       res.status(204).end();
     } else {

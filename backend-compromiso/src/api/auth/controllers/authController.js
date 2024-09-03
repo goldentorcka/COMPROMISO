@@ -1,25 +1,32 @@
+// @ts-nocheck
 const jwt = require('jsonwebtoken');
-const { jwtSecret } = require('../../../../config/jwtConfig.js'); // Asegúrate de que este archivo tenga el mismo secreto que el middleware
+const bcrypt = require('bcrypt');
+const Usuario = require('../../../api/usuario/models/usuarioModel.js');
 
-function login(req, res) {
-  const { Nom_Usuario, Pass_Usuario } = req.body;
+const loginUsuario = async (req, res) => {
+  const { Cor_Usuario, password } = req.body;
 
-  // Aquí deberías verificar las credenciales del usuario (esto es solo un ejemplo)
-  if (Nom_Usuario === 'Marlon' && Pass_Usuario === 'marlon1234567') {
-    // Usuario encontrado y autenticado
+  try {
+    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
 
-    // Datos que se incluirán en el token
-    const user = { id: 2, Nom_Usuario: 'Marlon' };
+    if (!usuario || !await bcrypt.compare(password, usuario.password)) {
+      return res.status(401).json({ msg: 'Credenciales inválidas' });
+    }
 
-    // Generación del token
-    const token = jwt.sign(user, jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign(
+      { id: usuario.Id_Usuario, rol: usuario.rol },
+      process.env.JWT_SECRET, // Usa la clave secreta del entorno
+      { expiresIn: '1h' }
+    );
 
-    // Envío del token al cliente
-    res.json({ token });
-  } else {
-    // Autenticación fallida
-    res.status(401).json({ message: 'Credenciales incorrectas' });
+    res.json({ token, rol: usuario.rol });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ msg: 'Error interno del servidor' });
   }
-}
+};
 
-module.exports = { login };
+module.exports = {
+  loginUsuario
+};

@@ -1,251 +1,162 @@
-import clienteAxios from "../config/axios.jsx";
-import { useState, useEffect } from "react";
-import { ReactSession } from 'react-client-session';
-import Swal from "sweetalert2";
-import FormUnidades from "../unit/formUnits.jsx"; // Componente para el formulario de unidades
-import FormQueryUnidades from "../unit/formQueryUnits.jsx"; // Componente para buscar unidades
-import Pagination from "../pagination.jsx";
-import Alerta from "../components/Alerta.jsx";
-import { AiOutlineMinusCircle } from "react-icons/ai";
-import { IoMdPersonAdd } from "react-icons/io";
-import { FaRegEdit } from "react-icons/fa";
-import { MdDeleteOutline } from "react-icons/md";
+import React, { useState, useEffect } from 'react';
+import clienteAxios from '../api.js';
+import Swal from 'sweetalert2';
+import Pagination from '../components/Pagination/Pagination';
+import FormUnits from './formUnits.jsx';
+import FormQueryUnit from './formQueryUnits.jsx';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
+import './styles.css'; // Importa el archivo CSS
 
-const URI = "unidades"; // Endpoint para unidades
-
-const CrudUnidades = () => {
-  const [unidadList, setUnidadList] = useState([]);
-  const [unidadQuery, setUnidadQuery] = useState([]);
-  const [buttonForm, setButtonForm] = useState("Enviar");
-  const [stateAddUnidad, setStateAddUnidad] = useState(false);
-  const [desde, setDesde] = useState(0);
-  const [hasta, setHasta] = useState(0);
-  const [alerta, setAlerta] = useState({});
-
-  const [unidad, setUnidad] = useState({
-    Nom_Unidad: "",
-    Id_Area: "",
-    estado: "",
+const CrudUnits = () => {
+  const [unitList, setUnitList] = useState([]);
+  const [unit, setUnit] = useState({
+    Nom_Unidad: '',
+    Id_Area: '',
+    estado: 'No',
   });
+  const [unitQuery, setUnitQuery] = useState([]);
+  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [desde, setDesde] = useState(0);
+  const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
-    getAllUnidades();
-  }, []);
+    getAllUnits();
+  }, [desde, hasta]);
 
-  const getAllUnidades = async () => {
-    const token = ReactSession.get("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const getAllUnits = async () => {
     try {
-      const responseApi = await clienteAxios.get(URI, config);
-      if (responseApi.status === 200) {
-        setUnidadList(responseApi.data);
-      } else {
-        setAlerta({
-          msg: "Error al cargar los registros!",
-          error: true,
-        });
-      }
+      const response = await clienteAxios.get('/units');
+      setUnitList(response.data);
+      setUnitQuery(response.data); // Inicializar unitQuery con todas las unidades
     } catch (error) {
-      setAlerta({
-        msg: "Error al cargar los registros!",
-        error: true,
-      });
-      console.error(error);
+      console.error('Error al obtener las unidades:', error);
     }
   };
 
-  const getUnidad = async (Id_Unidad) => {
-    setButtonForm("Actualizar");
-    const token = ReactSession.get("token");
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
+  const getUnit = async (Id_Unidad) => {
     try {
-      const responseApi = await clienteAxios.get(`${URI}/${Id_Unidad}`, config);
-      if (responseApi.status === 200) {
-        setUnidad(responseApi.data);
-      } else {
-        setAlerta({
-          msg: "Error al cargar el registro!",
-          error: true,
-        });
-      }
+      const response = await clienteAxios.get(`/units/${Id_Unidad}`);
+      setUnit(response.data);
+      setButtonForm('Actualizar');
     } catch (error) {
-      setAlerta({
-        msg: "Error al cargar el registro!",
-        error: true,
-      });
-      console.error(error);
+      console.error('Error al obtener la unidad:', error);
     }
   };
 
-  const deleteUnidad = (Id_Unidad) => {
-    Swal.fire({
-      title: "¿Estás seguro?",
-      text: "No podrás revertir esto!",
-      icon: "warning",
+  const deleteUnit = async (Id_Unidad) => {
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¡No podrás recuperar este registro!',
+      icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Sí, Borrar!",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const token = ReactSession.get("token");
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        };
-        try {
-          const responseApi = await clienteAxios.delete(`${URI}/${Id_Unidad}`, config);
-          if (responseApi.status === 200) {
-            getAllUnidades(); // Refrescar la lista después de borrar
-            Swal.fire({
-              title: "Borrado!",
-              text: "El registro ha sido borrado.",
-              icon: "success",
-            });
-          } else {
-            Swal.fire({
-              title: "Error!",
-              text: responseApi.data.message,
-              icon: "error",
-            });
-          }
-        } catch (error) {
-          Swal.fire({
-            title: "Error!",
-            text: "Hubo un problema al intentar borrar el registro.",
-            icon: "error",
-          });
-          console.error(error);
-        }
-      }
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminarlo!'
     });
+
+    if (result.isConfirmed) {
+      try {
+        await clienteAxios.delete(`/units/${Id_Unidad}`);
+        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+        getAllUnits();
+      } catch (error) {
+        console.error('Error al eliminar la unidad:', error);
+      }
+    }
   };
 
-  const updateTextButton = (text) => {
-    setButtonForm(text);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (buttonForm === 'Enviar') {
+        await clienteAxios.post('/units', unit);
+        Swal.fire('Agregado!', 'La unidad ha sido agregada.', 'success');
+      } else {
+        await clienteAxios.put(`/units/${unit.Id_Unidad}`, unit);
+        Swal.fire('Actualizado!', 'La unidad ha sido actualizada.', 'success');
+      }
+      resetForm();
+      getAllUnits();
+    } catch (error) {
+      console.error('Error al enviar el formulario:', error);
+    }
   };
 
-  const { msg } = alerta;
+  const resetForm = () => {
+    setUnit({
+      Nom_Unidad: '',
+      Id_Area: '',
+      estado: 'No',
+    });
+    setButtonForm('Enviar');
+  };
 
   return (
-    <>
-      <div className="flex justify-end pb-3">
-        <button
-          className="bg-green-600 px-6 py-2 rounded-xl text-white font-bold m-4 flex items-center hover:bg-green-800"
-          onClick={() => setStateAddUnidad(!stateAddUnidad)}
-        >
-          {stateAddUnidad ? (
-            <AiOutlineMinusCircle size={16} className="me-2" />
-          ) : (
-            <IoMdPersonAdd size={16} className="me-2" />
-          )}
-          {stateAddUnidad ? "Ocultar" : "Agregar"}
-        </button>
-      </div>
-      <div className="overflow-x-auto">
-        <div className="flex justify-between">
-          <div>
-            <h1 className="font-semibold text-lg text-gray-700">
-              Buscar Por Nombre...
-            </h1>
-            <FormQueryUnidades
-              getUnidad={getUnidad}
-              deleteUnidad={deleteUnidad}
-              buttonForm={buttonForm}
-              unidadQuery={unidadQuery}
-              setUnidadQuery={setUnidadQuery}
+    <div className="crud-container">
+      <SidebarAdministrator />
+      <div className="main-content">
+        <h1 className="page-title">Gestión de Unidades</h1>
+        <div className="content-wrapper">
+          <FormUnits
+            unit={unit}
+            setUnit={setUnit}
+            handleSubmit={handleSubmit}
+            buttonForm={buttonForm}
+            resetForm={resetForm}
+          />
+          <div className="table-wrapper">
+            <FormQueryUnit
+              unitQuery={unitQuery}
+              setUnitQuery={setUnitQuery}
+            />
+            <table className="process-table"> {/* Asegúrate de usar la clase process-table */}
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre de la Unidad</th>
+                  <th>Área</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Array.isArray(unitQuery) &&
+                  unitQuery.slice(desde, hasta).map((unit) => (
+                    <tr key={unit.Id_Unidad}>
+                      <td>{unit.Id_Unidad}</td>
+                      <td>{unit.Nom_Unidad}</td>
+                      <td>{unit.Id_Area}</td>
+                      <td>{unit.estado}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <button
+                            className="edit-button"
+                            onClick={() => getUnit(unit.Id_Unidad)}
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={() => deleteUnit(unit.Id_Unidad)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <Pagination
+              URI="/units"
+              setDesde={setDesde}
+              setHasta={setHasta}
             />
           </div>
         </div>
-        <hr />
-        {msg && <Alerta alerta={alerta} />}
-        <table className="min-w-full bg-white text-center text-sm">
-          <thead className="text-white bg-green-700">
-            <tr>
-              <th className="py-2 px-4 border-2 border-b-gray-500">ID</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Nombre</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Área</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Estado</th>
-              <th className="py-2 px-4 border-2 border-b-gray-500">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(unidadQuery.length ? unidadQuery : unidadList).map(
-              (unidad, indice) =>
-                indice >= desde && indice < hasta ? (
-                  <tr
-                    key={unidad.Id_Unidad}
-                    className="odd:bg-white even:bg-gray-100 select-none"
-                  >
-                    <td className="py-2 px-4 border-b">
-                      {unidad.Id_Unidad}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {unidad.Nom_Unidad}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {unidad.Id_Area}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      {unidad.estado}
-                    </td>
-                    <td className="py-2 px-4 border-b">
-                      <button
-                        onClick={() => [
-                          getUnidad(unidad.Id_Unidad),
-                          setStateAddUnidad(true),
-                        ]}
-                        className="text-blue-500 hover:text-blue-700 hover:border hover:border-blue-500 mr-3 p-1 rounded"
-                      >
-                        <FaRegEdit />
-                      </button>
-                      <button
-                        onClick={() => deleteUnidad(unidad.Id_Unidad)}
-                        className="text-red-500 hover:text-red-700 hover:border hover:border-red-500 p-1 rounded"
-                      >
-                        <MdDeleteOutline />
-                      </button>
-                    </td>
-                  </tr>
-                ) : null
-            )}
-          </tbody>
-        </table>
       </div>
-      <div className="flex justify-center mt-4">
-        <Pagination
-          desde={desde}
-          setDesde={setDesde}
-          hasta={hasta}
-          setHasta={setHasta}
-          max={unidadList.length}
-        />
-      </div>
-      {stateAddUnidad && (
-        <FormUnidades
-          unidad={unidad}
-          setUnidad={setUnidad}
-          updateTextButton={updateTextButton}
-          buttonForm={buttonForm}
-          getAllUnidades={getAllUnidades}
-          setStateAddUnidad={setStateAddUnidad}
-        />
-      )}
-    </>
+    </div>
   );
 };
 
-export default CrudUnidades;
+export default CrudUnits;

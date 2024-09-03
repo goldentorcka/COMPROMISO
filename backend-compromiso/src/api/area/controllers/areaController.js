@@ -1,5 +1,6 @@
-const Area = require('../models/areaModel.js');
-const logger = require('../../../../config/logger.js');
+// @ts-nocheck
+const Area = require('../models/areaModel.js');  // Ruta tal como la diste
+const logger = require('../../../../config/logger.js');  // Ruta tal como la diste
 
 const getAreas = async (req, res) => {
   try {
@@ -44,6 +45,9 @@ const createArea = async (req, res) => {
 
 const updateArea = async (req, res) => {
   try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'Datos insuficientes para actualizar el área' });
+    }
     const [updated] = await Area.update(req.body, {
       where: { Id_Area: req.params.id },
     });
@@ -80,5 +84,5 @@ module.exports = {
   getAreaById,
   createArea,
   updateArea,
-  deleteArea
+  deleteArea,
 };

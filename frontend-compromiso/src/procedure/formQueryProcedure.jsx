@@ -1,35 +1,38 @@
-import { useState } from "react";
+// FormQueryProcedure.jsx
+import React, { useState } from 'react';
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
-const FormQueryProcedure = ({ getProcedure, deleteProcedure, buttonForm, procedureQuery, setProcedureQuery }) => {
-  const [search, setSearch] = useState("");
+const FormQueryProcedure = ({ procedureQuery, setProcedureQuery }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      // Aquí podrías hacer una llamada a la API para buscar procedimientos por nombre
-      const result = procedureQuery.filter(p => p.Nom_Procedimiento.toLowerCase().includes(search.toLowerCase()));
-      setProcedureQuery(result);
-    } catch (error) {
-      console.error(error);
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setProcedureQuery(procedureQuery); // Mostrar todos los procedimientos si el término de búsqueda está vacío
+    } else {
+      const filteredProcedures = procedureQuery.filter((procedure) =>
+        procedure.Nom_Procedimiento.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setProcedureQuery(filteredProcedures);
     }
   };
 
   return (
-    <form onSubmit={handleSearch} className="mb-4">
+    <div className="search-wrapper">
       <input
         type="text"
         placeholder="Buscar por nombre..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
       />
       <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded mt-2 hover:bg-green-800"
+        type="button"
+        onClick={handleSearch}
+        className="search-button"
       >
         Buscar
       </button>
-    </form>
+    </div>
   );
 };
 

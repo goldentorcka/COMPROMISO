@@ -1,3 +1,4 @@
+// @ts-nocheck
 const Formato = require('../models/formatoModel.js');
 const logger = require('../../../../config/logger.js');
 
@@ -31,14 +32,40 @@ const getFormatoById = async (req, res) => {
 
 const createFormato = async (req, res) => {
   try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: 'Datos insuficientes para crear el formato' });
+    const { Cod_Formato, Fec_Actualizacion, Ver_Formato, Est_Formato, Id_Responsable, Nom_Formato, Nom_Magnetico, Id_Procedimiento, Id_Unidad } = req.body;
+
+    // Validar que todos los campos requeridos estén presentes
+    if (!Cod_Formato || !Fec_Actualizacion || !Ver_Formato || !Est_Formato || !Nom_Formato || !Nom_Magnetico || !Id_Procedimiento || !Id_Unidad) {
+      return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
     }
-    const formato = await Formato.create(req.body);
+
+    // Validar que el estado sea 'Activo' o 'Inactivo'
+    if (Est_Formato !== 'Activo' && Est_Formato !== 'Inactivo') {
+      return res.status(400).json({ error: 'Estado inválido' });
+    }
+
+    // Crear el formato si todas las validaciones son correctas
+    const formato = await Formato.create({
+      Cod_Formato,
+      Fec_Actualizacion,
+      Ver_Formato,
+      Est_Formato,
+      Id_Responsable,
+      Nom_Formato,
+      Nom_Magnetico,
+      Id_Procedimiento,
+      Id_Unidad
+    });
+
     res.status(201).json(formato);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+
+    // Manejo de errores con un mensaje genérico
+    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+      return res.status(400).json({ error: 'Error en el procesamiento de datos' });
+    }
+    return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
@@ -47,6 +74,7 @@ const updateFormato = async (req, res) => {
     const [updated] = await Formato.update(req.body, {
       where: { Id_Formato: req.params.id },
     });
+
     if (updated) {
       const updatedFormato = await Formato.findByPk(req.params.id);
       res.json(updatedFormato);
@@ -64,6 +92,7 @@ const deleteFormato = async (req, res) => {
     const deleted = await Formato.destroy({
       where: { Id_Formato: req.params.id },
     });
+
     if (deleted) {
       res.status(204).end();
     } else {

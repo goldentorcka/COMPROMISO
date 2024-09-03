@@ -1,36 +1,38 @@
-import { useState } from "react";
+import React, { useState } from 'react';
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
-const FormQueryUnidades = ({ getUnidad, deleteUnidad, buttonForm, unidadQuery, setUnidadQuery }) => {
-  const [search, setSearch] = useState("");
+const FormQueryUnit = ({ unitQuery, setUnitQuery }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    try {
-      // Aquí podrías hacer una llamada a la API para buscar unidades por nombre
-      const result = unidadQuery.filter(u => u.Nom_Unidad.toLowerCase().includes(search.toLowerCase()));
-      setUnidadQuery(result);
-    } catch (error) {
-      console.error(error);
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setUnitQuery(unitQuery); // Mostrar todas las unidades si el término de búsqueda está vacío
+    } else {
+      const filteredUnits = unitQuery.filter((unit) =>
+        unit.Nom_Unidad.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setUnitQuery(filteredUnits);
     }
   };
 
   return (
-    <form onSubmit={handleSearch} className="mb-4">
+    <div className="search-wrapper">
       <input
         type="text"
         placeholder="Buscar por nombre..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full px-3 py-2 border rounded"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
       />
       <button
-        type="submit"
-        className="bg-green-600 text-white px-4 py-2 rounded mt-2 hover:bg-green-800"
+        type="button"
+        onClick={handleSearch}
+        className="search-button"
       >
         Buscar
       </button>
-    </form>
+    </div>
   );
 };
 
-export default FormQueryUnidades;
+export default FormQueryUnit;

@@ -2,8 +2,9 @@
   "name": "compromiso",
   "version": "1.0.0",
   "description": "Proyecto-Sena",
-  "main": "App.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "npm start"
   },
   "author": "Marlon_Cumbe",
@@ -13,5 +14,8 @@
     "express-validator": "^7.1.0",
     "jsdoc": "^4.0.3",
     "strapi": "^3.6.11"
+  },
+  "devDependencies": {
+    "electron": "^32.0.1"
   }
 }
