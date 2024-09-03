@@ -1,32 +1,21 @@
-// @ts-nocheck
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
-const Usuario = require('../../../api/usuario/models/usuarioModel.js');
+const Usuario = require('../../usuario/models/usuarioModel.js');
+const logger = require('../../../../config/logger.js');
 
-const loginUsuario = async (req, res) => {
-  const { Cor_Usuario, password } = req.body;
-
+const buscarUsuarioPorCodigo = async (req, res) => {
   try {
-    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
+    const usuario = await Usuario.findOne({ where: { Cod_Usuario: req.params.codUsuario } });
 
-    if (!usuario || !await bcrypt.compare(password, usuario.password)) {
-      return res.status(401).json({ msg: 'Credenciales inválidas' });
+    if (usuario) {
+      console.log(usuario.contraseña); // Ejemplo de acceso a la propiedad 'contraseña'
+      res.status(200).json({ contraseña: usuario.contraseña });
+    } else {
+      console.log('Usuario no encontrado');
+      res.status(404).json({ mensaje: 'Usuario no encontrado' });
     }
-
-    const token = jwt.sign(
-      { id: usuario.Id_Usuario, rol: usuario.rol },
-      process.env.JWT_SECRET, // Usa la clave secreta del entorno
-      { expiresIn: '1h' }
-    );
-
-    res.json({ token, rol: usuario.rol });
-
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: 'Error interno del servidor' });
+    logger.error('Error al buscar el usuario:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-module.exports = {
-  loginUsuario
-};
+module.exports = { buscarUsuarioPorCodigo };
