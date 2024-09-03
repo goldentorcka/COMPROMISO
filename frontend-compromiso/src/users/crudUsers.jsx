@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import FormUsers from './formUsers.jsx';
 import Pagination from '../components/Pagination/Pagination';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import './styles.css'; // Asegúrate de que la ruta sea correcta
+import './styles.css'; 
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
@@ -105,64 +105,66 @@ const CrudUsers = () => {
   };
 
   return (
-    <div className="crud-container">
-      <SidebarAdministrator />
-      <div className="main-content">
-        <h1 className="page-title">Gestión de Usuarios</h1>
-        <div className="content-wrapper">
-          {stateAddUser && (
-            <FormUsers
-              user={user}
-              setUser={setUser}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-            />
-          )}
-          <div className="table-wrapper">
-            <table className="area-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre</th>
-                  <th>Apellido</th>
-                  <th>Código</th>
-                  <th>Correo</th>
-                  <th>Número de Documento</th>
-                  <th>Fecha</th>
-                  <th>Estado</th>
-                  <th>Rol</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(userList) && userList.slice(desde, hasta).map((user) => (
-                  <tr key={user.Id_Usuario}>
-                    <td>{user.Id_Usuario}</td>
-                    <td>{user.Nom_Usuario}</td>
-                    <td>{user.Ape_Usuario}</td>
-                    <td>{user.Cod_Usuario}</td>
-                    <td>{user.Cor_Usuario}</td>
-                    <td>{user.Nde_Usuario}</td>
-                    <td>{user.Fec_Usuario}</td>
-                    <td>{user.estado}</td>
-                    <td>{user.rol}</td>
-                    <td>
-                      <button className="edit-button" onClick={() => getUser(user.Id_Usuario)}>✏️</button>
-                      <button className="delete-button" onClick={() => deleteUser(user.Id_Usuario)}>🗑️</button>
-                    </td>
+    <>
+      <div className="crud-container">
+        <SidebarAdministrator />
+        <div className="main-content">
+          <h1 className="page-title">Gestión de Usuarios</h1>
+          <div className="content-wrapper">
+            {stateAddUser && (
+              <FormUsers
+                user={user}
+                setUser={setUser}
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+              />
+            )}
+            <div className="table-wrapper">
+              <table className="area-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Código</th>
+                    <th>Correo</th>
+                    <th>Número de Documento</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {Array.isArray(userList) && userList.slice(desde, hasta).map((user) => (
+                    <tr key={user.Id_Usuario}>
+                      <td>{user.Id_Usuario}</td>
+                      <td>{user.Nom_Usuario}</td>
+                      <td>{user.Ape_Usuario}</td>
+                      <td>{user.Cod_Usuario}</td>
+                      <td>{user.Cor_Usuario}</td>
+                      <td>{user.Nde_Usuario}</td>
+                      <td>{user.Fec_Usuario}</td>
+                      <td>{user.estado}</td>
+                      <td>{user.rol}</td>
+                      <td>
+                        <button className="edit-button" onClick={() => getUser(user.Id_Usuario)}>✏️</button>
+                        <button className="delete-button" onClick={() => deleteUser(user.Id_Usuario)}>🗑️</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <Pagination
+              URI="/usuarios"
+              setDesde={setDesde}
+              setHasta={setHasta}
+            />
           </div>
-          <Pagination
-            URI="/usuarios"
-            setDesde={setDesde}
-            setHasta={setHasta}
-          />
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
