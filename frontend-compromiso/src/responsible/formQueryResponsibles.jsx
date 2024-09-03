@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
-const FormQueryResponsables = () => {
-  const [responsableQuery, setResponsableQuery] = useState('');
+const FormQueryResponsable = ({ responsableQuery, setResponsableQuery }) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  // Efecto para manejar cambios en responsableQuery
-  useEffect(() => {
-    // Ejemplo de efecto que depende de responsableQuery
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`/responsables?query=${responsableQuery}`);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
-      }
-    };
-
-    fetchData();
-  }, [responsableQuery]);
+  const handleSearch = () => {
+    if (searchTerm.trim() === '') {
+      setResponsableQuery(responsableQuery); // Mostrar todos los responsables si el término de búsqueda está vacío
+    } else {
+      const filteredResponsables = responsableQuery.filter((responsable) =>
+        responsable.Nom_Responsable.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setResponsableQuery(filteredResponsables);
+    }
+  };
 
   return (
-    <div>
+    <div className="search-wrapper">
       <input
         type="text"
-        value={responsableQuery}
-        onChange={(e) => setResponsableQuery(e.target.value)}
-        placeholder="Buscar responsables"
+        placeholder="Buscar por nombre..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
       />
+      <button
+        type="button"
+        onClick={handleSearch}
+        className="search-button"
+      >
+        Buscar
+      </button>
     </div>
   );
 };
 
-export default FormQueryResponsables;
+export default FormQueryResponsable;

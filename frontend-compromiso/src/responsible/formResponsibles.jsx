@@ -1,66 +1,48 @@
-import { useEffect, useState } from "react";
-import clienteAxios from "../config/axios"; // Asegúrate de que la importación es correcta
-import { ReactSession } from 'react-client-session';
+import React from 'react';
+import './styles.css'; // Asegúrate de importar el archivo CSS
 
-const FormQueryResponsables = ({ buttonForm, setResponsableQuery }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const sendFormQuery = async (query) => {
-    if (query) {
-      const token = ReactSession.get("token");
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      };
-
-      const URI = `/api/responsables?search=${query}`; // Asegúrate de que el endpoint sea correcto
-      try {
-        const respuesta = await clienteAxios.get(URI, config);
-        if (respuesta.status === 200) {
-          setResponsableQuery(respuesta.data);
-        } else {
-          console.log("Error: " + respuesta.status);
-          setResponsableQuery([]);
-        }
-      } catch (error) {
-        console.error(error);
-        setResponsableQuery([]);
-      }
-    } else {
-      setResponsableQuery([]);
-    }
+const FormResponsables = ({ responsable, setResponsable, handleSubmit, buttonForm }) => {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setResponsable((prevResponsable) => ({
+      ...prevResponsable,
+      [name]: value,
+    }));
   };
 
-  useEffect(() => {
-    setResponsableQuery([]);
-    setSearchQuery("");
-  }, [buttonForm]);
-
   return (
-    <div className="flex content-center w-96">
-      <form
-        id="queryForm"
-        className="bg-white rounded-2xl max-w-3xl w-full"
-      >
-        <div className="mb-4">
-          <input
-            type="text"
-            id="responsableQuery"
-            placeholder="Buscar Responsables..."
-            className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
-            value={searchQuery}
-            onChange={(e) => {
-              const { value } = e.target;
-              setSearchQuery(value);
-              sendFormQuery(value);
-            }}
-          />
-        </div>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit} className="form">
+      <div className="form-group">
+        <label htmlFor="Nom_Responsable">Nombre del Responsable</label>
+        <input
+          type="text"
+          id="Nom_Responsable"
+          name="Nom_Responsable"
+          value={responsable.Nom_Responsable}
+          onChange={handleChange}
+          className="search-input"
+          required
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="estado">Estado</label>
+        <select
+          id="estado"
+          name="estado"
+          value={responsable.estado}
+          onChange={handleChange}
+          className="search-input"
+          required
+        >
+          <option value="Sí">Sí</option>
+          <option value="No">No</option>
+        </select>
+      </div>
+      <button type="submit" className="submit-button">
+        {buttonForm}
+      </button>
+    </form>
   );
 };
 
-export default FormQueryResponsables;
+export default FormResponsables;

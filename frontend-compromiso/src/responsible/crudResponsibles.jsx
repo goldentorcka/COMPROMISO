@@ -1,72 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api'; // Asegúrate de que la importación es correcta
+import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormResponsible from './formResponsibles';
-import Pagination from '../components/Pagination/Pagination'; // Asegúrate de que este componente exista
-import SidebarAdministrator from '../components/Admin/SidebarAdministrator';
-import '../css/stylesCrudResponsible.css';
+import Pagination from '../components/Pagination/Pagination';
+import FormResponsables from './formResponsibles.jsx';
+import FormQueryResponsable from './formQueryResponsibles.jsx';
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
 
-const CrudResponsible = () => {
-  const [responsibles, setResponsibles] = useState([]);
-  const [currentResponsible, setCurrentResponsible] = useState({
-    Id_Responsible: "",
-    Name: "",
-    Email: "",
-    Phone: "",
-    Status: "Active",
+const CrudResponsables = () => {
+  const [responsableList, setResponsableList] = useState([]);
+  const [responsable, setResponsable] = useState({
+    Nom_Responsable: '',
+    estado: 'Sí',
   });
-  const [buttonForm, setButtonForm] = useState("Submit");
-  const [stateAddResponsible, setStateAddResponsible] = useState(true);
-  const [page, setPage] = useState(1);
-  const [perPage] = useState(10);
+  const [responsableQuery, setResponsableQuery] = useState([]);
+  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [desde, setDesde] = useState(0);
+  const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
-    fetchResponsibles();
-  }, [page]);
+    getAllResponsables();
+  }, [desde, hasta]);
 
-  const fetchResponsibles = async () => {
+  const getAllResponsables = async () => {
     try {
-      const response = await clienteAxios.get('/responsibles', {
-        params: {
-          _page: page,
-          _limit: perPage,
-        },
-      });
-      setResponsibles(response.data);
+      const response = await clienteAxios.get('/responsables');
+      setResponsableList(response.data);
+      setResponsableQuery(response.data); // Inicializar responsableQuery con todos los responsables
     } catch (error) {
-      console.error("Error al obtener los responsables:", error);
+      console.error('Error al obtener los responsables:', error);
     }
   };
 
-  const fetchResponsible = async (Id_Responsible) => {
+  const getResponsable = async (Id_Responsable) => {
     try {
-      const response = await clienteAxios.get(`/responsibles/${Id_Responsible}`);
-      setCurrentResponsible(response.data);
-      setButtonForm("Update");
-      setStateAddResponsible(true);
+      const response = await clienteAxios.get(`/responsables/${Id_Responsable}`);
+      setResponsable(response.data);
+      setButtonForm('Actualizar');
     } catch (error) {
-      console.error("Error al obtener el responsable:", error);
+      console.error('Error al obtener el responsable:', error);
     }
   };
 
-  const deleteResponsible = async (Id_Responsible) => {
+  const deleteResponsable = async (Id_Responsable) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to recover this record!",
+      title: '¿Estás seguro?',
+      text: '¡No podrás recuperar este registro!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonText: 'Sí, eliminarlo!'
     });
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/responsibles/${Id_Responsible}`);
-        Swal.fire('Deleted!', 'The record has been deleted.', 'success');
-        fetchResponsibles(); // Update the list after deletion
+        await clienteAxios.delete(`/responsables/${Id_Responsable}`);
+        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
+        getAllResponsables();
       } catch (error) {
-        console.error("Error al eliminar el responsable:", error);
+        console.error('Error al eliminar el responsable:', error);
       }
     }
   };
@@ -74,94 +66,92 @@ const CrudResponsible = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (buttonForm === "Submit") {
-        await clienteAxios.post('/responsibles', currentResponsible);
-        Swal.fire('Added!', 'The responsible has been added.', 'success');
+      if (buttonForm === 'Enviar') {
+        await clienteAxios.post('/responsables', responsable);
+        Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/responsibles/${currentResponsible.Id_Responsible}`, currentResponsible);
-        Swal.fire('Updated!', 'The responsible has been updated.', 'success');
+        await clienteAxios.put(`/responsables/${responsable.Id_Responsable}`, responsable);
+        Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
-      resetForm(); // Clear the form
-      fetchResponsibles(); // Update the list
-      setStateAddResponsible(false);
+      resetForm();
+      getAllResponsables();
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
+      console.error('Error al enviar el formulario:', error);
     }
   };
 
   const resetForm = () => {
-    setCurrentResponsible({
-      Id_Responsible: "",
-      Name: "",
-      Email: "",
-      Phone: "",
-      Status: "Active",
+    setResponsable({
+      Nom_Responsable: '',
+      estado: 'Sí',
     });
-    setButtonForm("Submit");
+    setButtonForm('Enviar');
   };
 
   return (
     <div className="crud-container">
       <SidebarAdministrator />
       <div className="main-content">
-        <h1 className="page-title">Manage Responsible Persons</h1>
+        <h1 className="page-title">Gestión de Responsables</h1>
         <div className="content-wrapper">
-          {stateAddResponsible && (
-            <FormResponsible
-              responsible={currentResponsible}
-              setResponsible={setCurrentResponsible}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-            />
-          )}
+          <FormResponsables
+            responsable={responsable}
+            setResponsable={setResponsable}
+            handleSubmit={handleSubmit}
+            buttonForm={buttonForm}
+            resetForm={resetForm}
+          />
           <div className="table-wrapper">
-            <table className="responsible-table">
+            <FormQueryResponsable
+              responsableQuery={responsableQuery}
+              setResponsableQuery={setResponsableQuery}
+            />
+            <table className="responsable-table">
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>Nombre del Responsable</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {responsibles.map((resp) => (
-                  <tr key={resp.Id_Responsible}>
-                    <td>{resp.Id_Responsible}</td>
-                    <td>{resp.Name}</td>
-                    <td>{resp.Email}</td>
-                    <td>{resp.Phone}</td>
-                    <td>{resp.Status}</td>
-                    <td>
-                      <button
-                        className="edit-button"
-                        onClick={() => fetchResponsible(resp.Id_Responsible)}
-                      >
-                        ✏️
-                      </button>
-                      <button
-                        className="delete-button"
-                        onClick={() => deleteResponsible(resp.Id_Responsible)}
-                      >
-                        🗑️
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {Array.isArray(responsableQuery) &&
+                  responsableQuery.slice(desde, hasta).map((responsable) => (
+                    <tr key={responsable.Id_Responsable}>
+                      <td>{responsable.Id_Responsable}</td>
+                      <td>{responsable.Nom_Responsable}</td>
+                      <td>{responsable.estado}</td>
+                      <td>
+                        <div className="action-buttons">
+                          <button
+                            className="edit-button"
+                            onClick={() => getResponsable(responsable.Id_Responsable)}
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="delete-button"
+                            onClick={() => deleteResponsable(responsable.Id_Responsable)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
+            <Pagination
+              URI="/responsables"
+              setDesde={setDesde}
+              setHasta={setHasta}
+            />
           </div>
-          <Pagination
-            setPage={setPage}
-            perPage={perPage}
-            page={page}
-          />
         </div>
       </div>
     </div>
   );
 };
 
-export default CrudResponsible;
+export default CrudResponsables;
