@@ -23,17 +23,17 @@ const CrudResponsables = () => {
 
   const getAllResponsables = async () => {
     try {
-      const response = await clienteAxios.get('/responsables');
+      const response = await clienteAxios.get('/api/responsables');
       setResponsableList(response.data);
-      setResponsableQuery(response.data); // Inicializar responsableQuery con todos los responsables
+      setResponsableQuery(response.data); // Inicializar responsableQuery con todos los api/responsables
     } catch (error) {
-      console.error('Error al obtener los responsables:', error);
+      console.error('Error al obtener los api/responsables:', error);
     }
   };
 
   const getResponsable = async (Id_Responsable) => {
     try {
-      const response = await clienteAxios.get(`/responsables/${Id_Responsable}`);
+      const response = await clienteAxios.get(`/api/responsables/${Id_Responsable}`);
       setResponsable(response.data);
       setButtonForm('Actualizar');
     } catch (error) {
@@ -54,7 +54,7 @@ const CrudResponsables = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/responsables/${Id_Responsable}`);
+        await clienteAxios.delete(`/api/responsables/${Id_Responsable}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllResponsables();
       } catch (error) {
@@ -67,10 +67,10 @@ const CrudResponsables = () => {
     e.preventDefault();
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/responsables', responsable);
+        await clienteAxios.post('/api/responsables', responsable);
         Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/responsables/${responsable.Id_Responsable}`, responsable);
+        await clienteAxios.put(`/api/responsables/${responsable.Id_Responsable}`, responsable);
         Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
       resetForm();
@@ -143,7 +143,7 @@ const CrudResponsables = () => {
               </tbody>
             </table>
             <Pagination
-              URI="/responsables"
+              URI="/api/responsables"
               setDesde={setDesde}
               setHasta={setHasta}
             />

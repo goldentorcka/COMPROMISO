@@ -1,4 +1,3 @@
-// src/components/CrudFormatos.jsx
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
@@ -23,23 +22,57 @@ const CrudFormatos = () => {
   const [stateAddFormato, setStateAddFormato] = useState(true);
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  
+  const [responsables, setResponsables] = useState([]);
+  const [procedimientos, setProcedimientos] = useState([]);
+  const [unidades, setUnidades] = useState([]);
 
   useEffect(() => {
     getAllFormatos();
+    getAllResponsables();
+    getAllProcedimientos();
+    getAllUnidades();
   }, [desde, hasta]);
 
   const getAllFormatos = async () => {
     try {
-      const response = await clienteAxios.get('/formatos');
+      const response = await clienteAxios.get('/api/formatos');
       setFormatoList(response.data);
     } catch (error) {
       console.error("Error al obtener los formatos:", error);
     }
   };
 
+  const getAllResponsables = async () => {
+    try {
+      const response = await clienteAxios.get('/api/responsables'); // Ajusta el endpoint según tu API
+      setResponsables(response.data);
+    } catch (error) {
+      console.error("Error al obtener los responsables:", error);
+    }
+  };
+
+  const getAllProcedimientos = async () => {
+    try {
+      const response = await clienteAxios.get('/api/procedimientos'); // Ajusta el endpoint según tu API
+      setProcedimientos(response.data);
+    } catch (error) {
+      console.error("Error al obtener los procedimientos:", error);
+    }
+  };
+
+  const getAllUnidades = async () => {
+    try {
+      const response = await clienteAxios.get('/api/unidades'); // Ajusta el endpoint según tu API
+      setUnidades(response.data);
+    } catch (error) {
+      console.error("Error al obtener las unidades:", error);
+    }
+  };
+
   const getFormato = async (Id_Formato) => {
     try {
-      const response = await clienteAxios.get(`/formatos/${Id_Formato}`);
+      const response = await clienteAxios.get(`/api/formatos/${Id_Formato}`);
       setFormato(response.data);
       setButtonForm("Actualizar");
       setStateAddFormato(true);
@@ -61,7 +94,7 @@ const CrudFormatos = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/formatos/${Id_Formato}`);
+        await clienteAxios.delete(`/api/formatos/${Id_Formato}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllFormatos(); // Actualiza la lista de formatos después de eliminar
       } catch (error) {
@@ -74,10 +107,10 @@ const CrudFormatos = () => {
     e.preventDefault();
     try {
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/formatos', formato);
+        await clienteAxios.post('/api/formatos', formato);
         Swal.fire('Agregado!', 'El formato ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/formatos/${formato.Id_Formato}`, formato);
+        await clienteAxios.put(`/api/formatos/${formato.Id_Formato}`, formato);
         Swal.fire('Actualizado!', 'El formato ha sido actualizado.', 'success');
       }
       resetForm(); // Limpia el formulario
@@ -116,6 +149,9 @@ const CrudFormatos = () => {
                 setFormato={setFormato}
                 handleSubmit={handleSubmit}
                 buttonForm={buttonForm}
+                responsables={responsables}
+                procedimientos={procedimientos}
+                unidades={unidades}
               />
             )}
             <div style={styles.tableWrapper}>
@@ -158,7 +194,7 @@ const CrudFormatos = () => {
               </table>
             </div>
             <Pagination
-              URI="/formatos"
+              URI="/api/formatos"
               setDesde={setDesde}
               setHasta={setHasta}
             />
@@ -210,40 +246,31 @@ const styles = {
   userTable: {
     width: '100%',
     borderCollapse: 'collapse',
-    fontSize: '12px',
   },
   editButton: {
-    backgroundColor: '#4caf50',
+    background: 'none',
     border: 'none',
-    color: 'white',
-    padding: '6px 8px',
-    fontSize: '12px',
-    borderRadius: '4px',
+    color: 'blue',
     cursor: 'pointer',
+    fontSize: '16px',
     marginRight: '5px',
-    transition: 'background-color 0.3s',
   },
   deleteButton: {
-    backgroundColor: '#f44336',
+    background: 'none',
     border: 'none',
-    color: 'white',
-    padding: '6px 8px',
-    fontSize: '12px',
-    borderRadius: '4px',
+    color: 'red',
     cursor: 'pointer',
-    transition: 'background-color 0.3s',
+    fontSize: '16px',
   },
   consultButton: {
-    backgroundColor: '#008cba',
-    color: 'white',
-    padding: '8px 12px',
-    fontSize: '14px',
-    borderRadius: '8px',
-    cursor: 'pointer',
+    backgroundColor: '#007bff',
+    color: '#fff',
     border: 'none',
-    display: 'inline-block',
-    transition: 'background-color 0.3s, transform 0.2s',
-  },
+    padding: '10px 20px',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    fontSize: '16px',
+  }
 };
 
 export default CrudFormatos;

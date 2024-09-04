@@ -1,4 +1,3 @@
-// crudProcedures.jsx
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
@@ -11,22 +10,25 @@ import './styles.css'; // Asegúrate de importar el archivo CSS
 const CrudProcedures = () => {
   const [procedureList, setProcedureList] = useState([]);
   const [procedure, setProcedure] = useState({
+    Id_Procedimiento: '',
     Nom_Procedimiento: '',
     Id_Proceso: '',
     estado: 'No',
   });
   const [procedureQuery, setProcedureQuery] = useState([]);
+  const [processes, setProcesses] = useState([]); // Nuevo estado para almacenar los procesos
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
     getAllProcedures();
+    getAllProcesses(); // Cargar la lista de procesos al montar el componente
   }, [desde, hasta]);
 
   const getAllProcedures = async () => {
     try {
-      const response = await clienteAxios.get('/procedures');
+      const response = await clienteAxios.get('/api/procedimientos');
       setProcedureList(response.data);
       setProcedureQuery(response.data); // Inicializar procedureQuery con todos los procedimientos
     } catch (error) {
@@ -34,9 +36,18 @@ const CrudProcedures = () => {
     }
   };
 
+  const getAllProcesses = async () => {
+    try {
+      const response = await clienteAxios.get('/api/procesos');
+      setProcesses(response.data); // Almacena los procesos en el estado
+    } catch (error) {
+      console.error('Error al obtener los procesos:', error);
+    }
+  };
+
   const getProcedure = async (Id_Procedimiento) => {
     try {
-      const response = await clienteAxios.get(`/procedures/${Id_Procedimiento}`);
+      const response = await clienteAxios.get(`/api/procedimientos/${Id_Procedimiento}`);
       setProcedure(response.data);
       setButtonForm('Actualizar');
     } catch (error) {
@@ -57,7 +68,7 @@ const CrudProcedures = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/procedures/${Id_Procedimiento}`);
+        await clienteAxios.delete(`/api/procedimientos/${Id_Procedimiento}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllProcedures();
       } catch (error) {
@@ -70,10 +81,10 @@ const CrudProcedures = () => {
     e.preventDefault();
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/procedures', procedure);
+        await clienteAxios.post('/api/procedimientos', procedure);
         Swal.fire('Agregado!', 'El procedimiento ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/procedures/${procedure.Id_Procedimiento}`, procedure);
+        await clienteAxios.put(`/api/procedimientos/${procedure.Id_Procedimiento}`, procedure);
         Swal.fire('Actualizado!', 'El procedimiento ha sido actualizado.', 'success');
       }
       resetForm();
@@ -85,11 +96,17 @@ const CrudProcedures = () => {
 
   const resetForm = () => {
     setProcedure({
+      Id_Procedimiento: '',
       Nom_Procedimiento: '',
       Id_Proceso: '',
       estado: 'No',
     });
     setButtonForm('Enviar');
+  };
+
+  const getProcessName = (Id_Proceso) => {
+    const process = processes.find((proc) => proc.Id_Proceso === Id_Proceso);
+    return process ? process.Nom_Proceso : 'Desconocido';
   };
 
   return (
@@ -104,6 +121,7 @@ const CrudProcedures = () => {
             handleSubmit={handleSubmit}
             buttonForm={buttonForm}
             resetForm={resetForm}
+            processes={processes} // Pasar los procesos al formulario
           />
           <div className="table-wrapper">
             <FormQueryProcedure
@@ -115,7 +133,7 @@ const CrudProcedures = () => {
                 <tr>
                   <th>ID</th>
                   <th>Nombre del Procedimiento</th>
-                  <th>ID Proceso</th>
+                  <th>Proceso</th> {/* Cambiado a 'Proceso' */}
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -126,7 +144,7 @@ const CrudProcedures = () => {
                     <tr key={procedure.Id_Procedimiento}>
                       <td>{procedure.Id_Procedimiento}</td>
                       <td>{procedure.Nom_Procedimiento}</td>
-                      <td>{procedure.Id_Proceso}</td>
+                      <td>{getProcessName(procedure.Id_Proceso)}</td> {/* Mostrar el nombre del proceso */}
                       <td>{procedure.estado}</td>
                       <td>
                         <div className="action-buttons">
@@ -149,7 +167,7 @@ const CrudProcedures = () => {
               </tbody>
             </table>
             <Pagination
-              URI="/procedures"
+              URI="/api/procedimientos"
               setDesde={setDesde}
               setHasta={setHasta}
             />

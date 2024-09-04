@@ -15,17 +15,19 @@ const CrudUnits = () => {
     estado: 'No',
   });
   const [unitQuery, setUnitQuery] = useState([]);
+  const [areas, setAreas] = useState([]); // Estado para áreas
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
     getAllUnits();
+    getAllAreas(); // Obtener áreas al cargar el componente
   }, [desde, hasta]);
 
   const getAllUnits = async () => {
     try {
-      const response = await clienteAxios.get('/units');
+      const response = await clienteAxios.get('/api/unidades');
       setUnitList(response.data);
       setUnitQuery(response.data); // Inicializar unitQuery con todas las unidades
     } catch (error) {
@@ -33,9 +35,18 @@ const CrudUnits = () => {
     }
   };
 
+  const getAllAreas = async () => {
+    try {
+      const response = await clienteAxios.get('/api/areas');
+      setAreas(response.data); // Inicializar la lista de áreas
+    } catch (error) {
+      console.error('Error al obtener las áreas:', error);
+    }
+  };
+
   const getUnit = async (Id_Unidad) => {
     try {
-      const response = await clienteAxios.get(`/units/${Id_Unidad}`);
+      const response = await clienteAxios.get(`/api/unidades/${Id_Unidad}`);
       setUnit(response.data);
       setButtonForm('Actualizar');
     } catch (error) {
@@ -56,7 +67,7 @@ const CrudUnits = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/units/${Id_Unidad}`);
+        await clienteAxios.delete(`/api/unidades/${Id_Unidad}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllUnits();
       } catch (error) {
@@ -69,10 +80,10 @@ const CrudUnits = () => {
     e.preventDefault();
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/units', unit);
+        await clienteAxios.post('/api/unidades', unit);
         Swal.fire('Agregado!', 'La unidad ha sido agregada.', 'success');
       } else {
-        await clienteAxios.put(`/units/${unit.Id_Unidad}`, unit);
+        await clienteAxios.put(`/api/unidades/${unit.Id_Unidad}`, unit);
         Swal.fire('Actualizado!', 'La unidad ha sido actualizada.', 'success');
       }
       resetForm();
@@ -91,6 +102,12 @@ const CrudUnits = () => {
     setButtonForm('Enviar');
   };
 
+  // Encuentra el nombre del área usando el ID
+  const getAreaNameById = (id) => {
+    const area = areas.find((area) => area.Id_Area === id);
+    return area ? area.Nom_Area : 'Área no disponible';
+  };
+
   return (
     <div className="crud-container">
       <SidebarAdministrator />
@@ -103,13 +120,14 @@ const CrudUnits = () => {
             handleSubmit={handleSubmit}
             buttonForm={buttonForm}
             resetForm={resetForm}
+            areas={areas} // Pasa las áreas al componente FormUnits
           />
           <div className="table-wrapper">
             <FormQueryUnit
               unitQuery={unitQuery}
               setUnitQuery={setUnitQuery}
             />
-            <table className="process-table"> {/* Asegúrate de usar la clase process-table */}
+            <table className="process-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -125,7 +143,7 @@ const CrudUnits = () => {
                     <tr key={unit.Id_Unidad}>
                       <td>{unit.Id_Unidad}</td>
                       <td>{unit.Nom_Unidad}</td>
-                      <td>{unit.Id_Area}</td>
+                      <td>{getAreaNameById(unit.Id_Area)}</td> {/* Muestra el nombre del área */}
                       <td>{unit.estado}</td>
                       <td>
                         <div className="action-buttons">
@@ -148,7 +166,7 @@ const CrudUnits = () => {
               </tbody>
             </table>
             <Pagination
-              URI="/units"
+              URI="/api/unidades"
               setDesde={setDesde}
               setHasta={setHasta}
             />

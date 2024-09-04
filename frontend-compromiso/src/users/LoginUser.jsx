@@ -166,7 +166,7 @@ const LoginFormAdmin = () => {
             </div>
           </form>
           <nav className="text-center mt-4">
-            <Link
+            {/* <Link
               to="/registrar"
               className="d-block"
               style={linkStyles}
@@ -178,7 +178,7 @@ const LoginFormAdmin = () => {
               }}
             >
               ¿No tienes una Cuenta? Regístrate
-            </Link>
+            </Link> */}
             <Link
               to="/olvide-password"
               className="d-block"

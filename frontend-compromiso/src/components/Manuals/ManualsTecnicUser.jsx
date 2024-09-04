@@ -1,9 +1,8 @@
 import React from 'react';
-import PdfViewer from '../pdf/PdfViewer.jsx'; 
+import PdfViewer from '../pdf/PdfViewer.jsx';
 import NavMenuPublic from '../Nav/NavMenuPublic'; 
 
 const ManualViewer = ({ techManual, userManual }) => {
-  // Estilos en línea
   const styles = {
     manualViewer: {
       padding: '20px',
@@ -16,7 +15,7 @@ const ManualViewer = ({ techManual, userManual }) => {
       marginBottom: '20px',
     }
   };
-
+    
   return (
     <>
       <NavMenuPublic />

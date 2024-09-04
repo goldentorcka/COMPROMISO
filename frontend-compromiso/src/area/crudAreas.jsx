@@ -24,7 +24,7 @@ const CrudAreas = () => {
 
   const getAllAreas = async () => {
     try {
-      const response = await clienteAxios.get('/areas');
+      const response = await clienteAxios.get('/api/areas');
       setAreaList(response.data);
       setAreaQuery(response.data); // Inicializar areaQuery con todas las áreas
     } catch (error) {
@@ -34,7 +34,7 @@ const CrudAreas = () => {
 
   const getArea = async (Id_Area) => {
     try {
-      const response = await clienteAxios.get(`/areas/${Id_Area}`);
+      const response = await clienteAxios.get(`/api/areas/${Id_Area}`);
       setArea(response.data);
       setButtonForm('Actualizar');
     } catch (error) {
@@ -55,7 +55,7 @@ const CrudAreas = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/areas/${Id_Area}`);
+        await clienteAxios.delete(`/api/areas/${Id_Area}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllAreas();
       } catch (error) {
@@ -68,10 +68,10 @@ const CrudAreas = () => {
     e.preventDefault();
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/areas', area);
+        await clienteAxios.post('/api/areas', area);
         Swal.fire('Agregado!', 'El área ha sido agregada.', 'success');
       } else {
-        await clienteAxios.put(`/areas/${area.Id_Area}`, area);
+        await clienteAxios.put(`/api/areas/${area.Id_Area}`, area);
         Swal.fire('Actualizado!', 'El área ha sido actualizada.', 'success');
       }
       resetForm();
@@ -144,7 +144,7 @@ const CrudAreas = () => {
               </tbody>
             </table>
             <Pagination
-              URI="/areas"
+              URI="/api/areas"
               setDesde={setDesde}
               setHasta={setHasta}
             />

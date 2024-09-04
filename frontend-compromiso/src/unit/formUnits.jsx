@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './styles.css'; // Asegúrate de importar el archivo CSS
+import clienteAxios from '../api'; // Ajusta la ruta según la ubicación de tu archivo api.js
 
 const FormUnits = ({ unit, setUnit, handleSubmit, buttonForm }) => {
+  const [areas, setAreas] = useState([]);
+
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const response = await clienteAxios.get('/api/areas'); // Asegúrate de que la ruta sea correcta
+        console.log('Áreas obtenidas:', response.data); // Agrega este log para depurar
+        setAreas(response.data);
+      } catch (error) {
+        console.error('Error al obtener áreas:', error);
+      }
+    };
+
+    fetchAreas();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnit((prevUnit) => ({
@@ -26,15 +43,21 @@ const FormUnits = ({ unit, setUnit, handleSubmit, buttonForm }) => {
       </div>
       <div className="form-group">
         <label htmlFor="Id_Area">Área</label>
-        <input
-          type="number"
+        <select
           id="Id_Area"
           name="Id_Area"
           value={unit.Id_Area}
           onChange={handleChange}
           className="search-input"
           required
-        />
+        >
+          <option value="">Seleccionar Área</option>
+          {areas.map((area) => (
+            <option key={area.Id_Area} value={area.Id_Area}>
+              {area.Nom_Area}
+            </option>
+          ))}
+        </select>
       </div>
       <div className="form-group">
         <label htmlFor="estado">Estado</label>

@@ -5,7 +5,6 @@ import Pagination from '../components/Pagination/Pagination';
 import FormProcess from './formProcess.jsx';
 import FormQueryProcess from './formQueryProcess.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
-import './styles.css'; // Asegúrate de importar el archivo CSS
 
 const CrudProcess = () => {
   const [processList, setProcessList] = useState([]);
@@ -15,17 +14,19 @@ const CrudProcess = () => {
     estado: 'No',
   });
   const [processQuery, setProcessQuery] = useState([]);
+  const [responsables, setResponsables] = useState([]);
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
 
   useEffect(() => {
     getAllProcesses();
+    getAllResponsables(); // Obtener responsables al cargar el componente
   }, [desde, hasta]);
 
   const getAllProcesses = async () => {
     try {
-      const response = await clienteAxios.get('/processes');
+      const response = await clienteAxios.get('/api/procesos');
       setProcessList(response.data);
       setProcessQuery(response.data); // Inicializar processQuery con todos los procesos
     } catch (error) {
@@ -33,9 +34,18 @@ const CrudProcess = () => {
     }
   };
 
+  const getAllResponsables = async () => {
+    try {
+      const response = await clienteAxios.get('/api/responsables');
+      setResponsables(response.data); // Inicializar la lista de responsables
+    } catch (error) {
+      console.error('Error al obtener responsables:', error);
+    }
+  };
+
   const getProcess = async (Id_Proceso) => {
     try {
-      const response = await clienteAxios.get(`/processes/${Id_Proceso}`);
+      const response = await clienteAxios.get(`/api/procesos/${Id_Proceso}`);
       setProcess(response.data);
       setButtonForm('Actualizar');
     } catch (error) {
@@ -56,7 +66,7 @@ const CrudProcess = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/processes/${Id_Proceso}`);
+        await clienteAxios.delete(`/api/procesos/${Id_Proceso}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllProcesses();
       } catch (error) {
@@ -69,10 +79,10 @@ const CrudProcess = () => {
     e.preventDefault();
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/processes', process);
+        await clienteAxios.post('/api/procesos', process);
         Swal.fire('Agregado!', 'El proceso ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/processes/${process.Id_Proceso}`, process);
+        await clienteAxios.put(`/api/procesos/${process.Id_Proceso}`, process);
         Swal.fire('Actualizado!', 'El proceso ha sido actualizado.', 'success');
       }
       resetForm();
@@ -89,6 +99,12 @@ const CrudProcess = () => {
       estado: 'No',
     });
     setButtonForm('Enviar');
+  };
+
+  // Encuentra el nombre del responsable usando el ID
+  const getResponsableName = (id) => {
+    const responsable = responsables.find(r => r.Id_Responsable === id);
+    return responsable ? responsable.Nom_Responsable : 'Desconocido';
   };
 
   return (
@@ -125,7 +141,7 @@ const CrudProcess = () => {
                     <tr key={process.Id_Proceso}>
                       <td>{process.Id_Proceso}</td>
                       <td>{process.Nom_Proceso}</td>
-                      <td>{process.Id_Responsable}</td>
+                      <td>{getResponsableName(process.Id_Responsable)}</td>
                       <td>{process.estado}</td>
                       <td>
                         <div className="action-buttons">
@@ -148,7 +164,7 @@ const CrudProcess = () => {
               </tbody>
             </table>
             <Pagination
-              URI="/processes"
+              URI="/api/procesos"
               setDesde={setDesde}
               setHasta={setHasta}
             />

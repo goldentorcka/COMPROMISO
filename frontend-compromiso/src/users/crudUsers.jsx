@@ -30,16 +30,16 @@ const CrudUsers = () => {
 
   const getAllUsers = async () => {
     try {
-      const response = await clienteAxios.get('/usuarios');
+      const response = await clienteAxios.get('/api/usuarios');
       setUserList(response.data);
     } catch (error) {
-      console.error("Error al obtener los usuarios:", error);
+      console.error("Error al obtener los api/usuarios:", error);
     }
   };
 
   const getUser = async (Id_Usuario) => {
     try {
-      const response = await clienteAxios.get(`/usuarios/${Id_Usuario}`);
+      const response = await clienteAxios.get(`/api/usuarios/${Id_Usuario}`);
       setUser(response.data);
       setButtonForm("Actualizar");
       setStateAddUser(true);
@@ -61,9 +61,9 @@ const CrudUsers = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/usuarios/${Id_Usuario}`);
+        await clienteAxios.delete(`/api/usuarios/${Id_Usuario}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-        getAllUsers(); // Actualiza la lista de usuarios después de eliminar
+        getAllUsers(); // Actualiza la lista de api/usuarios después de eliminar
       } catch (error) {
         console.error("Error al eliminar el usuario:", error);
       }
@@ -75,14 +75,14 @@ const CrudUsers = () => {
     try {
       console.log("Datos enviados:", user); // Agrega esto para depurar
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/usuarios', user);
+        await clienteAxios.post('/api/usuarios', user);
         Swal.fire('Agregado!', 'El usuario ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/usuarios/${user.Id_Usuario}`, user);
+        await clienteAxios.put(`/api/usuarios/${user.Id_Usuario}`, user);
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
       resetForm(); // Limpia el formulario
-      getAllUsers(); // Actualiza la lista de usuarios
+      getAllUsers(); // Actualiza la lista de api/usuarios
       setStateAddUser(false);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
@@ -157,7 +157,7 @@ const CrudUsers = () => {
               </table>
             </div>
             <Pagination
-              URI="/usuarios"
+              URI="/api/usuarios"
               setDesde={setDesde}
               setHasta={setHasta}
             />
