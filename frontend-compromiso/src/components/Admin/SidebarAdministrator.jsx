@@ -32,7 +32,7 @@ const SidebarAdministrator = () => {
               to="/CrudUsers"
             >
               <FontAwesomeIcon icon={faUsers} className="icon" />
-              CRUD USUARIOS
+              USUARIOS
             </Link>
           </li>
           <li className="nav-item">
@@ -41,7 +41,7 @@ const SidebarAdministrator = () => {
               to="/Responsables"
             >
               <FontAwesomeIcon icon={faUserShield} className="icon" />
-              CRUD RESPONSABLES
+              RESPONSABLES
             </Link>
           </li>
           <li className="nav-item">
@@ -50,7 +50,7 @@ const SidebarAdministrator = () => {
               to="/Areas"
             >
               <FontAwesomeIcon icon={faBuilding} className="icon" />
-              CRUD AREAS
+              AREAS
             </Link>
           </li>
           <li className="nav-item">
@@ -59,7 +59,7 @@ const SidebarAdministrator = () => {
               to="/Unidades"
             >
               <FontAwesomeIcon icon={faLayerGroup} className="icon" />
-              CRUD UNIDADES
+              UNIDADES
             </Link>
           </li>
           <li className="nav-item">
@@ -68,7 +68,7 @@ const SidebarAdministrator = () => {
               to="/Procesos"
             >
               <FontAwesomeIcon icon={faProjectDiagram} className="icon" />
-              CRUD PROCESOS
+              PROCESOS
             </Link>
           </li>
           <li className="nav-item">
@@ -77,7 +77,7 @@ const SidebarAdministrator = () => {
               to="/Procedimientos"
             >
               <FontAwesomeIcon icon={faFileAlt} className="icon" />
-              CRUD PROCEDIMIENTO
+              PROCEDIMIENTO
             </Link>
           </li>
           <li className="nav-item">
@@ -86,7 +86,7 @@ const SidebarAdministrator = () => {
               to="/Formatos"
             >
               <FontAwesomeIcon icon={faCogs} className="icon" />
-              CRUD FORMATOS
+              FORMATOS
             </Link>
           </li>
         </ul>

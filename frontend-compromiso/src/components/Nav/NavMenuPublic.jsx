@@ -7,6 +7,10 @@ const NavMenuPublic = () => {
   const [activeLink, setActiveLink] = useState(""); // Estado para el link activo
   const navigate = useNavigate();
 
+  const handleConsultaClick = () => {
+    navigate("/modulo-consulta");
+  };
+
   const handleLoginClick = () => {
     navigate("/login-admin");
   };
@@ -49,6 +53,7 @@ const NavMenuPublic = () => {
   const btnOutlinePrimaryStyle = {
     borderColor: "#007bff",
     color: "#007bff",
+    marginRight: "10px", // Espacio entre botones
   };
 
   const btnOutlinePrimaryHoverStyle = {
@@ -163,7 +168,17 @@ const NavMenuPublic = () => {
             onMouseOver={(e) => e.currentTarget.style = { ...btnOutlinePrimaryStyle, ...btnOutlinePrimaryHoverStyle }}
             onMouseOut={(e) => e.currentTarget.style = btnOutlinePrimaryStyle}
           >
-            Login
+            Módulo del Administrador
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-primary"
+            style={btnOutlinePrimaryStyle}
+            onClick={handleConsultaClick}
+            onMouseOver={(e) => e.currentTarget.style = { ...btnOutlinePrimaryStyle, ...btnOutlinePrimaryHoverStyle }}
+            onMouseOut={(e) => e.currentTarget.style = btnOutlinePrimaryStyle}
+          >
+            Módulo de Consulta
           </button>
         </div>
       </header>

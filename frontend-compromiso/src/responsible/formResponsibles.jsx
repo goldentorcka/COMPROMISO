@@ -1,45 +1,42 @@
 import React from 'react';
 
-const FormResponsables = ({ responsable, setResponsable, handleSubmit, buttonForm }) => {
+const FormResponsables = ({ responsable, setResponsable }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setResponsable((prevResponsable) => ({
-      ...prevResponsable,
-      [name]: value,
-    }));
+    setResponsable({
+      ...responsable,
+      [name]: value
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="form">
-      <div className="form-group">
-        <label htmlFor="Nom_Responsable">Nombre del Responsable</label>
+    <form>
+      <div className="mb-3">
+        <label htmlFor="nombre" className="form-label">Nombre del Responsable</label>
         <input
           type="text"
-          id="Nom_Responsable"
-          name="Nom_Responsable"
-          value={responsable.Nom_Responsable}
+          className="form-control"
+          id="nombre"
+          name="nombre"
+          value={responsable.nombre}
           onChange={handleChange}
-          className="search-input"
           required
         />
       </div>
-      <div className="form-group">
-        <label htmlFor="estado">Estado</label>
+      <div className="mb-3">
+        <label htmlFor="estado" className="form-label">Estado</label>
         <select
+          className="form-select"
           id="estado"
           name="estado"
           value={responsable.estado}
           onChange={handleChange}
-          className="search-input"
           required
         >
           <option value="Sí">Sí</option>
           <option value="No">No</option>
         </select>
       </div>
-      <button type="submit" className="submit-button">
-        {buttonForm}
-      </button>
     </form>
   );
 };

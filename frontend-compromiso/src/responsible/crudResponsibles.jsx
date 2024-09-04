@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
-import FormResponsables from './formResponsibles.jsx';
 import FormQueryResponsable from './formQueryResponsibles.jsx';
-import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
+import ModalFormResponsible from '../components/Admin/modalForm/modalResponsible/ResponsibleModal.jsx';
+import Button from 'react-bootstrap/Button'; // Asegúrate de importar Button desde react-bootstrap
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
@@ -16,6 +17,7 @@ const CrudResponsables = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [showModal, setShowModal] = useState(false); // Estado para controlar la visibilidad del modal
 
   useEffect(() => {
     getAllResponsables();
@@ -27,21 +29,22 @@ const CrudResponsables = () => {
       setResponsableList(response.data);
       setResponsableQuery(response.data); // Inicializar responsableQuery con todos los api/responsables
     } catch (error) {
-      console.error('Error al obtener los api/responsables:', error);
+      console.error('Error al obtener los responsables:', error);
     }
   };
 
-  const getResponsable = async (Id_Responsable) => {
+  const getResponsable = async (id) => {
     try {
-      const response = await clienteAxios.get(`/api/responsables/${Id_Responsable}`);
+      const response = await clienteAxios.get(`/api/responsables/${id}`);
       setResponsable(response.data);
       setButtonForm('Actualizar');
+      setShowModal(true); // Mostrar el modal al seleccionar un responsable
     } catch (error) {
       console.error('Error al obtener el responsable:', error);
     }
   };
 
-  const deleteResponsable = async (Id_Responsable) => {
+  const deleteResponsable = async (id) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
       text: '¡No podrás recuperar este registro!',
@@ -54,7 +57,7 @@ const CrudResponsables = () => {
 
     if (result.isConfirmed) {
       try {
-        await clienteAxios.delete(`/api/responsables/${Id_Responsable}`);
+        await clienteAxios.delete(`/api/responsables/${id}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllResponsables();
       } catch (error) {
@@ -75,6 +78,7 @@ const CrudResponsables = () => {
       }
       resetForm();
       getAllResponsables();
+      setShowModal(false); // Cerrar el modal después de enviar
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
@@ -88,19 +92,27 @@ const CrudResponsables = () => {
     setButtonForm('Enviar');
   };
 
+  const handleShowModal = () => setShowModal(true); // Función para abrir el modal
+
   return (
     <div className="crud-container">
       <SidebarAdministrator />
       <div className="main-content">
         <h1 className="page-title">Gestión de Responsables</h1>
         <div className="content-wrapper">
-          <FormResponsables
+          {/* ModalFormResponsible se renderiza basado en el estado showModal */}
+          <ModalFormResponsible
             responsable={responsable}
             setResponsable={setResponsable}
             handleSubmit={handleSubmit}
             buttonForm={buttonForm}
             resetForm={resetForm}
+            showModal={showModal}
+            setShowModal={setShowModal}
           />
+          <Button variant="primary" onClick={handleShowModal}>
+            Registrar Responsable
+          </Button>
           <div className="table-wrapper">
             <FormQueryResponsable
               responsableQuery={responsableQuery}
