@@ -31,6 +31,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login-admin" element={<LoginFormAdmin />} />
           <Route path="/contacts" element={<ContendContacts />} />
+          <Route path="/Mision-Vision" element={<NavMenuSE />} />
+          <Route path="/Reseña-Historica" element={<ContendR_H />} />
           <Route 
             path="/manuals" 
             element={<Contend_Manuals techManual={techManualUrl} userManual={userManualUrl} />} 
@@ -38,15 +40,16 @@ function App() {
           <Route path="/registrar" element={<formUser />} />
           <Route path="/olvide-password" element={<OlvidePassword />} />
           <Route path="/CrudUsers" element={<CrudUsers />} />
+
+          <Route path="/" element={<RutaProtegida/>}>
           <Route path="/Responsables" element={<CrudResponsables />} />
           <Route path="/Procesos" element={<CrudProcesses />} />
           <Route path="/Procedimientos" element={<CrudProcedure />} />
           <Route path="/Areas" element={<CrudAreas />} />
-          <Route path="/Mision-Vision" element={<NavMenuSE />} />
-          <Route path="/Reseña-Historica" element={<ContendR_H />} />
           <Route path="/Administrator" element={<Init_Admin />} />
           <Route path="/Unidades" element={<CrudUnidades />} />
           {/* <Route path="/Formatos" element={<CrudFormatos />} /> */}
+          </Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css'; // Asegúrate de importar el archivo CSS
 import clienteAxios from '../api'; // Ajusta la ruta según la ubicación de tu archivo api.js
+import { ReactSession } from 'react-client-session';
+
 
 const FormUnits = ({ unit, setUnit, handleSubmit, buttonForm }) => {
   const [areas, setAreas] = useState([]);
@@ -19,12 +21,22 @@ const FormUnits = ({ unit, setUnit, handleSubmit, buttonForm }) => {
     fetchAreas();
   }, []);
 
+  const token = ReactSession.get("token");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUnit((prevUnit) => ({
       ...prevUnit,
       [name]: value,
-    }));
+    }),
+    config
+  );
   };
 
   return (

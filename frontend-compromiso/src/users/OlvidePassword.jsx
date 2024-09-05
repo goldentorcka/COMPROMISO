@@ -1,35 +1,59 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Alerta from "../components/Alert/Alerta.jsx";
-import clientAxios from "../config/axios.jsx";
-import "bootstrap/dist/css/bootstrap.min.css";  // Importar estilos de Bootstrap
+import clienteAxios from "../config/axios.jsx";
+import "bootstrap/dist/css/bootstrap.min.css";
+
+// Estilos
+const containerStyles = {
+  backgroundColor: "#f8f9fa",
+  borderRadius: "10px",
+  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+  padding: "2rem",
+};
+
+const inputStyles = {
+  borderRadius: "5px",
+  padding: "0.5rem",
+};
+
+const buttonStyles = {
+  backgroundColor: "#007bff",
+  color: "#ffffff",
+  borderRadius: "5px",
+  padding: "0.75rem 1.5rem",
+  transition: "background-color 0.3s",
+  width: "100%",
+};
+
+const buttonHoverStyles = {
+  backgroundColor: "#0056b3",
+};
 
 const OlvidePassword = () => {
-  const [Cor_User, setCor_User] = useState("");
+  const [Cor_Usuario, setCor_Usuario] = useState("");
   const [alerta, setAlerta] = useState({});
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (Cor_User === "") {
+    if (Cor_Usuario === "" || Cor_Usuario.length < 7) {
       setAlerta({
-        msg: "El correo es obligatorio!",
+        msg: "El Correo es obligatorio",
         error: true,
       });
       return;
     }
-
     try {
-      const url = "/api/usuarios/olvide-password";
-      const { data } = await clientAxios.post(url, { Cor_User });
-
+      const url = `/api/user/olvide-password`;
+      const { data } = await clienteAxios.post(url, {
+        Cor_Usuario,
+      });
       setAlerta({
         msg: data.msg,
-        error: false,
       });
     } catch (error) {
       setAlerta({
-        msg: error.response.data.msg || "Error al enviar el correo de recuperación",
+        msg: error.response.data.msg,
         error: true,
       });
     }
@@ -38,57 +62,67 @@ const OlvidePassword = () => {
   const { msg } = alerta;
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "600px" }}>
-      <h1 className="text-center mb-4" style={{ color: "#333", fontSize: "2rem", fontWeight: "bold" }}>
-        Recupera tu Contraseña
-        <span className="d-block" style={{ fontSize: "1.2rem", fontWeight: "normal" }}>
-          en el Aplicativo COMPROMISO SENA
-        </span>
-      </h1>
-      <div className="row justify-content-center">
-        <div className="col-md-12">
-          {msg && <Alerta alerta={alerta} />}
-          <form onSubmit={handleSubmit} className="card p-4 shadow" style={{ backgroundColor: "#fff", borderRadius: "10px" }}>
-            <div className="form-group mb-3">
-              <label htmlFor="email" className="form-label" style={{ fontWeight: "bold", color: "#555" }}>
-                Correo:
-              </label>
-              <input
-                id="email"
-                type="email"
-                placeholder="Aquí su Correo"
-                value={Cor_User}
-                onChange={(e) => setCor_User(e.target.value)}
-                className="form-control"
-                style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ccc", backgroundColor: "#e9ecef" }}
-              />
-            </div>
-            <button
-              type="submit"
-              className="btn w-100 mt-3"
-              style={{ padding: "10px", fontSize: "1rem", borderRadius: "5px", backgroundColor: "#85c1e9", color: "#fff", border: "none", transition: "background-color 0.3s ease, transform 0.3s ease" }}
+    <>
+      <div className="container mt-5">
+        <h1 className="text-center mb-4" style={{ color: "#007bff" }}>
+          Recupera tu Contraseña
+        </h1>
+        <div className="row justify-content-center">
+          <div className="col-md-6">
+            {msg && <Alerta alerta={alerta} />}
+            <form
+              onSubmit={handleSubmit}
+              style={containerStyles}
+              className="shadow p-4"
             >
-              Enviar Instrucciones
-            </button>
-          </form>
-          <nav className="text-center mt-4">
-            <Link to="/auth/registrar" className="d-block text-decoration-none text-primary" style={{ display: "block", marginBottom: "10px", color: "#007bff", fontWeight: "bold" }}>
-              ¿No tienes una Cuenta? Regístrate
-            </Link>
-            <Link to="/login-admin" className="d-block text-decoration-none text-primary" style={{ color: "#007bff", fontWeight: "bold" }}>
-              Iniciar Sesión
-            </Link>
-          </nav>
+              <div className="form-group mb-3">
+                <label htmlFor="email" className="form-label">
+                  Correo:
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Aquí su Correo"
+                  value={Cor_Usuario}
+                  onChange={(e) => setCor_Usuario(e.target.value)}
+                  className="form-control"
+                  style={inputStyles}
+                />
+              </div>
+              <button
+                type="submit"
+                className="btn mt-3"
+                style={buttonStyles}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = buttonHoverStyles.backgroundColor;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = buttonStyles.backgroundColor;
+                }}
+              >
+                Recuperar Contraseña
+              </button>
+            </form>
+            <nav className="text-center mt-4">
+              <Link
+                to="/login-admin"
+                className="d-block mb-3"
+                style={{ color: "#007bff", textDecoration: "none" }}
+              >
+                ¿Tienes una Cuenta? Inicia Sesión
+              </Link>
+              <Link
+                to="/registrar"
+                className="d-block"
+                style={{ color: "#007bff", textDecoration: "none" }}
+              >
+                ¿No tienes una Cuenta? Regístrate
+              </Link>
+            </nav>
+          </div>
         </div>
       </div>
-      <Link
-        to="/"
-        className="btn btn-primary mt-4"
-        style={{ padding: "10px 20px", fontSize: "1rem", borderRadius: "5px", textAlign: "center", backgroundColor: "#85c1e9", color: "#fff", border: "none", transition: "background-color 0.3s ease, transform 0.3s ease" }}
-      >
-        &#8592; Volver
-      </Link>
-    </div>
+    </>
   );
 };
 

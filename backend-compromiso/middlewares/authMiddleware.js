@@ -1,32 +1,50 @@
-// @ts-nocheck
-const jwt = require('jsonwebtoken');
-const Usuario = require('../src/api/usuario/models/usuarioModel.js'); // Ajusta la ruta según tu estructura
+import jwt from "jsonwebtoken";
+//importe user model 
+import UserModel from "../models/userModel.js";
+import { logger } from "./logMiddleware.js";
 
 const checkAuth = async (req, res, next) => {
-  const { Cor_Usuario, password } = req.body;
+  let token;
 
-  try {
-    // Buscar usuario en la base de datos
-    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
+  // Verifica si hay un token en el encabezado Authorization
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    try {
+      // Extrae el token del encabezado
+      token = req.headers.authorization.split(" ")[1];
 
-    if (!usuario || !usuario.comparePassword(password)) {
-      return res.status(401).json({ msg: 'Credenciales inválidas' });
+      // Verifica y decodifica el token
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      const decodedIdUser = Buffer.from(decoded.Id_User, "base64").toString(
+        "utf-8"
+      );
+
+      // Busca el usuario en la base de datos
+      const user = await UserModel.findByPk(decodedIdUser, {
+        attributes: { exclude: ["password", "Confirmado", "token"] },
+      });
+
+      // Verifica si el usuario existe y si el token coincide
+      if (!user) {
+        return res.status(403).json({ msg: "Usuario no encontrado" });
+      }
+
+      req.usuario = user;
+      return next();
+    } catch (error) {
+      // Maneja errores de token, como expiración o firma inválida
+      logger.error("Token no válido o expirado", error);
+      return res.status(403).json({ msg: "Token no valido o expirado" });
     }
-
-    // Generar token JWT
-    const token = jwt.sign(
-      { id: usuario.id, isAdmin: usuario.isAdmin }, 
-      process.env.JWT_SECRET, // Asegúrate de tener este secreto en tu .env
-      { expiresIn: '1h' }
-    );
-
-    // Enviar token en la respuesta
-    res.json({ token, isAdmin: usuario.isAdmin });
-
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ msg: 'Error interno del servidor' });
   }
+  // Si no hay token, devuelve un error
+  if (!token) {
+    return res.status(403).json({ msg: "Token no válido o inexistente" });
+  }
+  next();
 };
 
-module.exports = checkAuth;
+export default checkAuth;

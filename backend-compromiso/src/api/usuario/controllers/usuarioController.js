@@ -4,6 +4,11 @@ const logger = require('../../../../config/logger.js');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+import { emailRegistro } from "../../../../helpers/emailRegister.js";
+import { emailOlvidePassword } from "../../../../helpers/emailOlvidePassword.js";
+
+
+
 // Obtener todos los usuarios
 const getUsuarios = async (req, res) => {
   try {
@@ -32,22 +37,80 @@ const getUsuarioById = async (req, res) => {
   }
 };
 
+
 // Crear un nuevo usuario
 const createUsuario = async (req, res) => {
   try {
-    const { password, ...rest } = req.body;
+    const { password, Cor_Usuario, Nom_Usuario, ...rest } = req.body;
 
     // Hashea la contraseña antes de guardar el usuario
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = { ...rest, password: hashedPassword };
 
+    // Crear el usuario
     const usuario = await Usuario.create(newUser);
+
+    // Generar un token para confirmación de cuenta (puedes usar el ID del usuario o algo generado)
+    const token = jwt.sign(
+      { Id_Usuario: usuario.Id_Usuario },
+      process.env.JWT_SECRET || 'secretKey',
+      { expiresIn: '1h' }
+    );
+
+    // Actualizar el usuario con el token
+    await Usuario.update({ token }, { where: { Id_Usuario: usuario.Id_Usuario } });
+
+    // Enviar el correo de confirmación de cuenta
+    await emailRegistro({
+      Cor_User: Cor_Usuario,
+      Nom_User: Nom_Usuario,
+      token
+    });
+
     return res.status(201).json(usuario);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     return res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+
+// Olvidé mi contraseña
+const olvidePassword = async (req, res) => {
+  const { Cor_Usuario } = req.body;
+
+  try {
+    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Generar token de restablecimiento de contraseña
+    const token = jwt.sign(
+      { Id_Usuario: usuario.Id_Usuario },
+      process.env.JWT_SECRET || 'secretKey',
+      { expiresIn: '1h' }
+    );
+
+    // Actualizar el token en la base de datos
+    await Usuario.update({ token }, { where: { Id_Usuario: usuario.Id_Usuario } });
+
+    // Enviar el correo de restablecimiento de contraseña
+    await emailOlvidePassword({
+      Cor_User: Cor_Usuario,
+      Nom_User: usuario.Nom_Usuario,
+      token
+    });
+
+    return res.status(200).json({ message: 'Correo de recuperación enviado con éxito' });
+  } catch (error) {
+    logger.error(error.message, { stack: error.stack });
+    return res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+
 
 // Actualizar un usuario existente
 const updateUsuario = async (req, res) => {
@@ -143,5 +206,6 @@ module.exports = {
   createUsuario,
   updateUsuario,
   deleteUsuario,
-  loginUsuario
+  loginUsuario,
+  olvidePassword
 };

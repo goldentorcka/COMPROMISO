@@ -3,10 +3,13 @@ import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userIcon from "../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../Public/images/iconLogin/Password.svg";
+import clienteAxios from "../config/axios";  // Asegúrate de tener configurado clienteAxios
+import { ReactSession } from "react-client-session"; 
+import Alerta from "../components/Alert/Alerta.jsx";
 
 // Estilos de color
 const formStyles = {
-  backgroundColor: "#f8f9fa", 
+  backgroundColor: "#f8f9fa",
   borderRadius: "10px",
   boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
   transition: "transform 0.3s ease-in-out",
@@ -63,14 +66,43 @@ const volverButtonHoverStyles = {
 const LoginFormAdmin = () => {
   const [Cor_Usuario, setCor_Usuario] = useState("");
   const [password, setPassword] = useState("");
+  const [alerta, setAlerta] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Redirige al panel de administración sin verificación
-    navigate("/Administrator");
+    if ([Cor_Usuario, password].includes("")) {
+      setAlerta({
+        msg: "Todos los campos deben estar llenos",
+        error: true,
+      });
+      return;
+    }
+
+    try {
+      const url = `/api/user/login`;
+      const { data } = await clienteAxios.post(url, {
+        Cor_Usuario: Cor_Usuario,
+        password: password,
+      });
+
+      // Almacena el token en la sesión
+      ReactSession.set("token", data.token);
+
+      // Redirige al panel de administración
+      navigate("/Administrator");
+    } catch (error) {
+      ReactSession.remove("token");
+      localStorage.clear();
+      setAlerta({
+        msg: error.response?.data?.msg || "Error al iniciar sesión",
+        error: true,
+      });
+    }
   };
+
+  const { msg } = alerta;
 
   return (
     <div
@@ -94,6 +126,7 @@ const LoginFormAdmin = () => {
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
+            {msg && <Alerta alerta={alerta} />}
             <div className="form-group mb-3 position-relative">
               <label htmlFor="email" className="form-label">
                 Correo:
@@ -140,10 +173,12 @@ const LoginFormAdmin = () => {
                 className="btn mt-3"
                 style={buttonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = buttonHoverStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    buttonHoverStyles.backgroundColor;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = buttonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    buttonStyles.backgroundColor;
                 }}
               >
                 Iniciar Sesión
@@ -153,11 +188,14 @@ const LoginFormAdmin = () => {
                 className="btn mt-3"
                 style={volverButtonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = volverButtonHoverStyles.backgroundColor;
-                  e.currentTarget.style.transform = volverButtonHoverStyles.transform;
+                  e.currentTarget.style.backgroundColor =
+                    volverButtonHoverStyles.backgroundColor;
+                  e.currentTarget.style.transform =
+                    volverButtonHoverStyles.transform;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = volverButtonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    volverButtonStyles.backgroundColor;
                   e.currentTarget.style.transform = "scale(1)";
                 }}
               >
@@ -166,19 +204,6 @@ const LoginFormAdmin = () => {
             </div>
           </form>
           <nav className="text-center mt-4">
-            {/* <Link
-              to="/registrar"
-              className="d-block"
-              style={linkStyles}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = linkHoverStyles.color;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = linkStyles.color;
-              }}
-            >
-              ¿No tienes una Cuenta? Regístrate
-            </Link> */}
             <Link
               to="/olvide-password"
               className="d-block"
