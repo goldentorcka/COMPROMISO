@@ -40,7 +40,6 @@ function App() {
           <Route path="/registrar" element={<formUser />} />
           <Route path="/olvide-password" element={<OlvidePassword />} />
           <Route path="/CrudUsers" element={<CrudUsers />} />
-
           <Route path="/" element={<RutaProtegida/>}>
           <Route path="/Responsables" element={<CrudResponsables />} />
           <Route path="/Procesos" element={<CrudProcesses />} />
