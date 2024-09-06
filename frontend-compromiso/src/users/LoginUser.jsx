@@ -81,7 +81,7 @@ const LoginFormAdmin = () => {
     }
 
     try {
-      const url = `/api/user/login`;
+      const url = `/api/usuarios/login`;
       const { data } = await clienteAxios.post(url, {
         Cor_Usuario: Cor_Usuario,
         password: password,

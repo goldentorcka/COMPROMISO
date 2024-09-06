@@ -1,6 +1,7 @@
-import nodemailer from 'nodemailer';
+// @ts-nocheck
+const nodemailer = require('nodemailer');
 
-export const emailRegistro = async ({ Cor_User, Nom_User, token }) => {
+const emailRegistro = async ({ Cor_User, Nom_User, token }) => {
   const transport = nodemailer.createTransport({
     host: 'smtp.gmail.com', // Configura el host del servicio de email
     port: 465, // El puerto que utiliza el servidor SMTP (depende de tu proveedor)
@@ -31,3 +32,5 @@ export const emailRegistro = async ({ Cor_User, Nom_User, token }) => {
     console.log('Error al enviar el correo:', error);
   }
 };
+
+module.exports = emailRegistro;

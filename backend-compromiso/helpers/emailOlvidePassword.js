@@ -1,6 +1,7 @@
-import nodemailer from 'nodemailer';
+// @ts-nocheck
+const nodemailer = require('nodemailer');
 
-export const emailOlvidePassword = async ({ Cor_User, Nom_User, token }) => {
+const emailOlvidePassword = async ({ Cor_User, Nom_User, token }) => {
   const transport = nodemailer.createTransport({
     host: 'smtp.gmail.com', // O el servicio de correo que uses
     port: 465, // Puerto SMTP
@@ -31,3 +32,5 @@ export const emailOlvidePassword = async ({ Cor_User, Nom_User, token }) => {
     console.log('Error al enviar el correo:', error);
   }
 };
+
+module.exports = emailOlvidePassword;

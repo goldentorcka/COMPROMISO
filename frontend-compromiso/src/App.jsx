@@ -19,6 +19,7 @@ import CrudUnidades from "./unit/crudUnits.jsx";
 import ContendContacts from "./components/home-init/Contend-Contacts.jsx";
 // import CrudFormatos from "./format/crudFormat.jsx";
 
+
 function App() {
   // Rutas de los PDFs (actualizadas para la carpeta public)
   const techManualUrl = '/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';

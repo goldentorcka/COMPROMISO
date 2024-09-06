@@ -1,93 +1,48 @@
-import  DataTypes  from "sequelize"; // Importa DataTypes desde Sequelize
-import bcrypt from 'bcrypt'; // Para encriptar la contraseña
-import {generarToken } from '../../../../helpers/generarTOKEN.js'; // Función para generar tokens
-import sequelize from '../../../../config/database.js'; // Configuración de la base de datos
+// @ts-nocheck
+const { DataTypes } = require('sequelize');
+const bcrypt = require('bcrypt');
 
-
-// Definimos el modelo Usuario
-const Usuario = sequelize.define(
-  'usuario',
-  {
+module.exports = (sequelize) => {
+  const Usuario = sequelize.define('Usuarios', {
     Id_Usuario: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
-      primaryKey: true,
-      field: 'Id_Usuario',
+      primaryKey: true
     },
     Nom_Usuario: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      field: 'Nom_Usuario',
+      type: DataTypes.STRING,
+      allowNull: false
     },
     Ape_Usuario: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      field: 'Ape_Usuario',
-    },
-    Cod_Usuario: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-      field: 'Cod_Usuario',
+      type: DataTypes.STRING,
+      allowNull: false
     },
     Cor_Usuario: {
-      type: DataTypes.STRING(255),
+      type: DataTypes.STRING,
       allowNull: false,
-      unique: true, // Asegura que el correo sea único
-      field: 'Cor_Usuario',
-    },
-    Nde_Usuario: {
-      type: DataTypes.STRING(20),
-      allowNull: false,
-      field: 'Nde_Usuario',
-    },
-    Fec_Usuario: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      field: 'Fec_Usuario',
-    },
-    estado: {
-      type: DataTypes.ENUM('Sí', 'No'),
-      allowNull: false,
-      field: 'estado',
-    },
-    rol: {
-      type: DataTypes.ENUM('Administrador', 'Usuario'),
-      allowNull: false,
-      field: 'rol',
-    },
-    token: {
-      type: DataTypes.STRING(255),
-      field: 'token',
+      unique: true
     },
     password: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      field: 'password',
+      type: DataTypes.STRING,
+      allowNull: false
     },
-  },
-  {
-    timestamps: true,
-    createdAt: 'createdAt',
-    updatedAt: 'updatedAt',
+    rol: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    token: {
+      type: DataTypes.STRING
+    }
+  }, {
     hooks: {
-      // Antes de guardar o actualizar el usuario, encriptamos la contraseña
-      beforeSave: async (usuario) => {
-        if (usuario.changed('password')) {
+      beforeCreate: async (usuario) => {
+        if (usuario.password) {
           const salt = await bcrypt.genSalt(10);
           usuario.password = await bcrypt.hash(usuario.password, salt);
         }
-      },
-      // Antes de crear un usuario, le generamos un token único
-      beforeCreate: async (usuario) => {
-        usuario.token = generarToken(); // Función que genera un token único
-      },
-    },
-  }
-);
+      }
+    }
+  });
 
-// Método para verificar si la contraseña ingresada es correcta
-Usuario.prototype.comprobarPassword = async function (passwordFormulario) {
-  return await bcrypt.compare(passwordFormulario, this.password);
+  return Usuario;
 };
-
-export default Usuario;

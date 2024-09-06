@@ -6,7 +6,8 @@ const {
   createUsuario,
   updateUsuario,
   deleteUsuario,
-  loginUsuario
+  loginUsuario,
+  olvidePassword
 } = require('../controllers/usuarioController.js');
 const logger = require('../../../../config/logger.js');
 
@@ -46,34 +47,33 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 token:
+ *                 message:
  *                   type: string
- *                   description: Token de autenticación
+ *                   description: Mensaje de éxito
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     Id_Usuario:
+ *                       type: integer
+ *                       description: ID del usuario
+ *                     Nom_Usuario:
+ *                       type: string
+ *                       description: Nombre del usuario
+ *                     Cor_Usuario:
+ *                       type: string
+ *                       description: Correo electrónico del usuario
+ *                     rol:
+ *                       type: string
+ *                       description: Rol del usuario
+ *                     token:
+ *                       type: string
+ *                       description: Token de autenticación
  *       401:
  *         description: Credenciales inválidas
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/login', async (req, res) => {
-  const { Cor_Usuario, password } = req.body;
-
-  try {
-    // Llamar al controlador de login para validar las credenciales
-    const usuario = await loginUsuario(Cor_Usuario, password);
-
-    if (usuario) {
-      // Redirigir a la página del admin si las credenciales son correctas
-      res.redirect('/admin');
-    } else {
-      // Enviar mensaje de error si las credenciales son incorrectas
-      res.status(401).json({ error: 'Credenciales inválidas' });
-    }
-  } catch (err) {
-    logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
-    res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
-  }
-});
-
+router.post('/login', loginUsuario);
 /**
  * @swagger
  * /api/usuarios:
@@ -265,7 +265,7 @@ router.put('/:id', updateUsuario);
  */
 router.delete('/:id', deleteUsuario);
 
-// Middleware de manejo de errores
+// Middleware de manejo de errores (opcional)
 router.use((err, req, res, next) => {
   if (err) {
     logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
