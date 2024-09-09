@@ -5,7 +5,7 @@ import Pagination from '../components/Pagination/Pagination';
 import FormAreas from './FormAreas.jsx';
 import FormQueryArea from './FormQueryArea.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
-import './styles.css'; // Asegúrate de importar el archivo CSS
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 
 const CrudAreas = () => {
   const [areaList, setAreaList] = useState([]);
@@ -17,6 +17,7 @@ const CrudAreas = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     getAllAreas();
@@ -37,6 +38,7 @@ const CrudAreas = () => {
       const response = await clienteAxios.get(`/api/areas/${Id_Area}`);
       setArea(response.data);
       setButtonForm('Actualizar');
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error al obtener el área:', error);
     }
@@ -75,6 +77,7 @@ const CrudAreas = () => {
         Swal.fire('Actualizado!', 'El área ha sido actualizada.', 'success');
       }
       resetForm();
+      setIsModalOpen(false);
       getAllAreas();
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
@@ -95,13 +98,30 @@ const CrudAreas = () => {
       <div className="main-content">
         <h1 className="page-title">Gestión de Áreas</h1>
         <div className="content-wrapper">
-          <FormAreas
-            area={area}
-            setArea={setArea}
-            handleSubmit={handleSubmit}
-            buttonForm={buttonForm}
-            resetForm={resetForm}
-          />
+          <button
+            className="add-button"
+            onClick={() => {
+              setArea({
+                Nom_Area: '',
+                estado: 'Sí',
+              });
+              setButtonForm('Enviar');
+              setIsModalOpen(true);
+            }}
+          >
+            Agregar Área
+          </button>
+
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <FormAreas
+              area={area}
+              setArea={setArea}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+              resetForm={resetForm}
+            />
+          </Modal>
+
           <div className="table-wrapper">
             <FormQueryArea
               areaQuery={areaQuery}

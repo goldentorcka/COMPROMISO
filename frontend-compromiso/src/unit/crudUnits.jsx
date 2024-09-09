@@ -4,8 +4,8 @@ import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
 import FormUnits from './formUnits.jsx';
 import FormQueryUnit from './formQueryUnits.jsx';
-import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
-import './styles.css'; // Importa el archivo CSS
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 
 const CrudUnits = () => {
   const [unitList, setUnitList] = useState([]);
@@ -15,21 +15,22 @@ const CrudUnits = () => {
     estado: 'No',
   });
   const [unitQuery, setUnitQuery] = useState([]);
-  const [areas, setAreas] = useState([]); // Estado para áreas
+  const [areas, setAreas] = useState([]);
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
 
   useEffect(() => {
     getAllUnits();
-    getAllAreas(); // Obtener áreas al cargar el componente
+    getAllAreas();
   }, [desde, hasta]);
 
   const getAllUnits = async () => {
     try {
       const response = await clienteAxios.get('/api/unidades');
       setUnitList(response.data);
-      setUnitQuery(response.data); // Inicializar unitQuery con todas las unidades
+      setUnitQuery(response.data);
     } catch (error) {
       console.error('Error al obtener las unidades:', error);
     }
@@ -38,7 +39,7 @@ const CrudUnits = () => {
   const getAllAreas = async () => {
     try {
       const response = await clienteAxios.get('/api/areas');
-      setAreas(response.data); // Inicializar la lista de áreas
+      setAreas(response.data);
     } catch (error) {
       console.error('Error al obtener las áreas:', error);
     }
@@ -49,6 +50,7 @@ const CrudUnits = () => {
       const response = await clienteAxios.get(`/api/unidades/${Id_Unidad}`);
       setUnit(response.data);
       setButtonForm('Actualizar');
+      setIsModalOpen(true); // Abrir el modal al obtener una unidad
     } catch (error) {
       console.error('Error al obtener la unidad:', error);
     }
@@ -88,6 +90,7 @@ const CrudUnits = () => {
       }
       resetForm();
       getAllUnits();
+      setIsModalOpen(false); // Cerrar el modal al enviar el formulario
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
@@ -102,7 +105,6 @@ const CrudUnits = () => {
     setButtonForm('Enviar');
   };
 
-  // Encuentra el nombre del área usando el ID
   const getAreaNameById = (id) => {
     const area = areas.find((area) => area.Id_Area === id);
     return area ? area.Nom_Area : 'Área no disponible';
@@ -114,20 +116,33 @@ const CrudUnits = () => {
       <div className="main-content">
         <h1 className="page-title">Gestión de Unidades</h1>
         <div className="content-wrapper">
-          <FormUnits
-            unit={unit}
-            setUnit={setUnit}
-            handleSubmit={handleSubmit}
-            buttonForm={buttonForm}
-            resetForm={resetForm}
-            areas={areas} // Pasa las áreas al componente FormUnits
-          />
+          <button
+            onClick={() => {
+              resetForm();
+              setIsModalOpen(true); // Abrir el modal para agregar una unidad
+            }}
+            className="open-modal-button"
+          >
+            Añadir Unidad
+          </button>
+          
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <FormUnits
+              unit={unit}
+              setUnit={setUnit}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+              resetForm={resetForm}
+              areas={areas}
+            />
+          </Modal>
+          
           <div className="table-wrapper">
             <FormQueryUnit
               unitQuery={unitQuery}
               setUnitQuery={setUnitQuery}
             />
-            <table className="process-table">
+            <table className="unit-table">
               <thead>
                 <tr>
                   <th>ID</th>
@@ -143,7 +158,7 @@ const CrudUnits = () => {
                     <tr key={unit.Id_Unidad}>
                       <td>{unit.Id_Unidad}</td>
                       <td>{unit.Nom_Unidad}</td>
-                      <td>{getAreaNameById(unit.Id_Area)}</td> {/* Muestra el nombre del área */}
+                      <td>{getAreaNameById(unit.Id_Area)}</td>
                       <td>{unit.estado}</td>
                       <td>
                         <div className="action-buttons">

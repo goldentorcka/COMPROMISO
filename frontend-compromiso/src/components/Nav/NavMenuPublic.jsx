@@ -40,20 +40,23 @@ const NavMenuPublic = () => {
     padding: "0.5rem 1rem",
     textDecoration: "none",
     color: "#000",
-    transition: "transform 0.3s, background-color 0.3s", // Añadido para animaciones suaves
+    transition: "transform 0.3s, background-color 0.3s, box-shadow 0.3s", // Animaciones suaves
+    borderRadius: "5px",
+    position: "relative", // Necesario para el pseudo-elemento de la animación
   };
 
   const activeLinkStyle = {
     color: "#007bff",
     fontWeight: "bold",
     backgroundColor: "#e9ecef",
-    borderRadius: "5px",
+    boxShadow: "0 0 10px rgba(0, 123, 255, 0.5)", // Sombra para resaltar el enlace activo
   };
 
   const btnOutlinePrimaryStyle = {
     borderColor: "#007bff",
     color: "#007bff",
     marginRight: "10px", // Espacio entre botones
+    transition: "background-color 0.3s, color 0.3s", // Animaciones suaves
   };
 
   const btnOutlinePrimaryHoverStyle = {

@@ -79,3 +79,4 @@ sequelize.sync()
   .catch(err => {
     console.error('Error al conectar con la base de datos:', err);
   });
+

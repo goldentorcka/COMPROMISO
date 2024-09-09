@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { AuthContext } from '../context/authProvider'; // Contexto de autenticación
-import NavMenuAdministrator from '../components/Nav/NavMenuPrivate'; // Componente del menú privado
+import { AuthContext } from '../context/authProvider.jsx'; // Contexto de autenticación
+import NavMenuAdministrator from '../components/Nav/NavMenuPrivate.jsx'; // Componente del menú privado
 //import Footer from '../components/Footer'; // Componente de pie de página
 // import VerticalNav from '../components/VerticalNav'; // Componente de navegación vertical (si existe)
 

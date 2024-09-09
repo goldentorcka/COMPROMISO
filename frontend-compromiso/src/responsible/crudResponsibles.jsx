@@ -4,8 +4,9 @@ import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
 import FormQueryResponsable from './formQueryResponsibles.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import ModalFormResponsible from '../components/Admin/modalForm/modalResponsible/ResponsibleModal.jsx';
 import Button from 'react-bootstrap/Button'; // Asegúrate de importar Button desde react-bootstrap
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
+
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
@@ -100,16 +101,38 @@ const CrudResponsables = () => {
       <div className="main-content">
         <h1 className="page-title">Gestión de Responsables</h1>
         <div className="content-wrapper">
-          {/* ModalFormResponsible se renderiza basado en el estado showModal */}
-          <ModalFormResponsible
-            responsable={responsable}
-            setResponsable={setResponsable}
-            handleSubmit={handleSubmit}
-            buttonForm={buttonForm}
-            resetForm={resetForm}
-            showModal={showModal}
-            setShowModal={setShowModal}
-          />
+          {/* Modal se renderiza basado en el estado showModal */}
+          <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="Nom_Responsable">Nombre del Responsable</label>
+                <input
+                  type="text"
+                  id="Nom_Responsable"
+                  value={responsable.Nom_Responsable}
+                  onChange={(e) => setResponsable({ ...responsable, Nom_Responsable: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="estado">Estado</label>
+                <select
+                  id="estado"
+                  value={responsable.estado}
+                  onChange={(e) => setResponsable({ ...responsable, estado: e.target.value })}
+                >
+                  <option value="Sí">Sí</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              <Button type="submit" variant="primary">
+                {buttonForm}
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => setShowModal(false)}>
+                Cancelar
+              </Button>
+            </form>
+          </Modal>
           <Button variant="primary" onClick={handleShowModal}>
             Registrar Responsable
           </Button>

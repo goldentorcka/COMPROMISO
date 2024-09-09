@@ -4,7 +4,8 @@ import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
 import FormProcess from './formProcess.jsx';
 import FormQueryProcess from './formQueryProcess.jsx';
-import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 
 const CrudProcess = () => {
   const [processList, setProcessList] = useState([]);
@@ -18,6 +19,7 @@ const CrudProcess = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
 
   useEffect(() => {
     getAllProcesses();
@@ -48,6 +50,7 @@ const CrudProcess = () => {
       const response = await clienteAxios.get(`/api/procesos/${Id_Proceso}`);
       setProcess(response.data);
       setButtonForm('Actualizar');
+      setIsModalOpen(true); // Abrir el modal al obtener un proceso
     } catch (error) {
       console.error('Error al obtener el proceso:', error);
     }
@@ -87,6 +90,7 @@ const CrudProcess = () => {
       }
       resetForm();
       getAllProcesses();
+      setIsModalOpen(false); // Cerrar el modal al enviar el formulario
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
@@ -113,13 +117,27 @@ const CrudProcess = () => {
       <div className="main-content">
         <h1 className="page-title">Gestión de Procesos</h1>
         <div className="content-wrapper">
-          <FormProcess
-            process={process}
-            setProcess={setProcess}
-            handleSubmit={handleSubmit}
-            buttonForm={buttonForm}
-            resetForm={resetForm}
-          />
+          <button
+            onClick={() => {
+              resetForm();
+              setIsModalOpen(true); // Abrir el modal para agregar un proceso
+            }}
+            className="open-modal-button"
+          >
+            Añadir Proceso
+          </button>
+          
+          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+            <FormProcess
+              process={process}
+              setProcess={setProcess}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+              resetForm={resetForm}
+              responsables={responsables}
+            />
+          </Modal>
+          
           <div className="table-wrapper">
             <FormQueryProcess
               processQuery={processQuery}

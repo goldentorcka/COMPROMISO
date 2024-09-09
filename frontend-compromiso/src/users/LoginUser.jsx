@@ -3,8 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userIcon from "../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../Public/images/iconLogin/Password.svg";
-import clienteAxios from "../config/axios";  // Asegúrate de tener configurado clienteAxios
-import { ReactSession } from "react-client-session"; 
 import Alerta from "../components/Alert/Alerta.jsx";
 
 // Estilos de color
@@ -64,42 +62,17 @@ const volverButtonHoverStyles = {
 };
 
 const LoginFormAdmin = () => {
-  const [Cor_Usuario, setCor_Usuario] = useState("");
-  const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    if ([Cor_Usuario, password].includes("")) {
-      setAlerta({
-        msg: "Todos los campos deben estar llenos",
-        error: true,
-      });
-      return;
-    }
+    // Muestra una alerta de saludo
+    alert("¡Hola! Has iniciado sesión.");
 
-    try {
-      const url = `/api/usuarios/login`;
-      const { data } = await clienteAxios.post(url, {
-        Cor_Usuario: Cor_Usuario,
-        password: password,
-      });
-
-      // Almacena el token en la sesión
-      ReactSession.set("token", data.token);
-
-      // Redirige al panel de administración
-      navigate("/Administrator");
-    } catch (error) {
-      ReactSession.remove("token");
-      localStorage.clear();
-      setAlerta({
-        msg: error.response?.data?.msg || "Error al iniciar sesión",
-        error: true,
-      });
-    }
+    // Redirige al panel de administración
+    navigate("/Administrator");
   };
 
   const { msg } = alerta;
@@ -135,8 +108,6 @@ const LoginFormAdmin = () => {
                 id="email"
                 type="email"
                 placeholder="Aquí su Correo"
-                value={Cor_Usuario}
-                onChange={(e) => setCor_Usuario(e.target.value)}
                 className="form-control ps-5"
                 style={{ borderRadius: "5px", paddingLeft: "40px" }}
               />
@@ -155,8 +126,6 @@ const LoginFormAdmin = () => {
                 id="password"
                 type="password"
                 placeholder="Aquí su Contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="form-control ps-5"
                 style={{ borderRadius: "5px", paddingLeft: "40px" }}
               />
@@ -170,6 +139,7 @@ const LoginFormAdmin = () => {
             <div className="d-flex justify-content-between align-items-center">
               <button
                 type="submit"
+                to="/administrator"
                 className="btn mt-3"
                 style={buttonStyles}
                 onMouseEnter={(e) => {

@@ -4,8 +4,8 @@ import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
 import FormProcedures from './formProcedure.jsx';
 import FormQueryProcedure from './formQueryProcedure.jsx';
-import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx'; // Ajusta la ruta según la ubicación
-import './styles.css'; // Asegúrate de importar el archivo CSS
+import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 
 const CrudProcedures = () => {
   const [procedureList, setProcedureList] = useState([]);
@@ -16,10 +16,11 @@ const CrudProcedures = () => {
     estado: 'No',
   });
   const [procedureQuery, setProcedureQuery] = useState([]);
-  const [processes, setProcesses] = useState([]); // Nuevo estado para almacenar los procesos
+  const [processes, setProcesses] = useState([]);
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
 
   useEffect(() => {
     getAllProcedures();
@@ -45,11 +46,21 @@ const CrudProcedures = () => {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    resetForm();
+  };
+
   const getProcedure = async (Id_Procedimiento) => {
     try {
       const response = await clienteAxios.get(`/api/procedimientos/${Id_Procedimiento}`);
       setProcedure(response.data);
       setButtonForm('Actualizar');
+      openModal(); // Abre el modal al editar un procedimiento
     } catch (error) {
       console.error('Error al obtener el procedimiento:', error);
     }
@@ -89,6 +100,7 @@ const CrudProcedures = () => {
       }
       resetForm();
       getAllProcedures();
+      closeModal(); // Cerrar el modal al enviar el formulario
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
@@ -115,25 +127,38 @@ const CrudProcedures = () => {
       <div className="main-content">
         <h1 className="page-title">Gestión de Procedimientos</h1>
         <div className="content-wrapper">
-          <FormProcedures
-            procedure={procedure}
-            setProcedure={setProcedure}
-            handleSubmit={handleSubmit}
-            buttonForm={buttonForm}
-            resetForm={resetForm}
-            processes={processes} // Pasar los procesos al formulario
-          />
+          <button
+            onClick={() => {
+              resetForm();
+              openModal(); // Abrir el modal para agregar un procedimiento
+            }}
+            className="open-modal-button"
+          >
+            Añadir Procedimiento
+          </button>
+          
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <FormProcedures
+              procedure={procedure}
+              setProcedure={setProcedure}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+              resetForm={resetForm}
+              processes={processes} // Pasar los procesos al formulario
+            />
+          </Modal>
+          
           <div className="table-wrapper">
             <FormQueryProcedure
               procedureQuery={procedureQuery}
               setProcedureQuery={setProcedureQuery}
             />
-            <table className="process-table"> {/* Cambiar a 'process-table' */}
+            <table className="process-table">
               <thead>
                 <tr>
                   <th>ID</th>
                   <th>Nombre del Procedimiento</th>
-                  <th>Proceso</th> {/* Cambiado a 'Proceso' */}
+                  <th>Proceso</th>
                   <th>Estado</th>
                   <th>Acciones</th>
                 </tr>
@@ -144,7 +169,7 @@ const CrudProcedures = () => {
                     <tr key={procedure.Id_Procedimiento}>
                       <td>{procedure.Id_Procedimiento}</td>
                       <td>{procedure.Nom_Procedimiento}</td>
-                      <td>{getProcessName(procedure.Id_Proceso)}</td> {/* Mostrar el nombre del proceso */}
+                      <td>{getProcessName(procedure.Id_Proceso)}</td>
                       <td>{procedure.estado}</td>
                       <td>
                         <div className="action-buttons">
