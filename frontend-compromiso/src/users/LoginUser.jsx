@@ -3,61 +3,69 @@ import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userIcon from "../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../Public/images/iconLogin/Password.svg";
+import logo from "../Public/images/logos/logo.png"; // Asegúrate de que la ruta del logo sea correcta
 import Alerta from "../components/Alert/Alerta.jsx";
 
 // Estilos de color
 const formStyles = {
-  backgroundColor: "#f8f9fa",
-  borderRadius: "10px",
-  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#ffffff",
+  borderRadius: "8px",
+  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
   transition: "transform 0.3s ease-in-out",
 };
 
 const buttonStyles = {
-  backgroundColor: "#007bff",
+  backgroundColor: "#1877f2",
   color: "#ffffff",
   borderRadius: "5px",
+  padding: "10px 20px",
+  border: "none",
+  fontSize: "1rem",
+  cursor: "pointer",
   transition: "background-color 0.3s",
 };
 
 const buttonHoverStyles = {
-  backgroundColor: "#0056b3",
+  backgroundColor: "#145dbf",
 };
 
 const linkStyles = {
-  color: "#007bff",
+  color: "#1877f2",
   transition: "color 0.3s",
 };
 
 const linkHoverStyles = {
-  color: "#0056b3",
+  color: "#145dbf",
 };
 
 const headerStyles = {
-  fontSize: "2rem",
-  color: "#007bff",
+  fontSize: "1.5rem",
+  color: "#1877f2",
   fontWeight: "bold",
-  animation: "slideInDown 1s ease-out, pulse 1.5s infinite",
-  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
+  marginBottom: "1rem",
+  textAlign: "center",
 };
 
 const spanStyles = {
   display: "block",
-  fontSize: "1.2rem",
-  color: "#343a40",
+  fontSize: "1rem",
+  color: "#606770",
   marginTop: "0.5rem",
-  animation: "fadeIn 2s ease-in-out",
 };
 
 const volverButtonStyles = {
-  backgroundColor: "#6c757d",
-  color: "#ffffff",
+  backgroundColor: "#f0f2f5",
+  color: "#606770",
   borderRadius: "5px",
+  padding: "10px 20px",
+  border: "none",
+  fontSize: "1rem",
+  cursor: "pointer",
   transition: "background-color 0.3s, transform 0.3s",
 };
 
 const volverButtonHoverStyles = {
-  backgroundColor: "#5a6268",
+  backgroundColor: "#e4e6eb",
   transform: "scale(1.05)",
 };
 
@@ -78,16 +86,14 @@ const LoginFormAdmin = () => {
   const { msg } = alerta;
 
   return (
-    <div
-      className="container mt-5"
-      style={{ animation: "fadeIn 1.2s ease-in-out" }}
-    >
-      <h1 className="text-center mb-4" style={headerStyles}>
-        Inicia Sesión
-        <span style={spanStyles}>en el Aplicativo COMPROMISO SENA</span>
-      </h1>
+    <div className="container mt-5">
+      <div className="text-center mb-4">
+        <h1 style={headerStyles}>Inicia Sesión</h1>
+        <span style={spanStyles}>EN EL APLICATIVO COMPROMISO SENA</span>
+        <img src={logo} alt="Logo" style={{ width: "150px", marginTop: "1rem" }} />
+      </div>
       <div className="row justify-content-center">
-        <div className="col-md-12">
+        <div className="col-md-6 col-lg-4">
           <form
             onSubmit={handleSubmit}
             className="card p-4 shadow"
@@ -114,8 +120,8 @@ const LoginFormAdmin = () => {
               <img
                 src={userIcon}
                 alt="Usuario"
-                className="position-absolute top-50 start-0 translate-middle-y ms-2"
-                style={{ width: "20px", height: "20px", left: "15px" }}
+                className="position-absolute top-50 start-0 translate-middle-y"
+                style={{ width: "20px", height: "20px", left: "12px", top: "50%", transform: "translateY(-50%)" }}
               />
             </div>
             <div className="form-group mb-3 position-relative">
@@ -132,40 +138,34 @@ const LoginFormAdmin = () => {
               <img
                 src={lockIcon}
                 alt="Contraseña"
-                className="position-absolute top-50 start-0 translate-middle-y ms-2"
-                style={{ width: "20px", height: "20px", left: "10px" }}
+                className="position-absolute top-50 start-0 translate-middle-y"
+                style={{ width: "20px", height: "20px", left: "12px", top: "50%", transform: "translateY(-50%)" }}
               />
             </div>
             <div className="d-flex justify-content-between align-items-center">
               <button
                 type="submit"
-                to="/administrator"
-                className="btn mt-3"
+                className="btn"
                 style={buttonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    buttonHoverStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor = buttonHoverStyles.backgroundColor;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    buttonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor = buttonStyles.backgroundColor;
                 }}
               >
                 Iniciar Sesión
               </button>
               <Link
                 to="/"
-                className="btn mt-3"
+                className="btn"
                 style={volverButtonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    volverButtonHoverStyles.backgroundColor;
-                  e.currentTarget.style.transform =
-                    volverButtonHoverStyles.transform;
+                  e.currentTarget.style.backgroundColor = volverButtonHoverStyles.backgroundColor;
+                  e.currentTarget.style.transform = volverButtonHoverStyles.transform;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor =
-                    volverButtonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor = volverButtonStyles.backgroundColor;
                   e.currentTarget.style.transform = "scale(1)";
                 }}
               >

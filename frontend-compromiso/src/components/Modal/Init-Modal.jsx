@@ -1,4 +1,4 @@
-// src/components/Modal.js
+// src/components/Modal/Init-Modal.jsx
 import React from 'react';
 import '../styles/Modal.css'; // Asegúrate de crear este archivo para los estilos
 
@@ -18,4 +18,3 @@ const Modal = ({ isOpen, onClose, children }) => {
 };
 
 export default Modal;
-

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const FormResponsables = ({ responsable, setResponsable }) => {
+const FormResponsables = ({ responsable, setResponsable, handleSubmit, buttonForm }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setResponsable({
@@ -10,15 +10,15 @@ const FormResponsables = ({ responsable, setResponsable }) => {
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <div className="mb-3">
         <label htmlFor="nombre" className="form-label">Nombre del Responsable</label>
         <input
           type="text"
           className="form-control"
           id="nombre"
-          name="nombre"
-          value={responsable.nombre}
+          name="Nom_Responsable" // Asegúrate de que el nombre coincida con el estado
+          value={responsable.Nom_Responsable}
           onChange={handleChange}
           required
         />
@@ -33,10 +33,11 @@ const FormResponsables = ({ responsable, setResponsable }) => {
           onChange={handleChange}
           required
         >
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
+          <option value="Activo">Activo</option>
+          <option value="Inactivo">Inactivo</option>
         </select>
       </div>
+      <button type="submit" className="btn btn-primary">{buttonForm}</button>
     </form>
   );
 };

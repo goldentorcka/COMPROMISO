@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, Link } from "react-router-dom";
-import logo from '../../Public/images/logos/logo.ico';
+import logo from '../../Public/images/logos/logo.png'; 
+import { FaHome, FaUser, FaBook, FaHistory, FaEye, FaCog } from 'react-icons/fa';
+
 
 const NavMenuPublic = () => {
-  const [activeLink, setActiveLink] = useState(""); // Estado para el link activo
+  const [activeLink, setActiveLink] = useState(""); 
   const navigate = useNavigate();
 
   const handleConsultaClick = () => {
@@ -16,8 +18,13 @@ const NavMenuPublic = () => {
   };
 
   const handleLinkClick = (link) => {
-    setActiveLink(link); // Actualiza el estado con el link activo
+    setActiveLink(link); // Actualiza el enlace activo
   };
+
+  // Definir los colores
+  const primaryColor = "#282c34"; 
+  const activeColor = "#61dafb"; 
+  const textColor = "#ffffff";
 
   // Estilos en línea
   const headerStyle = {
@@ -27,8 +34,9 @@ const NavMenuPublic = () => {
     position: "fixed",
     top: 0,
     width: "100%",
-    backgroundColor: "#f8f9fa",
+    backgroundColor: primaryColor,
     boxShadow: "0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)",
+    boxSizing: "border-box", 
   };
 
   const logoStyle = {
@@ -37,31 +45,34 @@ const NavMenuPublic = () => {
   };
 
   const navLinkStyle = {
-    padding: "0.5rem 1rem",
+    padding: "10px 15px",
     textDecoration: "none",
-    color: "#000",
-    transition: "transform 0.3s, background-color 0.3s, box-shadow 0.3s", // Animaciones suaves
-    borderRadius: "5px",
-    position: "relative", // Necesario para el pseudo-elemento de la animación
+    color: textColor,
+    backgroundColor: primaryColor,
+    borderRadius: "4px",
+    transition: "background-color 0.3s, color 0.3s, transform 0.3s", 
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
   };
 
   const activeLinkStyle = {
-    color: "#007bff",
+    backgroundColor: activeColor, // Azul cuando está activo
+    color: primaryColor, // Texto oscuro cuando activo
     fontWeight: "bold",
-    backgroundColor: "#e9ecef",
-    boxShadow: "0 0 10px rgba(0, 123, 255, 0.5)", // Sombra para resaltar el enlace activo
   };
 
-  const btnOutlinePrimaryStyle = {
-    borderColor: "#007bff",
-    color: "#007bff",
-    marginRight: "10px", // Espacio entre botones
-    transition: "background-color 0.3s, color 0.3s", // Animaciones suaves
+  const btnStyle = {
+    color: textColor,
+    backgroundColor: primaryColor,
+    borderColor: primaryColor,
+    marginRight: "10px",
+    boxSizing: "border-box", 
+    transition: "background-color 0.3s, color 0.3s", 
   };
 
-  const btnOutlinePrimaryHoverStyle = {
-    backgroundColor: "#007bff",
-    color: "#fff",
+  const iconStyle = {
+    transition: "transform 0.3s", // Transición para la rotación
   };
 
   return (
@@ -91,13 +102,11 @@ const NavMenuPublic = () => {
               className="nav-link"
               style={{ 
                 ...navLinkStyle, 
-                ...(activeLink === "/" ? activeLinkStyle : {}) 
+                ...(activeLink === "/" ? activeLinkStyle : {}) // Mantener estilo activo si es el link actual
               }}
               onClick={() => handleLinkClick("/")}
-              onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"} // Animación de escala
-              onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"} // Restablecimiento
             >
-              Home
+              <FaHome style={activeLink === "/" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Home
             </Link>
           </li>
           <li>
@@ -109,10 +118,8 @@ const NavMenuPublic = () => {
                 ...(activeLink === "/contacts" ? activeLinkStyle : {}) 
               }}
               onClick={() => handleLinkClick("/contacts")}
-              onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"} // Animación de escala
-              onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"} // Restablecimiento
             >
-              Contacts
+              <FaUser style={activeLink === "/contacts" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Contacts
             </Link>
           </li>
           <li>
@@ -124,10 +131,8 @@ const NavMenuPublic = () => {
                 ...(activeLink === "/manuals" ? activeLinkStyle : {}) 
               }}
               onClick={() => handleLinkClick("/manuals")}
-              onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"} // Animación de escala
-              onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"} // Restablecimiento
             >
-              Manuals
+              <FaBook style={activeLink === "/manuals" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Manuals
             </Link>
           </li>
           <li>
@@ -139,10 +144,8 @@ const NavMenuPublic = () => {
                 ...(activeLink === "/reseña-historica" ? activeLinkStyle : {}) 
               }}
               onClick={() => handleLinkClick("/reseña-historica")}
-              onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"} // Animación de escala
-              onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"} // Restablecimiento
             >
-              Reseña Historica
+              <FaHistory style={activeLink === "/reseña-historica" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Reseña Historica
             </Link>
           </li>
           <li>
@@ -154,10 +157,8 @@ const NavMenuPublic = () => {
                 ...(activeLink === "/mision-vision" ? activeLinkStyle : {}) 
               }}
               onClick={() => handleLinkClick("/mision-vision")}
-              onMouseOver={(e) => e.currentTarget.style.transform = "scale(1.1)"} // Animación de escala
-              onMouseOut={(e) => e.currentTarget.style.transform = "scale(1)"} // Restablecimiento
             >
-              Mision y Vision
+              <FaCog style={activeLink === "/mision-vision" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Mision y Vision
             </Link>
           </li>
         </ul>
@@ -165,27 +166,22 @@ const NavMenuPublic = () => {
         <div className="text-end" style={{ marginLeft: "auto" }}>
           <button
             type="button"
-            className="btn btn-outline-primary"
-            style={btnOutlinePrimaryStyle}
+            className="btn"
+            style={btnStyle}
             onClick={handleLoginClick}
-            onMouseOver={(e) => e.currentTarget.style = { ...btnOutlinePrimaryStyle, ...btnOutlinePrimaryHoverStyle }}
-            onMouseOut={(e) => e.currentTarget.style = btnOutlinePrimaryStyle}
           >
-            Módulo del Administrador
+            <FaCog style={{ ...iconStyle }} /> Módulo del Administrador
           </button>
           <button
             type="button"
-            className="btn btn-outline-primary"
-            style={btnOutlinePrimaryStyle}
+            className="btn"
+            style={btnStyle}
             onClick={handleConsultaClick}
-            onMouseOver={(e) => e.currentTarget.style = { ...btnOutlinePrimaryStyle, ...btnOutlinePrimaryHoverStyle }}
-            onMouseOut={(e) => e.currentTarget.style = btnOutlinePrimaryStyle}
           >
-            Módulo de Consulta
+            <FaEye style={{ ...iconStyle }} /> Consulta
           </button>
         </div>
       </header>
-      <div style={{ paddingTop: "80px" }}></div>
     </>
   );
 };

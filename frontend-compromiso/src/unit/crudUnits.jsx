@@ -6,6 +6,102 @@ import FormUnits from './formUnits.jsx';
 import FormQueryUnit from './formQueryUnits.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'; // Asegúrate de tener los íconos necesarios
+
+const styles = {
+  root: {
+    minHeight: '100vh',
+    backgroundColor: '#f4f4f4',
+    overflowX: 'hidden',
+  },
+  crudContainer: {
+    display: 'flex',
+    minHeight: 'calc(100vh - 60px)',
+    width: '107%',
+  },
+  sidebar: {
+    width: '250px',
+    backgroundColor: '#333',
+    color: '#fff',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: '20px',
+  },
+  mainContent: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: '20px',
+    marginTop: '20px',
+  },
+  pageTitle: {
+    textAlign: 'center',
+    marginBottom: '20px',
+    fontSize: '2rem',
+  },
+  contentWrapper: {
+    width: '100%',
+    maxWidth: '1200px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    gap: '20px',
+    paddingLeft: '20px',
+  },
+  addButton: {
+    display: 'flex',
+    alignItems: 'center',
+    padding: '10px 20px',
+    fontSize: '1rem',
+    backgroundColor: '#4caf50',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer',
+    marginLeft: '190px',
+  },
+  icon: {
+    marginRight: '8px', // Espacio entre el icono y el texto
+  },
+  tableWrapper: {
+    width: '100%',
+    maxWidth: '800px',
+    margin: '0 auto',
+  },
+  icon: {
+    marginRight: '8px', // Espacio entre el icono y el texto
+  },
+  
+  unitTable: {
+    width: '100%',
+    borderCollapse: 'collapse',
+    backgroundColor: '#fff',
+  },
+  tableHeader: {
+    backgroundColor: '#f9f9f9',
+    textAlign: 'center',
+  },
+  tableCell: {
+    border: '1px solid #ddd',
+    padding: '10px',
+    textAlign: 'center',
+  },
+  actionButtons: {
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '10px',
+  },
+  button: {
+    padding: '5px 10px',
+    fontSize: '1rem',
+    cursor: 'pointer',
+    border: 'none',
+    borderRadius: '5px',
+  },
+};
 
 const CrudUnits = () => {
   const [unitList, setUnitList] = useState([]);
@@ -111,80 +207,84 @@ const CrudUnits = () => {
   };
 
   return (
-    <div className="crud-container">
-      <SidebarAdministrator />
-      <div className="main-content">
-        <h1 className="page-title">Gestión de Unidades</h1>
-        <div className="content-wrapper">
-          <button
-            onClick={() => {
-              resetForm();
-              setIsModalOpen(true); // Abrir el modal para agregar una unidad
-            }}
-            className="open-modal-button"
-          >
-            Añadir Unidad
-          </button>
-          
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-            <FormUnits
-              unit={unit}
-              setUnit={setUnit}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-              resetForm={resetForm}
-              areas={areas}
-            />
-          </Modal>
-          
-          <div className="table-wrapper">
-            <FormQueryUnit
-              unitQuery={unitQuery}
-              setUnitQuery={setUnitQuery}
-            />
-            <table className="unit-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Nombre de la Unidad</th>
-                  <th>Área</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(unitQuery) &&
-                  unitQuery.slice(desde, hasta).map((unit) => (
-                    <tr key={unit.Id_Unidad}>
-                      <td>{unit.Id_Unidad}</td>
-                      <td>{unit.Nom_Unidad}</td>
-                      <td>{getAreaNameById(unit.Id_Area)}</td>
-                      <td>{unit.estado}</td>
-                      <td>
-                        <div className="action-buttons">
-                          <button
-                            className="edit-button"
-                            onClick={() => getUnit(unit.Id_Unidad)}
-                          >
-                            ✏️
-                          </button>
-                          <button
-                            className="delete-button"
-                            onClick={() => deleteUnit(unit.Id_Unidad)}
-                          >
-                            🗑️
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-            <Pagination
-              URI="/api/unidades"
-              setDesde={setDesde}
-              setHasta={setHasta}
-            />
+    <div style={styles.root}>
+      <div style={styles.crudContainer}>
+        <SidebarAdministrator style={styles.sidebar} />
+        <div style={styles.mainContent}>
+          <h1 style={styles.pageTitle}>Gestión de Unidades</h1>
+          <div style={styles.contentWrapper}>
+            <button
+              style={styles.addButton}
+              onClick={() => {
+                resetForm();
+                setIsModalOpen(true); // Abrir el modal para agregar una unidad
+              }}
+            >
+              <FontAwesomeIcon icon={faLayerGroup} style={styles.icon} /> Añadir 
+            </button>
+
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+              <FormUnits
+                unit={unit}
+                setUnit={setUnit}
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+                resetForm={resetForm}
+                areas={areas}
+              />
+            </Modal>
+
+            <div style={styles.tableWrapper}>
+              <FormQueryUnit
+                unitQuery={unitQuery}
+                setUnitQuery={setUnitQuery}
+              />
+              <table style={styles.unitTable}>
+                <thead>
+                  <tr>
+                    <th style={styles.tableHeader}>ID</th>
+                    <th style={styles.tableHeader}>Nombre de la Unidad</th>
+                    <th style={styles.tableHeader}>Área</th>
+                    <th style={styles.tableHeader}>Estado</th>
+                    <th style={styles.tableHeader}>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.isArray(unitQuery) &&
+                    unitQuery.slice(desde, hasta).map((unit) => (
+                      <tr key={unit.Id_Unidad}>
+                        <td style={styles.tableCell}>{unit.Id_Unidad}</td>
+                        <td style={styles.tableCell}>{unit.Nom_Unidad}</td>
+                        <td style={styles.tableCell}>{getAreaNameById(unit.Id_Area)}</td>
+                        <td style={styles.tableCell}>{unit.estado}</td>
+                        <td style={styles.tableCell}>
+                          <div style={styles.actionButtons}>
+                            <button
+                              style={styles.button}
+                              onClick={() => getUnit(unit.Id_Unidad)}
+                            >
+                              ✏️
+                            </button>
+                            <button
+                              style={styles.button}
+                              onClick={() => deleteUnit(unit.Id_Unidad)}
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+              <Pagination
+                URI={'/api/unidades'}
+                setDesde={setDesde}
+                setHasta={setHasta}
+                desde={desde}
+                hasta={hasta}
+              />
+            </div>
           </div>
         </div>
       </div>

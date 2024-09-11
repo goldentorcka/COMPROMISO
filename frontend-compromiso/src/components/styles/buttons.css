@@ -1,0 +1,18 @@
+.download-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .download-buttons button {
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .download-buttons button:hover {
+    background: #e0e0e0;
+  }
+  

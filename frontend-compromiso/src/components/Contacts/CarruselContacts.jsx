@@ -41,7 +41,7 @@ const ContactUs = () => {
         },
         {
           img: imgJulian2,
-          caption: 'Es un apasionado del fitness y la vida saludable.',
+          caption: 'Es un apasionado del fitness y la vida saludable. ',
         },
       ],
       facebook: 'https://www.facebook.com/share/jq5Ny1Y7GnczcEwM/?mibextid=qi2Omg',
@@ -92,15 +92,15 @@ const ContactUs = () => {
   return (
     <>
       <NavMenuPublic />
-      <div className="container mt-5" style={{ padding: '0 15px' }}>
+      <div className="container mt-5 pt-5" style={{ padding: '0 15px' }}>
         <h1
           className="text-center mb-4"
           style={{
             color: '#333',
             fontFamily: "'Arial', sans-serif",
-            textAlign: 'center',
             fontSize: '2rem',
             fontWeight: 'bold',
+            marginTop: '3rem', // Ajusta el margen superior aquí
           }}
         >
           Nuestros Integrantes
@@ -118,6 +118,11 @@ const ContactUs = () => {
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   marginBottom: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '300px', // Ajusta la altura mínima según necesites
                 }}
               >
                 <img
@@ -152,7 +157,7 @@ const ContactUs = () => {
                 >
                   {member.description}
                 </p>
-                <div className="social-buttons" style={{ marginBottom: '15px', textAlign: 'center' }}>
+                <div className="social-buttons" style={{ marginBottom: '15px' }}>
                   <a 
                     href={member.facebook} 
                     target="_blank" 
@@ -182,7 +187,6 @@ const ContactUs = () => {
                     />
                   </a>
                 </div>
-
                 <p>
                   <button
                     className="btn btn-secondary"
