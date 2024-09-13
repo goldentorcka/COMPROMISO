@@ -41,7 +41,7 @@ const ContactUs = () => {
         },
         {
           img: imgJulian2,
-          caption: 'Es un apasionado del fitness y la vida saludable. ',
+          caption: 'Es un apasionado del fitness y la vida saludable.',
         },
       ],
       facebook: 'https://www.facebook.com/share/jq5Ny1Y7GnczcEwM/?mibextid=qi2Omg',
@@ -53,7 +53,7 @@ const ContactUs = () => {
       carouselItems: [
         {
           img: imgMarlon,
-          caption: ': Es una persona muy organizada y meticulosa',
+          caption: 'Es una persona muy organizada y meticulosa',
         },
         {
           img: imgMarlon2,
@@ -92,22 +92,23 @@ const ContactUs = () => {
   return (
     <>
       <NavMenuPublic />
-      <div className="container mt-5 pt-5" style={{ padding: '0 15px' }}>
+      <div className="container mt-5" style={{ padding: '0 15px' }}>
         <h1
           className="text-center mb-4"
           style={{
+            padding: '2rem',
             color: '#333',
-            fontFamily: "'Arial', sans-serif",
+            fontFamily: "'Georgia'",
             fontSize: '2rem',
-            fontWeight: 'bold',
-            marginTop: '3rem', // Ajusta el margen superior aquí
+           //fontWeight: 'bold', letra en negrita 
+            marginTop: '80px', // Ajustado para asegurar que no quede oculto
           }}
         >
           Nuestros Integrantes
         </h1>
-        <div className="row">
+        <div className="row justify-content-center">
           {members.map((member, index) => (
-            <div className="col-lg-4" key={index}>
+            <div className="col-lg-4 col-md-6" key={index}>
               <div
                 className="member-card"
                 style={{
@@ -118,11 +119,6 @@ const ContactUs = () => {
                   transition: 'transform 0.3s ease, box-shadow 0.3s ease',
                   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
                   marginBottom: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: '300px', // Ajusta la altura mínima según necesites
                 }}
               >
                 <img
@@ -135,6 +131,8 @@ const ContactUs = () => {
                     objectFit: 'cover',
                     backgroundColor: '#e9ecef',
                     transition: 'background-color 0.3s ease',
+                    display: 'block',
+                    margin: '0 auto', // Centrar imagen
                   }}
                 />
                 <h2
@@ -153,11 +151,12 @@ const ContactUs = () => {
                     fontSize: '0.9rem',
                     lineHeight: '1.5',
                     marginBottom: '15px',
+                    fontWeight: 'bold', // Descripción en negrita
                   }}
                 >
                   {member.description}
                 </p>
-                <div className="social-buttons" style={{ marginBottom: '15px' }}>
+                <div className="social-buttons" style={{ marginBottom: '15px', textAlign: 'center' }}>
                   <a 
                     href={member.facebook} 
                     target="_blank" 
@@ -187,6 +186,7 @@ const ContactUs = () => {
                     />
                   </a>
                 </div>
+
                 <p>
                   <button
                     className="btn btn-secondary"

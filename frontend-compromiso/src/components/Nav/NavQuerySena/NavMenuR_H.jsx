@@ -16,15 +16,15 @@ const NavMenuReseña = () => {
 
     const styles = {
         container: {
-            marginTop: '3rem',
+           //marginTop: '3rem',
             padding: '3rem',
-            backgroundColor: '#f3f4f6',
-            borderRadius: '20px',
-            boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
+           // backgroundColor: '#f3f4f6',
+           borderRadius: '20px',
+            //boxShadow: '0 8px 16px rgba(0, 0, 0, 0.15)',
             fontFamily: 'Georgia, serif',
             maxWidth: '1200px',
             margin: '0 auto',
-            position: 'relative',
+            //position: 'relative',
         },
         logo: {
             width: '150px',
@@ -35,7 +35,7 @@ const NavMenuReseña = () => {
         },
         title: {
             fontSize: '3rem',
-            color: '#2c3e50',
+            color: '#161514',
             fontWeight: 'bold',
             textAlign: 'center',
             marginBottom: '2rem',
@@ -78,16 +78,6 @@ const NavMenuReseña = () => {
             transform: 'rotateY(-20deg) rotateX(-10deg) scale(1.2)',
             boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
         },
-        decorativeLine: {
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            width: '80%',
-            height: '2px',
-            backgroundColor: '#2c3e50',
-            transform: 'translate(-50%, -50%)',
-            zIndex: '-1',
-        },
         contentWrapper: {
             display: 'flex',
             flexDirection: 'column',
@@ -104,9 +94,6 @@ const NavMenuReseña = () => {
                 <h1 style={styles.title}>Reseña Histórica</h1>
 
                 <div style={styles.section}>
-                    
-                        
-                    
                     <div style={styles.contentWrapper}>
                         <p style={styles.paragraph}>
                             El modelo de formación mediante la estrategia de Sena Empresa, nace en el año 2005 en el Centro de Formación La Granja en el Espinal - Tolima...
@@ -128,8 +115,6 @@ const NavMenuReseña = () => {
                         </p>
                     </div>
                 </div>
-
-                <div style={styles.decorativeLine}></div>
             </div>
         </>
     );
