@@ -80,7 +80,7 @@ const LoginFormAdmin = () => {
     alert("¡Hola! Has iniciado sesión.");
 
     // Redirige al panel de administración
-    navigate("/Administrator");
+    navigate("/Admin");
   };
 
   const { msg } = alerta;

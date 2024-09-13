@@ -1,16 +1,16 @@
-// Layout.jsx
-import React from 'react';
-import SidebarAdministrator from './SidebarAdministrator';
+// src/components/Admin/layout/Layout.jsx
+import { Outlet } from 'react-router-dom';
+import SidebarAdministrator from '../SidebarAdministrator.jsx';
 
-const Layout = ({ children }) => {
+function Layout() {
   return (
     <div style={{ display: 'flex' }}>
-      <SidebarAdministrator />
-      <main style={{ flex: 1, padding: '20px' }}>
-        {children}
+      <SidebarAdministrator /> {/* Barra lateral */}
+      <main style={{ flexGrow: 1, padding: '1rem' }}>
+        <Outlet /> {/* Aquí se renderizarán los componentes hijos */}
       </main>
     </div>
   );
-};
+}
 
 export default Layout;

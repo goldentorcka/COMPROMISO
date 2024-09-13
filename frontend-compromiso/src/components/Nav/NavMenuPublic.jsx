@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate, Link } from "react-router-dom";
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import logo from '../../Public/images/logos/logo.png'; 
-import { FaHome, FaUser, FaBook, FaHistory, FaEye, FaCog } from 'react-icons/fa';
+import { FaHome, FaUser, FaBook, FaHistory, FaEye, FaCog, FaUserTie } from 'react-icons/fa';
 
 
 const NavMenuPublic = () => {
   const [activeLink, setActiveLink] = useState(""); 
+  const [rotatingIcon, setRotatingIcon] = useState(""); // Estado para manejar íconos rotando
   const navigate = useNavigate();
 
   const handleConsultaClick = () => {
@@ -18,7 +18,11 @@ const NavMenuPublic = () => {
   };
 
   const handleLinkClick = (link) => {
-    setActiveLink(link); // Actualiza el enlace activo
+    setActiveLink(link); // Cambia el enlace activo inmediatamente con un clic
+    setRotatingIcon(link); // Activa la rotación del ícono
+    setTimeout(() => {
+      setRotatingIcon(""); // Detiene la rotación después de la animación
+    }, 1000); // Duración de la rotación en milisegundos
   };
 
   // Definir los colores
@@ -57,8 +61,8 @@ const NavMenuPublic = () => {
   };
 
   const activeLinkStyle = {
-    backgroundColor: activeColor, // Azul cuando está activo
-    color: primaryColor, // Texto oscuro cuando activo
+    backgroundColor: activeColor,
+    color: primaryColor,
     fontWeight: "bold",
   };
 
@@ -72,7 +76,11 @@ const NavMenuPublic = () => {
   };
 
   const iconStyle = {
-    transition: "transform 0.3s", // Transición para la rotación
+    transition: "transform 0.3s", 
+  };
+
+  const rotatingStyle = {
+    transform: "rotate(360deg)", 
   };
 
   return (
@@ -102,11 +110,11 @@ const NavMenuPublic = () => {
               className="nav-link"
               style={{ 
                 ...navLinkStyle, 
-                ...(activeLink === "/" ? activeLinkStyle : {}) // Mantener estilo activo si es el link actual
+                ...(activeLink === "/" ? activeLinkStyle : {}) 
               }}
               onClick={() => handleLinkClick("/")}
             >
-              <FaHome style={activeLink === "/" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Home
+              <FaHome style={rotatingIcon === "/" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Home
             </Link>
           </li>
           <li>
@@ -119,7 +127,7 @@ const NavMenuPublic = () => {
               }}
               onClick={() => handleLinkClick("/contacts")}
             >
-              <FaUser style={activeLink === "/contacts" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Contacts
+              <FaUser style={rotatingIcon === "/contacts" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Contacts
             </Link>
           </li>
           <li>
@@ -132,7 +140,7 @@ const NavMenuPublic = () => {
               }}
               onClick={() => handleLinkClick("/manuals")}
             >
-              <FaBook style={activeLink === "/manuals" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Manuals
+              <FaBook style={rotatingIcon === "/manuals" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Manuals
             </Link>
           </li>
           <li>
@@ -145,7 +153,7 @@ const NavMenuPublic = () => {
               }}
               onClick={() => handleLinkClick("/reseña-historica")}
             >
-              <FaHistory style={activeLink === "/reseña-historica" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Reseña Historica
+              <FaHistory style={rotatingIcon === "/reseña-historica" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Reseña Historica
             </Link>
           </li>
           <li>
@@ -158,7 +166,7 @@ const NavMenuPublic = () => {
               }}
               onClick={() => handleLinkClick("/mision-vision")}
             >
-              <FaCog style={activeLink === "/mision-vision" ? { ...iconStyle, transform: "rotate(360deg)" } : iconStyle} /> Mision y Vision
+              <FaCog style={rotatingIcon === "/mision-vision" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Mision y Vision
             </Link>
           </li>
         </ul>
@@ -170,7 +178,7 @@ const NavMenuPublic = () => {
             style={btnStyle}
             onClick={handleLoginClick}
           >
-            <FaCog style={{ ...iconStyle }} /> Módulo del Administrador
+            <FaUserTie style={{ ...iconStyle }} /> Módulo del Administrador
           </button>
           <button
             type="button"

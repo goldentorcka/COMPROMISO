@@ -74,7 +74,7 @@ const styles = {
   icon: {
     marginRight: '8px', // Espacio entre el icono y el texto
   },
-  
+
   unitTable: {
     width: '100%',
     borderCollapse: 'collapse',
@@ -220,7 +220,7 @@ const CrudUnits = () => {
                 setIsModalOpen(true); // Abrir el modal para agregar una unidad
               }}
             >
-              <FontAwesomeIcon icon={faLayerGroup} style={styles.icon} /> Añadir 
+              <FontAwesomeIcon icon={faLayerGroup} style={styles.icon} /> Añadir
             </button>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>

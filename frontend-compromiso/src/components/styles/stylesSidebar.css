@@ -1,148 +1,76 @@
-/* Estilos generales para el sidebar */
-.sidebar {
-    width: 250px;
-    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-    height: 100vh;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    perspective: 1000px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    transform: rotateY(0deg);
-    transition: transform 0.3s ease;
-  }
-  
-  .sidebar:hover {
-    transform: rotateY(5deg);
-  }
-  
-  /* Estilos para los enlaces del sidebar */
-  .nav-link {
-    color: #ffffff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  
-  .nav-link.active {
-    color: #00f5e0;
-    background: rgba(0, 245, 224, 0.2);
-    box-shadow: inset 0 0 10px rgba(0, 245, 224, 0.5);
-  }
-  
-  .nav-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #00f5e0;
-    transform: scale(1.05);
-  }
-  
-  /* Estilos para los íconos */
-  .icon {
-    font-size: 18px;
-    transition: color 0.3s ease;
-  }
-  
-  .nav-link.active .icon,
-  .nav-link:hover .icon {
-    color: #00f5e0;
-  }
-  
-  /* Animación 3D para los elementos del sidebar */
-  .sidebar .nav-item {
-    margin-bottom: 10px;
-  }
-  
-  .nav-item {
-    position: relative;
-    perspective: 1000px;
-  }
-  
-  .nav-item::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.3);
-    transform: scaleX(0);
-    transform-origin: bottom right;
-    transition: transform 0.3s ease;
-  }
-  
-  .nav-item:hover::before {
-    transform: scaleX(1);
-    transform-origin: bottom left;
-  }
-  
-  /* Estilos para el área de configuración y cierre de sesión */
-  .settings-logout {
-    margin-top: auto;
-    padding: 10px 20px;
-    background: rgba(0, 0, 0, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
-  }
-  
-  .settings-logout .nav-link {
-    color: #ccc;
-    transition: color 0.3s ease;
-  }
-  
-  .settings-logout .nav-link:hover {
-    color: #00f5e0;
-  }
-  
-  .settings-logout .icon {
-    font-size: 20px;
-    transition: color 0.3s ease;
-  }
+/* stylesSidebar.css */
 
-  .sidebar {
-    height: 100vh;
-    width: 250px;
-    background-color: #f8f9fa;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .user-section {
-    background-color: #fff;
-    border-top: 1px solid #e9ecef;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-  }
-  
-  .user-icon {
-    font-size: 24px;
-    color: #007bff;
-  }
-  
-  .user-name {
-    font-size: 1rem;
-    font-weight: bold;
-  }
-  
-  .status-indicator {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 2px solid #fff;
-  }
-  
-  .status-indicator.active {
-    background-color: green;
-  }
-  
-  .status-indicator.inactive {
-    background-color: gray;
-  }
-  
-  
+.sidebar {
+  width: 250px; /* Ancho fijo del sidebar */
+  background-color: #343a40; /* Color de fondo del sidebar */
+  color: #fff;
+  height: 100vh; /* Altura completa de la ventana */
+  position: fixed; /* Fijo para mantenerse en su lugar */
+  top: 0;
+  left: 0;
+  overflow-y: auto; /* Permite el scroll vertical si es necesario */
+  transition: width 0.3s ease; /* Suaviza cambios en el ancho si se realizan */
+}
+
+.sidebar .nav-link {
+  color: #adb5bd; /* Color de texto en el sidebar */
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.sidebar .nav-link.active,
+.sidebar .nav-link:hover {
+  background-color: #007bff; /* Fondo azul en hover y activo */
+  color: #fff; /* Texto blanco en hover y activo */
+  border-radius: 4px;
+}
+
+.sidebar .nav-link .icon {
+  margin-right: 10px;
+  transition: transform 0.3s ease;
+}
+
+.sidebar .nav-link:hover .icon {
+  transform: rotate(15deg); /* Rotación ligera del icono en hover */
+}
+
+.settings-logout {
+  margin-top: auto; /* Alinea la sección en la parte inferior */
+  padding: 10px;
+}
+
+.settings-logout .nav-link {
+  padding: 10px 15px;
+}
+
+.settings-logout .nav-link.active,
+.settings-logout .nav-link:hover {
+  background-color: #007bff; /* Fondo azul en hover y activo */
+  color: #fff; /* Texto blanco en hover y activo */
+}
+
+.user-section {
+  border-top: 1px solid #495057; /* Línea divisoria */
+  background-color: #343a40;
+}
+
+.user-info {
+  color: #fff;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-indicator.active {
+  background-color: #28a745; /* Verde para activo */
+}
+
+.status-indicator.inactive {
+  background-color: #dc3545; /* Rojo para inactivo */
+}

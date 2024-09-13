@@ -1,106 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
+import FormGeneral from '../components/datatables/GeneralForm.jsx'; // Importa el nuevo formulario general
 import Pagination from '../components/Pagination/Pagination';
-import FormResponsables from './formResponsibles.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import Modal from '../components/Modal/Init-Modal.jsx';
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 import DownloadButtons from '../components/Buttons/ButtonsDowload.jsx'; // Importa el componente
-
-const styles = {
-  root: {
-    minHeight: '100vh',
-    backgroundColor: '#f4f4f4',
-    overflowX: 'hidden',
-  },
-  crudContainer: {
-    display: 'flex',
-    minHeight: 'calc(100vh - 60px)',
-    width: '107%',
-  },
-  sidebar: {
-    width: '250px',
-    backgroundColor: '#333',
-    color: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '20px',
-  },
-  mainContent: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    marginTop: '20px',
-  },
-  pageTitle: {
-    textAlign: 'center',
-    marginBottom: '20px',
-    fontSize: '2rem',
-  },
-  contentWrapper: {
-    width: '100%',
-    maxWidth: '1200px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '20px',
-    paddingLeft: '20px',
-  },
-  addButton: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px 20px',
-    fontSize: '1rem',
-    backgroundColor: '#4caf50',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginLeft: '190px',
-  },
-  tableWrapper: {
-    width: '100%',
-    maxWidth: '800px',
-    margin: '0 auto',
-  },
-  responsableTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    backgroundColor: '#fff',
-  },
-  tableHeader: {
-    backgroundColor: '#f9f9f9',
-    textAlign: 'center',
-  },
-  tableCell: {
-    border: '1px solid #ddd',
-    padding: '10px',
-    textAlign: 'center',
-  },
-  actionButtons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-  },
-  button: {
-    padding: '5px 10px',
-    fontSize: '1rem',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '5px',
-  },
-  editButton: {
-    backgroundColor: '#4caf50',
-    color: '#fff',
-  },
-  deleteButton: {
-    backgroundColor: '#f44336',
-    color: '#fff',
-  },
-};
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus, faEdit, faTrash, faUserShield } from '@fortawesome/free-solid-svg-icons';
+import '../components/styles/stylesResponsiblesCrud.css'; // Importa el archivo CSS
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
@@ -125,7 +33,7 @@ const CrudResponsables = () => {
       const totalRegistros = response.data.length;
       setTotalRegistros(totalRegistros);
       const startIndex = (paginaActual - 1) * registrosPorPagina;
-      const endIndex = startIndex + registrosPorPagina;
+      const endIndex = Math.min(startIndex + registrosPorPagina, totalRegistros);
       setResponsableList(response.data);
       setResponsableQuery(response.data.slice(startIndex, endIndex));
     } catch (error) {
@@ -166,14 +74,13 @@ const CrudResponsables = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (data) => {
     try {
       if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/api/responsables', responsable);
+        await clienteAxios.post('/api/responsables', data);
         Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/api/responsables/${responsable.Id_Responsable}`, responsable);
+        await clienteAxios.put(`/api/responsables/${data.Id_Responsable}`, data);
         Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
       resetForm();
@@ -192,15 +99,23 @@ const CrudResponsables = () => {
     setButtonForm('Enviar');
   };
 
+  const formFields = [
+    { name: 'Nom_Responsable', label: 'Nombre del Responsable', type: 'text', placeholder: 'Nombre', required: true },
+    { name: 'estado', label: 'Estado', type: 'select', options: [
+      { value: 'Activo', label: 'Activo' },
+      { value: 'Inactivo', label: 'Inactivo' }
+    ], required: true },
+  ];
+
   return (
-    <div style={styles.root}>
-      <div style={styles.crudContainer}>
-        <SidebarAdministrator style={styles.sidebar} />
-        <div style={styles.mainContent}>
-          <h1 style={styles.pageTitle}>Gestión de Responsables</h1>
-          <div style={styles.contentWrapper}>
+    <div className="crud-root">
+      <div className="crud-container">
+        <SidebarAdministrator />
+        <div className="main-content">
+          <h1 className="page-title">Gestión de Responsables</h1>
+          <div className="content-wrapper">
             <button
-              style={styles.addButton}
+              className="add-button"
               onClick={() => {
                 setResponsable({
                   Nom_Responsable: '',
@@ -210,50 +125,58 @@ const CrudResponsables = () => {
                 setIsModalOpen(true);
               }}
             >
-              Agregar Responsable
+              <FontAwesomeIcon icon={faUserShield} /> Agregar
             </button>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-              <FormResponsables
-                responsable={responsable}
-                setResponsable={setResponsable}
-                handleSubmit={handleSubmit}
-                buttonForm={buttonForm}
+              <FormGeneral
+                initialValues={responsable}
+                fields={formFields}
+                onSubmit={handleSubmit}
+                onCancel={() => {
+                  resetForm();
+                  setIsModalOpen(false);
+                }}
+                buttonText={buttonForm}
               />
             </Modal>
 
-            <DownloadButtons data={responsableList} formType="responsable" /> {/* Agrega los botones de descarga */}
+            <DownloadButtons 
+              data={responsableList} 
+              formType="responsable" 
+              title="GESTIÓN DE RESPONSABLES" 
+            /> {/* Pasa el título dinámico */}
 
-            <div style={styles.tableWrapper}>
-              <table style={styles.responsableTable}>
+            <div className="table-wrapper">
+              <table className="responsable-table">
                 <thead>
                   <tr>
-                    <th style={styles.tableHeader}>ID</th>
-                    <th style={styles.tableHeader}>Nombre del Responsable</th>
-                    <th style={styles.tableHeader}>Estado</th>
-                    <th style={styles.tableHeader}>Acciones</th>
+                    <th>ID</th>
+                    <th>Nombre del Responsable</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   {Array.isArray(responsableQuery) &&
-                    responsableQuery.map((responsable) => (
-                      <tr key={responsable.Id_Responsable}>
-                        <td style={styles.tableCell}>{responsable.Id_Responsable}</td>
-                        <td style={styles.tableCell}>{responsable.Nom_Responsable}</td>
-                        <td style={styles.tableCell}>{responsable.estado}</td>
-                        <td style={styles.tableCell}>
-                          <div style={styles.actionButtons}>
+                    responsableQuery.map((resp) => (
+                      <tr key={resp.Id_Responsable}>
+                        <td>{resp.Id_Responsable}</td>
+                        <td>{resp.Nom_Responsable}</td>
+                        <td>{resp.estado}</td>
+                        <td>
+                          <div className="action-buttons">
                             <button
-                              style={{ ...styles.button, ...styles.editButton }}
-                              onClick={() => getResponsable(responsable.Id_Responsable)}
+                              className="edit-button"
+                              onClick={() => getResponsable(resp.Id_Responsable)}
                             >
-                              ✏️
+                              <FontAwesomeIcon icon={faEdit} />
                             </button>
                             <button
-                              style={{ ...styles.button, ...styles.deleteButton }}
-                              onClick={() => deleteResponsable(responsable.Id_Responsable)}
+                              className="delete-button"
+                              onClick={() => deleteResponsable(resp.Id_Responsable)}
                             >
-                              🗑️
+                              <FontAwesomeIcon icon={faTrash} />
                             </button>
                           </div>
                         </td>
