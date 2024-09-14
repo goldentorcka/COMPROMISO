@@ -6,15 +6,13 @@ import OlvidePassword from './users/OlvidePassword.jsx';
 import Contend_Manuals from './components/home-init/Contend-Manuals.jsx';
 import NavMenuSE from './components/Nav/NavQuerySena/NavMenuS_E.jsx';
 import ContendR_H from './components/home-init/Contend-R_H.jsx';
-// import Init_Admin from './components/Admin/init-Admin.jsx';
-import CrudUsers from './users/crudUsers.jsx';  // Importa el componente para CRUD de Usuarios
+import CrudUsers from './users/crudUsers.jsx';
 import CrudResponsables from './responsible/crudResponsibles.jsx';
 import CrudProcedure from './procedure/crudProcedure.jsx';
 import CrudProcesses from './process/crudProcess.jsx';
-// import CrudAreas from './area/crudAreas.jsx';
 import CrudUnidades from './unit/crudUnits.jsx';
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
-import Layout from './components/Admin/layout/Layout.jsx'; // Importa el Layout
+import Layout from './components/Admin/layout/Layout.jsx';
 
 function App() {
   const techManualUrl = '/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
@@ -36,7 +34,6 @@ function App() {
             <Route path="Responsables" element={<CrudResponsables />} />
             <Route path="Procesos" element={<CrudProcesses />} />
             <Route path="Procedimientos" element={<CrudProcedure />} />
-            {/* <Route path="Areas" element={<CrudAreas />} /> */}
             <Route path="Unidades" element={<CrudUnidades />} />
           </Route>
         </Routes>

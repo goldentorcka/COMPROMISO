@@ -8,7 +8,7 @@ import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFileAlt } from '@fortawesome/free-solid-svg-icons';
-import DataTable from '../components/datatables/DataTable.jsx';
+import DataTable from '../components/datatables/DataTableResponsible.jsx';
 
 const styles = {
   // Tus estilos aquí

@@ -1,13 +1,13 @@
+// Importaciones
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api.js';
-import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/Pagination';
+import axios from 'axios';
+import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 import FormUnits from './formUnits.jsx';
 import FormQueryUnit from './formQueryUnits.jsx';
+import Pagination from '../components/Pagination/Pagination';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'; // Asegúrate de tener los íconos necesarios
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 
 const styles = {
   root: {
@@ -70,24 +70,40 @@ const styles = {
     width: '100%',
     maxWidth: '800px',
     margin: '0 auto',
+    marginTop: '20px',
+    backgroundColor: '#ffffff',
+    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+    borderRadius: '8px',
+    padding: '20px',
   },
-  icon: {
-    marginRight: '8px', // Espacio entre el icono y el texto
-  },
-
   unitTable: {
     width: '100%',
     borderCollapse: 'collapse',
-    backgroundColor: '#fff',
+    textAlign: 'left',
+    borderRadius: '8px',
+    overflow: 'hidden',
   },
   tableHeader: {
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#4CAF50', // Color de encabezado de DataTable
+    color: '#fff',
     textAlign: 'center',
+    padding: '12px',
+    fontWeight: 'bold',
+    fontSize: '1rem',
   },
   tableCell: {
     border: '1px solid #ddd',
-    padding: '10px',
+    padding: '12px',
     textAlign: 'center',
+    fontSize: '0.9rem',
+    color: '#333',
+  },
+  tableRow: {
+    backgroundColor: '#fff',
+    transition: 'background-color 0.3s ease',
+  },
+  tableRowHover: {
+    backgroundColor: '#f1f1f1',
   },
   actionButtons: {
     display: 'flex',
@@ -96,114 +112,107 @@ const styles = {
   },
   button: {
     padding: '5px 10px',
-    fontSize: '1rem',
+    fontSize: '0.85rem',
     cursor: 'pointer',
     border: 'none',
     borderRadius: '5px',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    transition: 'background-color 0.3s ease',
+  },
+  buttonDelete: {
+    backgroundColor: '#dc3545',
+    color: '#fff',
   },
 };
 
 const CrudUnits = () => {
-  const [unitList, setUnitList] = useState([]);
-  const [unit, setUnit] = useState({
-    Nom_Unidad: '',
-    Id_Area: '',
-    estado: 'No',
-  });
+  const [units, setUnits] = useState([]);
+  const [unit, setUnit] = useState({});
   const [unitQuery, setUnitQuery] = useState([]);
-  const [areas, setAreas] = useState([]);
-  const [buttonForm, setButtonForm] = useState('Enviar');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [buttonForm, setButtonForm] = useState('Añadir');
+  const [areas, setAreas] = useState([]);
 
   useEffect(() => {
-    getAllUnits();
-    getAllAreas();
-  }, [desde, hasta]);
+    fetchUnits();
+    fetchAreas();
+  }, []);
 
-  const getAllUnits = async () => {
+  const fetchUnits = async () => {
     try {
-      const response = await clienteAxios.get('/api/unidades');
-      setUnitList(response.data);
+      const response = await axios.get('/api/unidades');
+      setUnits(response.data);
       setUnitQuery(response.data);
     } catch (error) {
-      console.error('Error al obtener las unidades:', error);
+      console.error('Error fetching units:', error);
     }
   };
 
-  const getAllAreas = async () => {
+  const fetchAreas = async () => {
     try {
-      const response = await clienteAxios.get('/api/areas');
+      const response = await axios.get('/api/areas');
       setAreas(response.data);
     } catch (error) {
-      console.error('Error al obtener las áreas:', error);
+      console.error('Error fetching areas:', error);
     }
   };
 
-  const getUnit = async (Id_Unidad) => {
-    try {
-      const response = await clienteAxios.get(`/api/unidades/${Id_Unidad}`);
-      setUnit(response.data);
-      setButtonForm('Actualizar');
-      setIsModalOpen(true); // Abrir el modal al obtener una unidad
-    } catch (error) {
-      console.error('Error al obtener la unidad:', error);
-    }
-  };
-
-  const deleteUnit = async (Id_Unidad) => {
-    const result = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: '¡No podrás recuperar este registro!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, eliminarlo!'
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await clienteAxios.delete(`/api/unidades/${Id_Unidad}`);
-        Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-        getAllUnits();
-      } catch (error) {
-        console.error('Error al eliminar la unidad:', error);
-      }
-    }
+  const getUnit = (id) => {
+    const selectedUnit = units.find((u) => u.Id_Unidad === id);
+    setUnit(selectedUnit);
+    setButtonForm('Actualizar');
+    setIsModalOpen(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (buttonForm === 'Añadir') {
+      await addUnit();
+    } else {
+      await updateUnit();
+    }
+    setIsModalOpen(false);
+    resetForm();
+  };
+
+  const addUnit = async () => {
     try {
-      if (buttonForm === 'Enviar') {
-        await clienteAxios.post('/api/unidades', unit);
-        Swal.fire('Agregado!', 'La unidad ha sido agregada.', 'success');
-      } else {
-        await clienteAxios.put(`/api/unidades/${unit.Id_Unidad}`, unit);
-        Swal.fire('Actualizado!', 'La unidad ha sido actualizada.', 'success');
-      }
-      resetForm();
-      getAllUnits();
-      setIsModalOpen(false); // Cerrar el modal al enviar el formulario
+      await axios.post('/api/unidades', unit);
+      fetchUnits();
     } catch (error) {
-      console.error('Error al enviar el formulario:', error);
+      console.error('Error adding unit:', error);
+    }
+  };
+
+  const updateUnit = async () => {
+    try {
+      await axios.put(`/api/unidades/${unit.Id_Unidad}`, unit);
+      fetchUnits();
+    } catch (error) {
+      console.error('Error updating unit:', error);
+    }
+  };
+
+  const deleteUnit = async (id) => {
+    try {
+      await axios.delete(`/api/unidades/${id}`);
+      fetchUnits();
+    } catch (error) {
+      console.error('Error deleting unit:', error);
     }
   };
 
   const resetForm = () => {
-    setUnit({
-      Nom_Unidad: '',
-      Id_Area: '',
-      estado: 'No',
-    });
-    setButtonForm('Enviar');
+    setUnit({});
+    setButtonForm('Añadir');
   };
 
-  const getAreaNameById = (id) => {
-    const area = areas.find((area) => area.Id_Area === id);
-    return area ? area.Nom_Area : 'Área no disponible';
+  const getAreaNameById = (areaId) => {
+    const area = areas.find((a) => a.Id_Area === areaId);
+    return area ? area.Nom_Area : 'N/A';
   };
 
   return (
@@ -252,7 +261,18 @@ const CrudUnits = () => {
                 <tbody>
                   {Array.isArray(unitQuery) &&
                     unitQuery.slice(desde, hasta).map((unit) => (
-                      <tr key={unit.Id_Unidad}>
+                      <tr
+                        key={unit.Id_Unidad}
+                        style={styles.tableRow}
+                        onMouseEnter={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            styles.tableRowHover.backgroundColor)
+                        }
+                        onMouseLeave={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            styles.tableRow.backgroundColor)
+                        }
+                      >
                         <td style={styles.tableCell}>{unit.Id_Unidad}</td>
                         <td style={styles.tableCell}>{unit.Nom_Unidad}</td>
                         <td style={styles.tableCell}>{getAreaNameById(unit.Id_Area)}</td>
@@ -266,7 +286,7 @@ const CrudUnits = () => {
                               ✏️
                             </button>
                             <button
-                              style={styles.button}
+                              style={{ ...styles.button, ...styles.buttonDelete }}
                               onClick={() => deleteUnit(unit.Id_Unidad)}
                             >
                               🗑️
@@ -278,11 +298,11 @@ const CrudUnits = () => {
                 </tbody>
               </table>
               <Pagination
-                URI={'/api/unidades'}
                 setDesde={setDesde}
-                setHasta={setHasta}
                 desde={desde}
                 hasta={hasta}
+                setHasta={setHasta}
+                cantidad={unitQuery.length}
               />
             </div>
           </div>

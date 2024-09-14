@@ -3,97 +3,93 @@ import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import userIcon from "../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../Public/images/iconLogin/Password.svg";
-import logo from "../Public/images/logos/logo.png"; // Asegúrate de que la ruta del logo sea correcta
+import { ReactSession } from "react-client-session";
 import Alerta from "../components/Alert/Alerta.jsx";
 
 // Estilos de color
 const formStyles = {
-  backgroundColor: "#ffffff",
-  borderRadius: "8px",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+  backgroundColor: "#f8f9fa",
+  borderRadius: "10px",
+  boxShadow: "0 10px 30px rgba(0, 0, 0, 0.1)",
   transition: "transform 0.3s ease-in-out",
+  maxWidth: "400px", // Ajusta el ancho máximo
+  margin: "0 auto", // Centra el formulario horizontalmente
 };
 
 const buttonStyles = {
-  backgroundColor: "#1877f2",
+  backgroundColor: "#007bff",
   color: "#ffffff",
   borderRadius: "5px",
-  padding: "10px 20px",
-  border: "none",
-  fontSize: "1rem",
-  cursor: "pointer",
   transition: "background-color 0.3s",
 };
 
 const buttonHoverStyles = {
-  backgroundColor: "#145dbf",
+  backgroundColor: "#0056b3",
 };
 
 const linkStyles = {
-  color: "#1877f2",
+  color: "#007bff",
   transition: "color 0.3s",
 };
 
 const linkHoverStyles = {
-  color: "#145dbf",
+  color: "#0056b3",
 };
 
 const headerStyles = {
-  fontSize: "1.5rem",
-  color: "#1877f2",
+  fontSize: "1.5rem", // Ajusta el tamaño del texto
+  color: "#007bff",
   fontWeight: "bold",
-  marginBottom: "1rem",
-  textAlign: "center",
+  animation: "slideInDown 1s ease-out, pulse 1.5s infinite",
+  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.2)",
 };
 
 const spanStyles = {
   display: "block",
-  fontSize: "1rem",
-  color: "#606770",
+  fontSize: "1rem", // Ajusta el tamaño del texto
+  color: "#343a40",
   marginTop: "0.5rem",
+  animation: "fadeIn 2s ease-in-out",
 };
 
 const volverButtonStyles = {
-  backgroundColor: "#f0f2f5",
-  color: "#606770",
+  backgroundColor: "#6c757d",
+  color: "#ffffff",
   borderRadius: "5px",
-  padding: "10px 20px",
-  border: "none",
-  fontSize: "1rem",
-  cursor: "pointer",
   transition: "background-color 0.3s, transform 0.3s",
 };
 
 const volverButtonHoverStyles = {
-  backgroundColor: "#e4e6eb",
+  backgroundColor: "#5a6268",
   transform: "scale(1.05)",
 };
 
 const LoginFormAdmin = () => {
-  const [alerta, setAlerta] = useState({});
+  const [Cor_Usuario, setCor_Usuario] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Muestra una alerta de saludo
-    alert("¡Hola! Has iniciado sesión.");
+    // Almacena un token ficticio en la sesión (puedes cambiarlo según tu lógica)
+    ReactSession.set("token", "fake-token");
 
     // Redirige al panel de administración
-    navigate("/Admin");
+    navigate("/admin");
   };
 
-  const { msg } = alerta;
-
   return (
-    <div className="container mt-5">
-      <div className="text-center mb-4">
-        <h1 style={headerStyles}>Inicia Sesión</h1>
-        <span style={spanStyles}>EN EL APLICATIVO COMPROMISO SENA</span>
-        <img src={logo} alt="Logo" style={{ width: "150px", marginTop: "1rem" }} />
-      </div>
+    <div
+      className="container mt-5"
+      style={{ animation: "fadeIn 1.2s ease-in-out" }}
+    >
+      <h1 className="text-center mb-4" style={headerStyles}>
+        Inicia Sesión
+        <span style={spanStyles}>en el Aplicativo COMPROMISO SENA</span>
+      </h1>
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
+        <div className="col-md-12">
           <form
             onSubmit={handleSubmit}
             className="card p-4 shadow"
@@ -105,7 +101,6 @@ const LoginFormAdmin = () => {
               e.currentTarget.style.transform = "translateY(0)";
             }}
           >
-            {msg && <Alerta alerta={alerta} />}
             <div className="form-group mb-3 position-relative">
               <label htmlFor="email" className="form-label">
                 Correo:
@@ -114,14 +109,16 @@ const LoginFormAdmin = () => {
                 id="email"
                 type="email"
                 placeholder="Aquí su Correo"
+                value={Cor_Usuario}
+                onChange={(e) => setCor_Usuario(e.target.value)}
                 className="form-control ps-5"
                 style={{ borderRadius: "5px", paddingLeft: "40px" }}
               />
               <img
                 src={userIcon}
                 alt="Usuario"
-                className="position-absolute top-50 start-0 translate-middle-y"
-                style={{ width: "20px", height: "20px", left: "12px", top: "50%", transform: "translateY(-50%)" }}
+                className="position-absolute top-50 start-0 translate-middle-y ms-2"
+                style={{ width: "20px", height: "20px", left: "15px" }}
               />
             </div>
             <div className="form-group mb-3 position-relative">
@@ -132,40 +129,47 @@ const LoginFormAdmin = () => {
                 id="password"
                 type="password"
                 placeholder="Aquí su Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="form-control ps-5"
                 style={{ borderRadius: "5px", paddingLeft: "40px" }}
               />
               <img
                 src={lockIcon}
                 alt="Contraseña"
-                className="position-absolute top-50 start-0 translate-middle-y"
-                style={{ width: "20px", height: "20px", left: "12px", top: "50%", transform: "translateY(-50%)" }}
+                className="position-absolute top-50 start-0 translate-middle-y ms-2"
+                style={{ width: "20px", height: "20px", left: "10px" }}
               />
             </div>
             <div className="d-flex justify-content-between align-items-center">
               <button
                 type="submit"
-                className="btn"
+                className="btn mt-3"
                 style={buttonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = buttonHoverStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    buttonHoverStyles.backgroundColor;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = buttonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    buttonStyles.backgroundColor;
                 }}
               >
                 Iniciar Sesión
               </button>
               <Link
                 to="/"
-                className="btn"
+                className="btn mt-3"
                 style={volverButtonStyles}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = volverButtonHoverStyles.backgroundColor;
-                  e.currentTarget.style.transform = volverButtonHoverStyles.transform;
+                  e.currentTarget.style.backgroundColor =
+                    volverButtonHoverStyles.backgroundColor;
+                  e.currentTarget.style.transform =
+                    volverButtonHoverStyles.transform;
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = volverButtonStyles.backgroundColor;
+                  e.currentTarget.style.backgroundColor =
+                    volverButtonStyles.backgroundColor;
                   e.currentTarget.style.transform = "scale(1)";
                 }}
               >

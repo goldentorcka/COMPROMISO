@@ -266,13 +266,13 @@ router.put('/:id', updateUsuario);
 router.delete('/:id', deleteUsuario);
 
 // Middleware de manejo de errores (opcional)
-router.use((err, req, res, next) => {
-  if (err) {
-    logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
-    res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
-  } else {
-    next();
-  }
-});
+// router.use((err, req, res, next) => {
+//   if (err) {
+//     logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
+//     res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
+//   } else {
+//     next();
+//   }
+// });
 
 module.exports = router;

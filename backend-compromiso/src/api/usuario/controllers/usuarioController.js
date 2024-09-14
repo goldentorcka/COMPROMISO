@@ -1,171 +1,129 @@
-// @ts-nocheck
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { Usuario } = require('../models/usuarioModel.js');
-const logger = require('../../../../config/logger.js');
+const Usuario = require('../models/usuario');
+const logger = require('../config/logger'); // Asumiendo que el logger está en config/logger.js
 
-// Obtener todos los usuarios
-const getUsuarios = async (req, res) => {
-  try {
-    const usuarios = await Usuario.findAll();
-    if (usuarios.length === 0) {
-      res.status(404).json({ message: 'No se encontraron usuarios' });
-    } else {
-      res.json(usuarios);
-    }
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+// Validación de campos no vacíos y tipos de datos
+const validarDatosUsuario = (data) => {
+  const { Nom_Usuario, Ape_Usuario, Cod_Usuario, Cor_Usuario, Nde_Usuario, Fec_Usuario, estado, rol, token, password } = data;
+
+  if (!Nom_Usuario || !Ape_Usuario || !Cod_Usuario || !Cor_Usuario || !Nde_Usuario || !Fec_Usuario || !estado || !rol || !password) {
+    return { error: 'Todos los campos son obligatorios.' };
   }
+
+  // Validar que el nombre y apellido sean solo texto
+  const nombreRegex = /^[A-Za-z\s]+$/;
+  if (!nombreRegex.test(Nom_Usuario)) {
+    return { error: 'El nombre solo puede contener letras.' };
+  }
+  if (!nombreRegex.test(Ape_Usuario)) {
+    return { error: 'El apellido solo puede contener letras.' };
+  }
+
+  // Validar que Cod_Usuario sea un valor numérico
+  const codigoRegex = /^[0-9]+$/;
+  if (!codigoRegex.test(Cod_Usuario)) {
+    return { error: 'El código del usuario solo puede contener números.' };
+  }
+
+  // Validar el correo electrónico
+  const correoRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  if (!correoRegex.test(Cor_Usuario)) {
+    return { error: 'El correo electrónico no es válido.' };
+  }
+
+  // Validar que Nde_Usuario (número de documento) sea numérico
+  if (!codigoRegex.test(Nde_Usuario)) {
+    return { error: 'El número de documento solo puede contener números.' };
+  }
+
+  return null;
 };
 
-// Obtener un usuario por ID
-const getUsuarioById = async (req, res) => {
-  try {
-    const usuario = await Usuario.findByPk(req.params.id);
-    if (!usuario) {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-    } else {
-      res.json(usuario);
-    }
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+// Crear un nuevo usuario con validaciones
+const crearUsuario = async (req, res) => {
+  const { Nom_Usuario, Ape_Usuario, Cod_Usuario, Cor_Usuario, Nde_Usuario, Fec_Usuario, estado, rol, token, password } = req.body;
+
+  // Validar los datos antes de proceder
+  const validacionError = validarDatosUsuario(req.body);
+  if (validacionError) {
+    return res.status(400).json(validacionError);
   }
-};
 
-// Crear un nuevo usuario
-const createUsuario = async (req, res) => {
   try {
-    const { Nom_Usuario, Ape_Usuario, Cor_Usuario, password, rol } = req.body;
-
-    // Validar campos requeridos
-    if (!Nom_Usuario || !Ape_Usuario || !Cor_Usuario || !password || !rol) {
-      return res.status(400).json({ error: 'Datos requeridos faltantes' });
-    }
-
-    // Validar longitud del nombre (por ejemplo, al menos 3 caracteres)
-    if (Nom_Usuario.length < 3 || Ape_Usuario.length < 3) {
-      return res.status(400).json({ error: 'Nombre o apellido demasiado corto' });
-    }
-
-    // Validar que el rol sea válido
-    if (rol !== 'Administrador') {
-      return res.status(400).json({ error: 'Rol inválido' });
-    }
-
-    // Crear el usuario
-    const usuario = await Usuario.create({ Nom_Usuario, Ape_Usuario, Cor_Usuario, password, rol });
-    return res.status(201).json(usuario);
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'Error en el procesamiento de datos' });
-    }
-    return res.status(500).json({ error: 'Error interno del servidor' });
-  }
-};
-
-// Actualizar un usuario existente
-const updateUsuario = async (req, res) => {
-  try {
-    const usuario = await Usuario.findByPk(req.params.id);
-
-    if (!usuario) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
-    }
-
-    const [updated] = await Usuario.update(req.body, {
-      where: { Id_Usuario: req.params.id },
+    const nuevoUsuario = await Usuario.create({
+      Nom_Usuario,
+      Ape_Usuario,
+      Cod_Usuario,
+      Cor_Usuario,
+      Nde_Usuario,
+      Fec_Usuario,
+      estado,
+      rol,
+      token,
+      password
     });
-
-    if (updated) {
-      const updatedUsuario = await Usuario.findByPk(req.params.id);
-      res.json(updatedUsuario);
-    } else {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-    }
+    res.status(201).json(nuevoUsuario);
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    logger.error(error.message); // Captura solo el mensaje del error
+    res.status(500).json({ error: 'Error al crear el usuario.' });
   }
 };
 
-// Eliminar un usuario por ID
-const deleteUsuario = async (req, res) => {
+// Actualizar un usuario con validaciones
+const actualizarUsuario = async (req, res) => {
+  const { id } = req.params;
+  const { Nom_Usuario, Ape_Usuario, Cod_Usuario, Cor_Usuario, Nde_Usuario, Fec_Usuario, estado, rol, token, password } = req.body;
+
+  // Validar los datos antes de proceder
+  const validacionError = validarDatosUsuario(req.body);
+  if (validacionError) {
+    return res.status(400).json(validacionError);
+  }
+
   try {
-    const usuario = await Usuario.findByPk(req.params.id);
-
+    const usuario = await Usuario.findByPk(id);
     if (!usuario) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
 
-    const deleted = await Usuario.destroy({
-      where: { Id_Usuario: req.params.id },
-    });
+    usuario.Nom_Usuario = Nom_Usuario;
+    usuario.Ape_Usuario = Ape_Usuario;
+    usuario.Cod_Usuario = Cod_Usuario;
+    usuario.Cor_Usuario = Cor_Usuario;
+    usuario.Nde_Usuario = Nde_Usuario;
+    usuario.Fec_Usuario = Fec_Usuario;
+    usuario.estado = estado;
+    usuario.rol = rol;
+    usuario.token = token;
+    usuario.password = password;
 
-    if (deleted) {
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: 'Usuario no encontrado' });
-    }
+    await usuario.save();
+    res.json(usuario);
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    logger.error(error.message); // Captura solo el mensaje del error
+    res.status(500).json({ error: 'Error al actualizar el usuario.' });
   }
 };
 
-// Iniciar sesión de un usuario
-const loginUsuario = async (req, res) => {
-  const { Cor_Usuario, password } = req.body;
+// Eliminar un usuario
+const eliminarUsuario = async (req, res) => {
+  const { id } = req.params;
 
   try {
-    if (!Cor_Usuario || !password) {
-      return res.status(400).json({ error: 'Faltan el correo electrónico o la contraseña' });
-    }
-
-    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
-
+    const usuario = await Usuario.findByPk(id);
     if (!usuario) {
-      return res.status(401).json({ error: 'Correo electrónico o contraseña incorrectos' });
+      return res.status(404).json({ error: 'Usuario no encontrado.' });
     }
 
-    const passwordMatch = await bcrypt.compare(password, usuario.password);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Correo electrónico o contraseña incorrectos' });
-    }
-
-    const token = jwt.sign(
-      { Id_Usuario: usuario.Id_Usuario, rol: usuario.rol },
-      process.env.JWT_SECRET || 'secretKey',
-      { expiresIn: '1h' }
-    );
-
-    await usuario.update({ token });
-
-    return res.status(200).json({
-      message: 'Inicio de sesión exitoso',
-      user: {
-        Id_Usuario: usuario.Id_Usuario,
-        Nom_Usuario: usuario.Nom_Usuario,
-        Ape_Usuario: usuario.Ape_Usuario,
-        Cor_Usuario: usuario.Cor_Usuario,
-        rol: usuario.rol,
-        token
-      }
-    });
+    await usuario.destroy();
+    res.json({ message: 'Usuario eliminado correctamente.' });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    return res.status(500).json({ error: 'Error en el servidor' });
+    logger.error(error.message); // Captura solo el mensaje del error
+    res.status(500).json({ error: 'Error al eliminar el usuario.' });
   }
 };
 
 module.exports = {
-  getUsuarios,
-  getUsuarioById,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario,
-  loginUsuario
+  crearUsuario,
+  actualizarUsuario,
+  eliminarUsuario
 };

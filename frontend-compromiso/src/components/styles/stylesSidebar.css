@@ -1,76 +1,52 @@
-/* stylesSidebar.css */
-
+/* Sidebar */
 .sidebar {
-  width: 250px; /* Ancho fijo del sidebar */
-  background-color: #343a40; /* Color de fondo del sidebar */
-  color: #fff;
-  height: 100vh; /* Altura completa de la ventana */
-  position: fixed; /* Fijo para mantenerse en su lugar */
+  width: 240px; /* Ajusta este valor según el tamaño del sidebar */
+  position: fixed;
   top: 0;
   left: 0;
-  overflow-y: auto; /* Permite el scroll vertical si es necesario */
-  transition: width 0.3s ease; /* Suaviza cambios en el ancho si se realizan */
-}
-
-.sidebar .nav-link {
-  color: #adb5bd; /* Color de texto en el sidebar */
-  display: flex;
-  align-items: center;
-  padding: 10px 15px;
-  text-decoration: none;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.sidebar .nav-link.active,
-.sidebar .nav-link:hover {
-  background-color: #007bff; /* Fondo azul en hover y activo */
-  color: #fff; /* Texto blanco en hover y activo */
-  border-radius: 4px;
-}
-
-.sidebar .nav-link .icon {
-  margin-right: 10px;
-  transition: transform 0.3s ease;
-}
-
-.sidebar .nav-link:hover .icon {
-  transform: rotate(15deg); /* Rotación ligera del icono en hover */
-}
-
-.settings-logout {
-  margin-top: auto; /* Alinea la sección en la parte inferior */
-  padding: 10px;
-}
-
-.settings-logout .nav-link {
-  padding: 10px 15px;
-}
-
-.settings-logout .nav-link.active,
-.settings-logout .nav-link:hover {
-  background-color: #007bff; /* Fondo azul en hover y activo */
-  color: #fff; /* Texto blanco en hover y activo */
-}
-
-.user-section {
-  border-top: 1px solid #495057; /* Línea divisoria */
+  height: 100%;
   background-color: #343a40;
+  padding-top: 1rem;
+  z-index: 1000; /* Asegura que esté siempre sobre otros elementos */
 }
 
-.user-info {
-  color: #fff;
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.status-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+.nav-item {
+  margin-bottom: 1rem;
 }
 
-.status-indicator.active {
-  background-color: #28a745; /* Verde para activo */
+.icon {
+  font-size: 1.2rem;
 }
 
-.status-indicator.inactive {
-  background-color: #dc3545; /* Rojo para inactivo */
+/* Contenedor del CRUD */
+.main-content {
+  margin-left: 260px; /* Deja espacio para el sidebar */
+  padding: 20px;
+}
+
+.crud-wrapper {
+  max-width: 1200px; /* Ancho máximo del CRUD */
+  margin: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustar la tabla */
+.table-responsive {
+  margin-top: 20px;
+}
+
+/* Centrar el contenido */
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }

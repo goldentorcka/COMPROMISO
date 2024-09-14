@@ -5,7 +5,7 @@ const Home_init = () => {
     const imageBasePath = '/src/Public/images/imagenHome-Init/';
     const images = [
         `${imageBasePath}imagen1.jpeg`,
-        `${imageBasePath}imagen2.jpeg`,
+        `${imageBasePath}imagen2.jpeg`, 
         `${imageBasePath}imagen3.jpeg`
     ];
 

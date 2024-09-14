@@ -9,13 +9,9 @@ const clienteAxios = axios.create({
 });
 
 // Función para obtener datos
-export const fetchData = async (endpoint, token) => {
+export const fetchData = async (endpoint) => {
   try {
-    const response = await clienteAxios.get(endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await clienteAxios.get(endpoint);
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -24,11 +20,10 @@ export const fetchData = async (endpoint, token) => {
 };
 
 // Función para enviar datos (POST)
-export const postData = async (endpoint, data, token) => {
+export const postData = async (endpoint, data) => {
   try {
     const response = await clienteAxios.post(endpoint, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -40,11 +35,10 @@ export const postData = async (endpoint, data, token) => {
 };
 
 // Función para actualizar datos (PUT)
-export const putData = async (endpoint, data, token) => {
+export const putData = async (endpoint, data) => {
   try {
     const response = await clienteAxios.put(endpoint, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     });
@@ -56,13 +50,9 @@ export const putData = async (endpoint, data, token) => {
 };
 
 // Función para eliminar datos (DELETE)
-export const deleteData = async (endpoint, token) => {
+export const deleteData = async (endpoint) => {
   try {
-    const response = await clienteAxios.delete(endpoint, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await clienteAxios.delete(endpoint);
     return response.data;
   } catch (error) {
     console.error('Error deleting data:', error);

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormGeneral from '../components/datatables/GeneralForm.jsx'; // Importa el nuevo formulario general
+import FormGeneral from '../components/datatables/Crud_General.jsx';
 import Pagination from '../components/Pagination/Pagination';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
-import DownloadButtons from '../components/Buttons/ButtonsDowload.jsx'; // Importa el componente
+import Modal from '../components/Modal/Init-Modal.jsx'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faEdit, faTrash, faUserShield } from '@fortawesome/free-solid-svg-icons';
-import '../components/styles/stylesResponsiblesCrud.css'; // Importa el archivo CSS
+import { faPlus, faEdit, faTrash, faFilePdf, faFileExcel, faDatabase } from '@fortawesome/free-solid-svg-icons';
+import DataTable from 'react-data-table-component';
+import '../components/styles/stylesResponsiblesCrud.css';
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
@@ -16,26 +16,18 @@ const CrudResponsables = () => {
     Nom_Responsable: '',
     estado: 'Activo',
   });
-  const [responsableQuery, setResponsableQuery] = useState([]);
   const [buttonForm, setButtonForm] = useState('Enviar');
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [totalRegistros, setTotalRegistros] = useState(0);
-  const [registrosPorPagina] = useState(10); // Número de registros por página
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     getAllResponsables();
-  }, [paginaActual]);
+  }, []);
 
   const getAllResponsables = async () => {
     try {
       const response = await clienteAxios.get('/api/responsables');
-      const totalRegistros = response.data.length;
-      setTotalRegistros(totalRegistros);
-      const startIndex = (paginaActual - 1) * registrosPorPagina;
-      const endIndex = Math.min(startIndex + registrosPorPagina, totalRegistros);
+      console.log('Datos obtenidos:', response.data); // Depuración
       setResponsableList(response.data);
-      setResponsableQuery(response.data.slice(startIndex, endIndex));
     } catch (error) {
       console.error('Error al obtener los responsables:', error);
     }
@@ -99,12 +91,47 @@ const CrudResponsables = () => {
     setButtonForm('Enviar');
   };
 
-  const formFields = [
-    { name: 'Nom_Responsable', label: 'Nombre del Responsable', type: 'text', placeholder: 'Nombre', required: true },
-    { name: 'estado', label: 'Estado', type: 'select', options: [
-      { value: 'Activo', label: 'Activo' },
-      { value: 'Inactivo', label: 'Inactivo' }
-    ], required: true },
+  const exportToPDF = () => {
+    console.log('Exportar a PDF');
+  };
+
+  const exportToExcel = () => {
+    console.log('Exportar a Excel');
+  };
+
+  const exportToSQL = () => {
+    console.log('Exportar a SQL');
+  };
+
+  const columns = [
+    {
+      name: 'ID',
+      selector: (row) => row.Id_Responsable,
+      sortable: true,
+    },
+    {
+      name: 'Nombre del Responsable',
+      selector: (row) => row.Nom_Responsable,
+      sortable: true,
+    },
+    {
+      name: 'Estado',
+      selector: (row) => row.estado,
+      sortable: true,
+    },
+    {
+      name: 'Acciones',
+      cell: (row) => (
+        <div className="action-buttons">
+          <button className="edit-button" onClick={() => getResponsable(row.Id_Responsable)}>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+          <button className="delete-button" onClick={() => deleteResponsable(row.Id_Responsable)}>
+            <FontAwesomeIcon icon={faTrash} />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
@@ -125,13 +152,19 @@ const CrudResponsables = () => {
                 setIsModalOpen(true);
               }}
             >
-              <FontAwesomeIcon icon={faUserShield} /> Agregar
+              <FontAwesomeIcon icon={faPlus} /> Agregar
             </button>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               <FormGeneral
                 initialValues={responsable}
-                fields={formFields}
+                fields={[
+                  { name: 'Nom_Responsable', label: 'Nombre del Responsable', type: 'text', placeholder: 'Nombre', required: true },
+                  { name: 'estado', label: 'Estado', type: 'select', options: [
+                    { value: 'Activo', label: 'Activo' },
+                    { value: 'Inactivo', label: 'Inactivo' }
+                  ], required: true },
+                ]}
                 onSubmit={handleSubmit}
                 onCancel={() => {
                   resetForm();
@@ -141,54 +174,27 @@ const CrudResponsables = () => {
               />
             </Modal>
 
-            <DownloadButtons 
-              data={responsableList} 
-              formType="responsable" 
-              title="GESTIÓN DE RESPONSABLES" 
-            /> {/* Pasa el título dinámico */}
+            <div className="export-buttons">
+              <button className="export-btn pdf-btn" onClick={exportToPDF}>
+                <FontAwesomeIcon icon={faFilePdf} /> Exportar PDF
+              </button>
+              <button className="export-btn excel-btn" onClick={exportToExcel}>
+                <FontAwesomeIcon icon={faFileExcel} /> Exportar Excel
+              </button>
+              <button className="export-btn sql-btn" onClick={exportToSQL}>
+                <FontAwesomeIcon icon={faDatabase} /> Exportar SQL
+              </button>
+            </div>
 
             <div className="table-wrapper">
-              <table className="responsable-table">
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nombre del Responsable</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.isArray(responsableQuery) &&
-                    responsableQuery.map((resp) => (
-                      <tr key={resp.Id_Responsable}>
-                        <td>{resp.Id_Responsable}</td>
-                        <td>{resp.Nom_Responsable}</td>
-                        <td>{resp.estado}</td>
-                        <td>
-                          <div className="action-buttons">
-                            <button
-                              className="edit-button"
-                              onClick={() => getResponsable(resp.Id_Responsable)}
-                            >
-                              <FontAwesomeIcon icon={faEdit} />
-                            </button>
-                            <button
-                              className="delete-button"
-                              onClick={() => deleteResponsable(resp.Id_Responsable)}
-                            >
-                              <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-              <Pagination
-                totalRegistros={totalRegistros}
-                registrosPorPagina={registrosPorPagina}
-                paginaActual={paginaActual}
-                setPaginaActual={setPaginaActual}
+              <DataTable
+                columns={columns}
+                data={responsableList}
+                pagination
+                highlightOnHover
+                striped
+                paginationComponent={Pagination}
+                paginationPerPage={10}
               />
             </div>
           </div>
