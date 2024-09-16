@@ -1,4 +1,3 @@
-// Importaciones
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
@@ -8,123 +7,7 @@ import Pagination from '../components/Pagination/Pagination';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
-
-const styles = {
-  root: {
-    minHeight: '100vh',
-    backgroundColor: '#f4f4f4',
-    overflowX: 'hidden',
-  },
-  crudContainer: {
-    display: 'flex',
-    minHeight: 'calc(100vh - 60px)',
-    width: '107%',
-  },
-  sidebar: {
-    width: '250px',
-    backgroundColor: '#333',
-    color: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '20px',
-  },
-  mainContent: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '20px',
-    marginTop: '20px',
-  },
-  pageTitle: {
-    textAlign: 'center',
-    marginBottom: '20px',
-    fontSize: '2rem',
-  },
-  contentWrapper: {
-    width: '100%',
-    maxWidth: '1200px',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: '20px',
-    paddingLeft: '20px',
-  },
-  addButton: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '10px 20px',
-    fontSize: '1rem',
-    backgroundColor: '#4caf50',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    marginLeft: '190px',
-  },
-  icon: {
-    marginRight: '8px', // Espacio entre el icono y el texto
-  },
-  tableWrapper: {
-    width: '100%',
-    maxWidth: '800px',
-    margin: '0 auto',
-    marginTop: '20px',
-    backgroundColor: '#ffffff',
-    boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-    borderRadius: '8px',
-    padding: '20px',
-  },
-  unitTable: {
-    width: '100%',
-    borderCollapse: 'collapse',
-    textAlign: 'left',
-    borderRadius: '8px',
-    overflow: 'hidden',
-  },
-  tableHeader: {
-    backgroundColor: '#4CAF50', // Color de encabezado de DataTable
-    color: '#fff',
-    textAlign: 'center',
-    padding: '12px',
-    fontWeight: 'bold',
-    fontSize: '1rem',
-  },
-  tableCell: {
-    border: '1px solid #ddd',
-    padding: '12px',
-    textAlign: 'center',
-    fontSize: '0.9rem',
-    color: '#333',
-  },
-  tableRow: {
-    backgroundColor: '#fff',
-    transition: 'background-color 0.3s ease',
-  },
-  tableRowHover: {
-    backgroundColor: '#f1f1f1',
-  },
-  actionButtons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-  },
-  button: {
-    padding: '5px 10px',
-    fontSize: '0.85rem',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '5px',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    transition: 'background-color 0.3s ease',
-  },
-  buttonDelete: {
-    backgroundColor: '#dc3545',
-    color: '#fff',
-  },
-};
+import '../components/styles/stylesCrudUnits.css';
 
 const CrudUnits = () => {
   const [units, setUnits] = useState([]);
@@ -216,20 +99,20 @@ const CrudUnits = () => {
   };
 
   return (
-    <div style={styles.root}>
-      <div style={styles.crudContainer}>
-        <SidebarAdministrator style={styles.sidebar} />
-        <div style={styles.mainContent}>
-          <h1 style={styles.pageTitle}>Gestión de Unidades</h1>
-          <div style={styles.contentWrapper}>
+    <div className="root">
+      <div className="crudContainer">
+        <SidebarAdministrator className="sidebar" />
+        <div className="mainContent">
+          <h1 className="pageTitle">Gestión de Unidades</h1>
+          <div className="contentWrapper">
             <button
-              style={styles.addButton}
+              className="addButton"
               onClick={() => {
                 resetForm();
                 setIsModalOpen(true); // Abrir el modal para agregar una unidad
               }}
             >
-              <FontAwesomeIcon icon={faLayerGroup} style={styles.icon} /> Añadir
+              <FontAwesomeIcon icon={faLayerGroup} className="icon" /> Añadir
             </button>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -243,19 +126,19 @@ const CrudUnits = () => {
               />
             </Modal>
 
-            <div style={styles.tableWrapper}>
+            <div className="tableWrapper">
               <FormQueryUnit
                 unitQuery={unitQuery}
                 setUnitQuery={setUnitQuery}
               />
-              <table style={styles.unitTable}>
+              <table className="unitTable">
                 <thead>
                   <tr>
-                    <th style={styles.tableHeader}>ID</th>
-                    <th style={styles.tableHeader}>Nombre de la Unidad</th>
-                    <th style={styles.tableHeader}>Área</th>
-                    <th style={styles.tableHeader}>Estado</th>
-                    <th style={styles.tableHeader}>Acciones</th>
+                    <th className="tableHeader">ID</th>
+                    <th className="tableHeader">Nombre de la Unidad</th>
+                    <th className="tableHeader">Área</th>
+                    <th className="tableHeader">Estado</th>
+                    <th className="tableHeader">Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -263,46 +146,48 @@ const CrudUnits = () => {
                     unitQuery.slice(desde, hasta).map((unit) => (
                       <tr
                         key={unit.Id_Unidad}
-                        style={styles.tableRow}
+                        className="tableRow"
                         onMouseEnter={(e) =>
                           (e.currentTarget.style.backgroundColor =
-                            styles.tableRowHover.backgroundColor)
+                            document.querySelector('.tableRowHover').style.backgroundColor)
                         }
                         onMouseLeave={(e) =>
                           (e.currentTarget.style.backgroundColor =
-                            styles.tableRow.backgroundColor)
+                            document.querySelector('.tableRow').style.backgroundColor)
                         }
                       >
-                        <td style={styles.tableCell}>{unit.Id_Unidad}</td>
-                        <td style={styles.tableCell}>{unit.Nom_Unidad}</td>
-                        <td style={styles.tableCell}>{getAreaNameById(unit.Id_Area)}</td>
-                        <td style={styles.tableCell}>{unit.estado}</td>
-                        <td style={styles.tableCell}>
-                          <div style={styles.actionButtons}>
-                            <button
-                              style={styles.button}
-                              onClick={() => getUnit(unit.Id_Unidad)}
-                            >
-                              ✏️
-                            </button>
-                            <button
-                              style={{ ...styles.button, ...styles.buttonDelete }}
-                              onClick={() => deleteUnit(unit.Id_Unidad)}
-                            >
-                              🗑️
-                            </button>
-                          </div>
+                        <td className="tableCell">{unit.Id_Unidad}</td>
+                        <td className="tableCell">{unit.Nom_Unidad}</td>
+                        <td className="tableCell">{getAreaNameById(unit.Id_Area)}</td>
+                        <td className="tableCell">{unit.estado}</td>
+                        <td className="tableCell actionButtons">
+                          <button
+                            className="button"
+                            onClick={() => getUnit(unit.Id_Unidad)}
+                          >
+                            Editar
+                          </button>
+                          <button
+                            className="button buttonDelete"
+                            onClick={() => deleteUnit(unit.Id_Unidad)}
+                          >
+                            Eliminar
+                          </button>
                         </td>
                       </tr>
                     ))}
                 </tbody>
               </table>
               <Pagination
-                setDesde={setDesde}
-                desde={desde}
-                hasta={hasta}
-                setHasta={setHasta}
-                cantidad={unitQuery.length}
+                totalItems={unitQuery.length}
+                itemsPerPage={10}
+                currentPage={Math.ceil((desde + 1) / 10)}
+                onPageChange={(page) => {
+                  const start = (page - 1) * 10;
+                  const end = start + 10;
+                  setDesde(start);
+                  setHasta(end);
+                }}
               />
             </div>
           </div>

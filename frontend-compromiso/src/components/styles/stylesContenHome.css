@@ -1,0 +1,56 @@
+/* Estilos generales */
+.container {
+    margin-top: 3rem;
+}
+
+.position-relative {
+    padding: 3rem;
+    background-color: #f8f9fa;
+    border-radius: 15px;
+    text-align: center;
+    /* Borde eliminado */
+    border: none; 
+}
+
+/* Estilo minimalista para el título */
+.text-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    color: #2c3e50; /* Color minimalista (gris oscuro) */
+    margin-bottom: 2rem;
+    text-transform: uppercase; /* Pone el texto en mayúsculas */
+}
+
+/* Descripción debajo del título */
+.description {
+    font-size: 1.25rem;
+    color: #555;
+    margin-bottom: 2rem;
+}
+
+/* Contenedor de la imagen */
+.image-container {
+    display: flex;
+    justify-content: center;
+    perspective: 1200px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 2rem;
+}
+
+/* Estilo de la imagen */
+.image-container img {
+    width: 350px;
+    height: auto;
+    transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out, box-shadow 1.5s ease-in-out;
+    transform-style: preserve-3d;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    opacity: 1;
+}
+
+/* Efecto hover 3D */
+.image-container img:hover {
+    transform: scale(1.3) rotateY(20deg) rotateX(15deg); /* Efecto 3D */
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}

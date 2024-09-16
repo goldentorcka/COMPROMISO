@@ -10,6 +10,10 @@ import imgJulian2 from '../../../src/Public/images/ImagesMenbersGroup/julian2.jp
 import imgMarlon2 from '../../../src/Public/images/ImagesMenbersGroup/cumbe.jpeg';
 import imgMarlon3 from '../../../src/Public/images/ImagesMenbersGroup/cumbe2.jpeg';
 import DetailsModal from '../Modal/DetailsModal.jsx';
+import audioJulian from '../../../src/Public/audio/Julian.mp3'; // Audio de presentación
+import audioMarlon from '../../../src/Public/audio/Marlon.mp3'; // Audio de presentación
+import audioSofia from '../../../src/Public/audio/Sofia.mp3'; // Audio de presentación
+import '../styles/stylesCarruselContacts.css';
 
 const ContactUs = () => {
   const [showModal, setShowModal] = useState(false);
@@ -30,6 +34,7 @@ const ContactUs = () => {
     {
       name: 'Julian Felipe Montaña Ruiz',
       description: 'ANALISTA Y DESARROLLADOR',
+      className: 'julian',
       carouselItems: [
         {
           img: imgJulian,
@@ -41,19 +46,19 @@ const ContactUs = () => {
         },
         {
           img: imgJulian2,
-          caption: 'Es un apasionado del fitness y la vida saludable. ',
+          caption: 'Es un apasionado del fitness y la vida saludable.',
         },
       ],
-      facebook: 'https://www.facebook.com/share/jq5Ny1Y7GnczcEwM/?mibextid=qi2Omg',
-      instagram: 'https://www.instagram.com/julian_mr18?igsh=MWQ1dXVlOWViM2oxZg==',
+      audio: audioJulian,
     },
     {
-      name: 'Marlon Cumbe',
+      name: 'Marlon Javier Cumbe Loaiza',
       description: 'GERENTE',
+      className: 'marlon',
       carouselItems: [
         {
           img: imgMarlon,
-          caption: ': Es una persona muy organizada y meticulosa',
+          caption: 'Es una persona muy organizada y meticulosa.',
         },
         {
           img: imgMarlon2,
@@ -64,12 +69,12 @@ const ContactUs = () => {
           caption: 'También aprecia pasar tiempo desconectado, disfrutando de la naturaleza y las caminatas largas.',
         },
       ],
-      facebook: 'https://www.facebook.com/profile.php?id=61561011352009&mibextid=ZbWKwL',
-      instagram: 'https://www.instagram.com/marlxon69?igsh=MXI4bHo2bjdlZHAxag==',
+      audio: audioMarlon,
     },
     {
-      name: 'Sofía Solano',
+      name: 'Aqnoe Sofía Solano Solaque',
       description: 'ANALISTA Y DESARROLLADORA',
+      className: 'sofia',
       carouselItems: [
         {
           img: imgSofia1,
@@ -77,136 +82,67 @@ const ContactUs = () => {
         },
         {
           img: imgSofia2,
-          caption: ' Es muy intuitiva y tiene una gran habilidad para escuchar a los demás',
+          caption: 'Es muy intuitiva y tiene una gran habilidad para escuchar a los demás.',
         },
         {
           img: imgSofia3,
           caption: 'Es una persona que se desvive por sus amigos y familiares.',
         },
       ],
-      facebook: 'https://www.facebook.com/profile.php?id=61551864178712&mibextid=ZbWKwL',
-      instagram: 'https://www.instagram.com/sofia_ass23?igsh=MTBqYTgxejdiOW44YQ==',
+      audio: audioSofia,
     }
   ];
+
+  const handleMouseEnter = (audio) => {
+    const audioElement = new Audio(audio);
+    audioElement.play();
+  };
+
+  const handleMouseLeave = () => {
+    const audios = document.querySelectorAll("audio");
+    audios.forEach(audio => audio.pause());
+  };
 
   return (
     <>
       <NavMenuPublic />
       <div className="container mt-5 pt-5" style={{ padding: '0 15px' }}>
-        <h1
-          className="text-center mb-4"
-          style={{
-            color: '#333',
-            fontFamily: "'Arial', sans-serif",
-            fontSize: '2rem',
-            fontWeight: 'bold',
-            marginTop: '3rem', // Ajusta el margen superior aquí
-          }}
-        >
-          Nuestros Integrantes
-        </h1>
+        <h1 className="text-center mb-4">Nuestros Integrantes</h1>
         <div className="row">
           {members.map((member, index) => (
             <div className="col-lg-4" key={index}>
-              <div
-                className="member-card"
-                style={{
-                  textAlign: 'center',
-                  padding: '20px',
-                  border: '1px solid #ddd',
-                  borderRadius: '10px',
-                  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-                  marginBottom: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minHeight: '300px', // Ajusta la altura mínima según necesites
-                }}
-              >
-                <img
-                  src={member.carouselItems[0].img}
-                  alt={member.name}
-                  width="140"
-                  height="140"
-                  style={{
-                    borderRadius: '50%',
-                    objectFit: 'cover',
-                    backgroundColor: '#e9ecef',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                />
-                <h2
-                  className="fw-normal"
-                  style={{
-                    fontSize: '1.5rem',
-                    marginTop: '15px',
-                    color: '#333',
-                  }}
+              <div className={`member-card ${member.className}`}>
+                <div
+                  className="img-container"
+                  onMouseEnter={() => handleMouseEnter(member.audio)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  {member.name}
-                </h2>
-                <p
-                  style={{
-                    color: '#666',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.5',
-                    marginBottom: '15px',
-                  }}
-                >
-                  {member.description}
-                </p>
-                <div className="social-buttons" style={{ marginBottom: '15px' }}>
-                  <a 
-                    href={member.facebook} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    style={{ display: 'inline-block', margin: '0 5px' }}
-                  >
-                    <img 
-                      src="src/Public/images/icons/facebook.png" 
-                      width="30" 
-                      height="30" 
-                      style={{ borderRadius: '50%', objectFit: 'cover' }}
-                      alt="Facebook"
-                    />
+                  <img
+                    src={member.carouselItems[0].img}
+                    alt={member.name}
+                    className="profile-img"
+                  />
+                  <i className="fas fa-volume-up audio-icon"></i> {/* Ícono de audio */}
+                </div>
+                <h2>{member.name}</h2>
+                <p>{member.description}</p>
+                <div className="social-icons">
+                  <a href="https://www.github.com" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-github"></i>
                   </a>
-                  <a 
-                    href={member.instagram} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    style={{ display: 'inline-block', margin: '0 5px' }}
-                  >
-                    <img 
-                      src="src/Public/images/icons/instagram.png" 
-                      width="30" 
-                      height="30" 
-                      style={{ borderRadius: '50%', objectFit: 'cover' }}
-                      alt="Instagram"
-                    />
+                  <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-instagram"></i>
+                  </a>
+                  <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-facebook"></i>
+                  </a>
+                  <a href="mailto:correo@gmail.com">
+                    <i className="fas fa-envelope"></i>
+                  </a>
+                  <a href="https://wa.me/123456789" target="_blank" rel="noopener noreferrer">
+                    <i className="fab fa-whatsapp"></i>
                   </a>
                 </div>
-                <p>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleShow(member)}
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px 20px',
-                      fontSize: '0.9rem',
-                      textDecoration: 'none',
-                      color: '#fff',
-                      backgroundColor: '#007bff',
-                      borderRadius: '5px',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-                  >
-                    Ver detalles »
-                  </button>
-                </p>
               </div>
             </div>
           ))}

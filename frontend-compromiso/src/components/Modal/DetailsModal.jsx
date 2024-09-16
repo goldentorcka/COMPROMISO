@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal, Button, Carousel } from 'react-bootstrap';
-import './DetailsModal.css'; // Asegúrate de importar el archivo CSS
+import '../styles/Modal.css'; // Asegúrate de que este archivo exista y contenga los estilos
 
 const DetailsModal = ({ showModal, handleClose, member }) => {
   if (!member) return null;

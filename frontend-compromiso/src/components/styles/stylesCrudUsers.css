@@ -1,0 +1,100 @@
+/* CrudUsers.css */
+.root {
+    min-height: 100vh;
+    background-color: #f4f4f4;
+    overflow-x: hidden;
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .mainContent {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .pageTitle {
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .contentWrapper {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .openModalButton {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .tableWrapper {
+    width: 100%;
+    max-width: 1200px;
+    overflow-x: auto;
+  }
+  
+  .userTable {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    margin-top: 20px;
+  }
+  
+  .tableHeader {
+    background-color: #f9f9f9;
+    text-align: center;
+  }
+  
+  .tableCell {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .button {
+    padding: 5px 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  
+  .editButton {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .deleteButton {
+    background-color: #f44336;
+    color: #fff;
+  }
+  

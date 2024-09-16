@@ -3,56 +3,55 @@ const { DataTypes } = require('sequelize');
 const bcrypt = require('bcrypt');
 const sequelize = require('../../../../config/database.js');
 
-const Usuario = sequelize.define('usuario', {
+const Usuario = sequelize.define('usuarios', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   Nom_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   Ape_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   Cod_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   Cor_Usuario: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(255),
     allowNull: false,
-  },
-  Nde_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
+    validate: {
+      isEmail: true
+    }
   },
   Fec_Usuario: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: false
   },
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
-    allowNull: false,
+    allowNull: false
   },
   rol: {
     type: DataTypes.ENUM('Administrador'),
-    allowNull: false,
+    allowNull: false
   },
   token: {
-    type: DataTypes.STRING,
-    allowNull: true,
+    type: DataTypes.STRING(255)
   },
   password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
+    type: DataTypes.STRING(255),
+    allowNull: false
+  }
 }, {
-  timestamps: true,
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
+  timestamps: true, // createdAt y updatedAt automáticos
+  tableName: 'usuarios' // Asegura que coincida con el nombre de la tabla en la base de datos
 });
 
 module.exports = Usuario;
+
+

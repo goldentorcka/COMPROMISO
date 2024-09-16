@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './styles.css'; // Asegúrate de importar el archivo CSS
 import clienteAxios from '../api'; // Ajusta la ruta según la ubicación de tu archivo api.js
 import { ReactSession } from 'react-client-session';
 

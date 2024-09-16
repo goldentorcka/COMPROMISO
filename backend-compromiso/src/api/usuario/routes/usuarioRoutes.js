@@ -1,14 +1,15 @@
 // @ts-nocheck
 const express = require('express');
 const {
-  getUsuarios,
-  getUsuarioById,
-  createUsuario,
-  updateUsuario,
-  deleteUsuario,
+  crearUsuario,
+  actualizarUsuario,
+  eliminarUsuario,
   loginUsuario,
-  olvidePassword
-} = require('../controllers/usuarioController.js');
+  olvidePassword,
+  resetPassword,
+  getUsuarios,
+  getUsuarioById
+} = require('../controllers/usuarioController');
 const logger = require('../../../../config/logger.js');
 
 const router = express.Router();
@@ -47,33 +48,87 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 message:
+ *                 token:
  *                   type: string
- *                   description: Mensaje de éxito
- *                 user:
- *                   type: object
- *                   properties:
- *                     Id_Usuario:
- *                       type: integer
- *                       description: ID del usuario
- *                     Nom_Usuario:
- *                       type: string
- *                       description: Nombre del usuario
- *                     Cor_Usuario:
- *                       type: string
- *                       description: Correo electrónico del usuario
- *                     rol:
- *                       type: string
- *                       description: Rol del usuario
- *                     token:
- *                       type: string
- *                       description: Token de autenticación
+ *                   description: Token de autenticación
  *       401:
  *         description: Credenciales inválidas
  *       500:
  *         description: Error interno del servidor
  */
 router.post('/login', loginUsuario);
+
+/**
+ * @swagger
+ * /api/usuarios/olvide-password:
+ *   post:
+ *     summary: Solicita un cambio de contraseña
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               Cor_Usuario:
+ *                 type: string
+ *                 description: Correo electrónico del usuario
+ *     responses:
+ *       200:
+ *         description: Solicitud de cambio de contraseña enviada
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de éxito
+ *       404:
+ *         description: Correo electrónico no encontrado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/olvide-password', olvidePassword);
+
+/**
+ * @swagger
+ * /api/usuarios/reset-password:
+ *   post:
+ *     summary: Restablece la contraseña del usuario usando el token de restablecimiento
+ *     tags: [Usuarios]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               token:
+ *                 type: string
+ *                 description: Token de restablecimiento de contraseña
+ *               password:
+ *                 type: string
+ *                 description: Nueva contraseña del usuario
+ *     responses:
+ *       200:
+ *         description: Contraseña actualizada correctamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Mensaje de éxito
+ *       400:
+ *         description: Token inválido o expirado
+ *       500:
+ *         description: Error interno del servidor
+ */
+router.post('/reset-password', resetPassword);
+
 /**
  * @swagger
  * /api/usuarios:
@@ -157,9 +212,25 @@ router.get('/:id', getUsuarioById);
  *               Nom_Usuario:
  *                 type: string
  *                 description: Nombre del usuario
+ *               Ape_Usuario:
+ *                 type: string
+ *                 description: Apellido del usuario
+ *               Cod_Usuario:
+ *                 type: string
+ *                 description: Código del usuario
  *               Cor_Usuario:
  *                 type: string
  *                 description: Correo electrónico del usuario
+ *               Fec_Usuario:
+ *                 type: string
+ *                 format: date
+ *                 description: Fecha de nacimiento del usuario
+ *               estado:
+ *                 type: string
+ *                 description: Estado del usuario (Sí/No)
+ *               rol:
+ *                 type: string
+ *                 description: Rol del usuario
  *               password:
  *                 type: string
  *                 description: Contraseña del usuario
@@ -185,7 +256,7 @@ router.get('/:id', getUsuarioById);
  *       500:
  *         description: Error interno del servidor
  */
-router.post('/', createUsuario);
+router.post('/', crearUsuario);
 
 /**
  * @swagger
@@ -210,9 +281,25 @@ router.post('/', createUsuario);
  *               Nom_Usuario:
  *                 type: string
  *                 description: Nuevo nombre del usuario
+ *               Ape_Usuario:
+ *                 type: string
+ *                 description: Nuevo apellido del usuario
+ *               Cod_Usuario:
+ *                 type: string
+ *                 description: Nuevo código del usuario
  *               Cor_Usuario:
  *                 type: string
  *                 description: Nuevo correo electrónico del usuario
+ *               Fec_Usuario:
+ *                 type: string
+ *                 format: date
+ *                 description: Nueva fecha de nacimiento del usuario
+ *               estado:
+ *                 type: string
+ *                 description: Nuevo estado del usuario (Sí/No)
+ *               rol:
+ *                 type: string
+ *                 description: Nuevo rol del usuario
  *               password:
  *                 type: string
  *                 description: Nueva contraseña del usuario
@@ -240,7 +327,7 @@ router.post('/', createUsuario);
  *       500:
  *         description: Error interno del servidor
  */
-router.put('/:id', updateUsuario);
+router.put('/:id', actualizarUsuario);
 
 /**
  * @swagger
@@ -256,23 +343,13 @@ router.put('/:id', updateUsuario);
  *         schema:
  *           type: integer
  *     responses:
- *       204:
+ *       200:
  *         description: Usuario eliminado
  *       404:
  *         description: Usuario no encontrado
  *       500:
  *         description: Error interno del servidor
  */
-router.delete('/:id', deleteUsuario);
-
-// Middleware de manejo de errores (opcional)
-// router.use((err, req, res, next) => {
-//   if (err) {
-//     logger.error(`Error: ${err.message}, Ruta: ${req.method} ${req.originalUrl}, IP: ${req.ip}`);
-//     res.status(500).json({ error: 'Algo salió mal, intente de nuevo más tarde' });
-//   } else {
-//     next();
-//   }
-// });
+router.delete('/:id', eliminarUsuario);
 
 module.exports = router;

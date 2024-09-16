@@ -11,8 +11,12 @@ import CrudResponsables from './responsible/crudResponsibles.jsx';
 import CrudProcedure from './procedure/crudProcedure.jsx';
 import CrudProcesses from './process/crudProcess.jsx';
 import CrudUnidades from './unit/crudUnits.jsx';
+import CrudArea from './area/crudAreas.jsx'
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
 import Layout from './components/Admin/layout/Layout.jsx';
+// src/index.js o src/App.js
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   const techManualUrl = '/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
@@ -35,6 +39,8 @@ function App() {
             <Route path="Procesos" element={<CrudProcesses />} />
             <Route path="Procedimientos" element={<CrudProcedure />} />
             <Route path="Unidades" element={<CrudUnidades />} />
+            <Route path="Areas" element={<CrudUnidades />} />
+            
           </Route>
         </Routes>
       </div>

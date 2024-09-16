@@ -1,0 +1,62 @@
+/* Contenedor principal del formulario */
+.container-olvide-password {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-top: 2rem;
+  }
+  
+  /* Estilo del título */
+  .text-title {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Estilo del input */
+  .input-field {
+    border-radius: 5px;
+    padding: 0.5rem;
+  }
+  
+  /* Estilo del botón */
+  .btn-olvide-password {
+    background-color: #007bff;
+    color: #ffffff;
+    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    transition: background-color 0.3s, transform 0.3s;
+    width: 100%;
+  }
+  
+  /* Efecto hover para el botón */
+  .btn-olvide-password:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* Efecto de animación para el botón */
+  @keyframes buttonBounce {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+  
+  .btn-olvide-password:focus {
+    animation: buttonBounce 0.5s;
+  }
+  
+  /* Enlaces de navegación */
+  .link-nav {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .link-nav:hover {
+    text-decoration: underline;
+  }
+  
