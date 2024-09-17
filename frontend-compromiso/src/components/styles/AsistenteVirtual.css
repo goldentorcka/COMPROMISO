@@ -1,0 +1,204 @@
+/* Efectos globales */
+body {
+  font-family: 'Roboto', sans-serif;
+  background: linear-gradient(135deg, #ffffff, #f1f1f1); /* Fondo blanco con degradado suave */
+  color: #333; /* Texto gris oscuro */
+  overflow: hidden;
+  margin: 0;
+  height: 100vh;
+}
+
+/* Caja del chatbot */
+.chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 400px;
+  height: 600px;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.5s;
+}
+
+.chatbot-toggle {
+  background-color: #06d6a0;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
+  font-size: 1.2em;
+}
+
+.chatbot-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 20px rgba(0, 255, 100, 0.7); /* Efecto luminoso */
+}
+
+/* Caja del chatbot */
+.chatbox {
+  background: rgba(255, 255, 255, 0.95); /* Fondo blanco semitransparente */
+  border: 2px solid #06d6a0; /* Línea fina verde */
+  padding: 20px;
+  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0, 150, 255, 0.5); /* Azul brillante */
+  animation: enter 1.5s ease-in-out;
+}
+
+/* Animación de entrada */
+@keyframes enter {
+  0% {
+    transform: scale(0.8) rotateY(90deg);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+/* Estilo de los mensajes */
+.messages {
+  overflow-y: auto;
+  flex-grow: 1;
+  margin-bottom: 10px;
+  padding-right: 10px;
+}
+
+.user {
+  color: #06d6a0;
+  text-align: right;
+  margin-bottom: 10px;
+}
+
+.assistant {
+  color: #555;
+  text-align: left;
+  margin-bottom: 10px;
+}
+
+/* Entrada de texto */
+form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+input {
+  flex: 1;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.05); /* Fondo gris claro */
+  border: 2px solid #06d6a0;
+  color: #333;
+  border-radius: 5px;
+  outline: none;
+  margin-right: 10px;
+  font-size: 1.1em;
+}
+
+button {
+  background-color: #06d6a0;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+  background-color: #04c083;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+}
+
+button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+}
+
+/* Cámara */
+.camera {
+  position: relative;
+  margin-top: 10px;
+}
+
+video {
+  border: 2px solid #06d6a0;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+button + video {
+  margin-top: 10px;
+}
+
+/* Partículas (átomos) */
+@keyframes particles {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-10px) translateX(10px);
+  }
+}
+
+.particle {
+  position: absolute;
+  background-color: rgba(0, 255, 255, 0.7);
+  border-radius: 50%;
+  width: 5px;
+  height: 5px;
+  animation: particles 3s infinite alternate ease-in-out;
+}
+
+/* Diseño futurista */
+h1 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #06d6a0;
+  text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+  font-size: 2.2em;
+}
+
+/* Robots y aviones animados 3D */
+@keyframes robot-programming {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(100px); }
+  100% { transform: translateX(0); }
+}
+
+.robot {
+  width: 50px;
+  height: 50px;
+  background-color: #06d6a0;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+  border-radius: 10px;
+  animation: robot-programming 4s infinite ease-in-out;
+}
+
+@keyframes airplane-fly {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-50px) rotate(45deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.airplane {
+  width: 30px;
+  height: 30px;
+  background-color: #04c083;
+  position: absolute;
+  top: 100px;
+  right: 50px;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  animation: airplane-fly 5s infinite ease-in-out;
+}

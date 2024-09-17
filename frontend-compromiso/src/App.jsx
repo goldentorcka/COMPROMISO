@@ -1,4 +1,5 @@
 // src/App.jsx
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/home/home.jsx';
 import LoginFormAdmin from './users/LoginUser.jsx';
@@ -11,39 +12,32 @@ import CrudResponsables from './responsible/crudResponsibles.jsx';
 import CrudProcedure from './procedure/crudProcedure.jsx';
 import CrudProcesses from './process/crudProcess.jsx';
 import CrudUnidades from './unit/crudUnits.jsx';
-import CrudArea from './area/crudAreas.jsx'
+import CrudArea from './area/crudAreas.jsx';
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
 import Layout from './components/Admin/layout/Layout.jsx';
-// src/index.js o src/App.js
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import AsistenteVirtual from './components/AsistenteVirtual/Asistente-virtual.jsx';
 
 function App() {
-  const techManualUrl = '/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
-  const userManualUrl = '/pdf/OPERACIONES_BASICAS.pdf';
-
   return (
     <BrowserRouter>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login-admin" element={<LoginFormAdmin />} />
-          <Route path="/contacts" element={<ContendContacts />} />
-          <Route path="/Mision-Vision" element={<NavMenuSE />} />
-          <Route path="/Reseña-Historica" element={<ContendR_H />} />
-          <Route path="/manuals" element={<Contend_Manuals techManual={techManualUrl} userManual={userManualUrl} />} />
-          <Route path="/olvide-password" element={<OlvidePassword />} />
-          <Route path="/admin" element={<Layout />}>
-            <Route path="Usuarios" element={<CrudUsers />} />
-            <Route path="Responsables" element={<CrudResponsables />} />
-            <Route path="Procesos" element={<CrudProcesses />} />
-            <Route path="Procedimientos" element={<CrudProcedure />} />
-            <Route path="Unidades" element={<CrudUnidades />} />
-            <Route path="Areas" element={<CrudUnidades />} />
-            
-          </Route>
-        </Routes>
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/loginFormAdmin" element={<LoginFormAdmin />} />
+        <Route path="/olvidePassword" element={<OlvidePassword />} />
+        <Route path="/manuales" element={<Contend_Manuals />} />
+        <Route path="/se/admin" element={<NavMenuSE />} />
+        <Route path="/recursos-humanos" element={<ContendR_H />} />
+        <Route path="/admin/crud-users" element={<CrudUsers />} />
+        <Route path="/admin/crud-responsables" element={<CrudResponsables />} />
+        <Route path="/admin/crud-procedures" element={<CrudProcedure />} />
+        <Route path="/admin/crud-processes" element={<CrudProcesses />} />
+        <Route path="/admin/crud-unidades" element={<CrudUnidades />} />
+        <Route path="/admin/crud-areas" element={<CrudArea />} />
+        <Route path="/contactos" element={<ContendContacts />} />
+        <Route path="/admin/layout" element={<Layout />} />
+      </Routes>
+      <AsistenteVirtual /> {/* Aquí integras el Asistente Virtual */}
     </BrowserRouter>
   );
 }
