@@ -21,15 +21,22 @@
     width: 150px;
     height: auto;
     margin-bottom: 2rem;
-    animation: logoAnimation 5s infinite alternate;
+    animation: logoSpinOnce 5s ease-in-out 1; /* Solo una vez */
+    position: relative;
 }
 
-@keyframes logoAnimation {
+/* Animación de la imagen: gira al cargar la página */
+@keyframes logoSpinOnce {
     0% {
         transform: rotate(0deg);
     }
-    100% {
+    50% {
         transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+        right: 0;
+        top: 0;
     }
 }
 
@@ -69,25 +76,41 @@
 
 .social-icon {
     color: #2c3e50;
-    font-size: 2.5rem;
+    font-size: 3rem; /* Tamaño aumentado */
     transition: transform 0.4s ease, color 0.4s ease, filter 0.4s ease;
 }
 
+/* Animación y colores al hacer hover */
 .social-icon:hover {
     transform: rotate(360deg) scale(1.5);
-    color: #3498db;
     filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
-    animation: icon3D 1s ease-in-out infinite;
+    animation: iconHoverEffect 0.8s ease-in-out;
 }
 
-@keyframes icon3D {
+@keyframes iconHoverEffect {
     0% {
-        transform: rotateX(0deg) rotateY(0deg);
+        transform: rotate(0deg) scale(1);
     }
     50% {
-        transform: rotateX(15deg) rotateY(15deg);
+        transform: rotate(180deg) scale(1.2);
     }
     100% {
-        transform: rotateX(0deg) rotateY(0deg);
+        transform: rotate(360deg) scale(1.5);
     }
+}
+
+.social-icon:hover .fa-facebook {
+    color: #4267B2; /* Azul Facebook */
+}
+
+.social-icon:hover .fa-instagram {
+    color: #E4405F; /* Rosa Instagram */
+}
+
+.social-icon:hover .fa-tiktok {
+    color: #69C9D0; /* Azul TikTok */
+}
+
+.social-icon:hover .fa-blogger-b {
+    color: #FF5722; /* Naranja Blogger */
 }

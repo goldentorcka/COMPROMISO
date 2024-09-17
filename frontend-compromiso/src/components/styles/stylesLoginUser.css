@@ -1,139 +1,127 @@
 /* Estilos para el formulario */
 .form-container {
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease-in-out;
-    max-width: 500px; /* Aumenta el ancho máximo del formulario */
-    margin: 0 auto; /* Centra el formulario horizontalmente */
-    position: relative; /* Para posicionar el ícono de ojo */
-    padding: 20px; /* Añade padding interno */
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out;
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+  padding: 20px;
+}
+
+/* Estilo para los botones */
+.button {
+  background-color: #007bff;
+  color: #ffffff;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo para los enlaces */
+.link {
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.link:hover {
+  color: #0056b3;
+}
+
+/* Estilo para el encabezado */
+.header {
+  font-size: 1.5rem;
+  color: #007bff;
+  font-weight: bold;
+  animation: slideInDown 1s ease-out, pulse 1.5s infinite;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para el texto en el encabezado */
+.header-span {
+  display: block;
+  font-size: 1rem;
+  color: #343a40;
+  margin-top: 0.5rem;
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* Estilo para los campos de entrada */
+.form-control {
+  border-radius: 5px;
+  padding-left: 40px;
+}
+
+/* Estilo para el ícono de ojo */
+.eye-icon {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  top: 55%; /* Bajamos el icono un 30% (de 50% a 55%) */
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Estilo para los íconos 3D */
+.icon-3d {
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.icon-3d:hover {
+  transform: scale(1.2) rotateX(360deg);
+  filter: brightness(1.2);
+}
+
+/* Estilo para los campos de entrada con íconos */
+.icon-container {
+  position: relative;
+}
+
+/* Estilo para los campos de entrada */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+/* Ajustes para los iconos de correo y contraseña */
+.icon-container img {
+  top: 55%; /* Bajamos los íconos un 30% (de 50% a 55%) */
+  transform: translateY(-50%);
+}
+
+/* Animaciones */
+@keyframes slideInDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
   }
-  
-  /* Estilo para los botones */
-  .button {
-    background-color: #007bff;
-    color: #ffffff;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
-  
-  .button:hover {
-    background-color: #0056b3;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  /* Estilo para los enlaces */
-  .link {
-    color: #007bff;
-    transition: color 0.3s;
+  to {
+    opacity: 1;
   }
-  
-  .link:hover {
-    color: #0056b3;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
   }
-  
-  /* Estilo para el encabezado */
-  .header {
-    font-size: 1.5rem;
-    color: #007bff;
-    font-weight: bold;
-    animation: slideInDown 1s ease-out, pulse 1.5s infinite;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  50% {
+    transform: scale(1.1);
   }
-  
-  /* Estilo para el texto en el encabezado */
-  .header-span {
-    display: block;
-    font-size: 1rem;
-    color: #343a40;
-    margin-top: 0.5rem;
-    animation: fadeIn 2s ease-in-out;
+  100% {
+    transform: scale(1);
   }
-  
-  /* Estilo para el botón de volver */
-  .volver-button {
-    background-color: #6c757d;
-    color: #ffffff;
-    border-radius: 5px;
-    transition: background-color 0.3s, transform 0.3s;
-  }
-  
-  .volver-button:hover {
-    background-color: #5a6268;
-    transform: scale(1.05);
-  }
-  
-  /* Estilo para el ícono de ojo */
-  .eye-icon {
-    width: 24px;
-    height: 24px;
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    cursor: pointer;
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-  
-  .eye-icon:hover {
-    transform: translateY(-50%) rotateY(360deg) scale(1.2);
-    filter: brightness(1.2);
-  }
-  
-  /* Estilo para el contenedor de los íconos en los campos */
-  .icon-container {
-    position: relative;
-  }
-  
-  /* Estilo para los campos de entrada */
-  .form-control {
-    border-radius: 5px;
-    padding-left: 40px;
-  }
-  
-  /* Estilo para los campos de entrada con íconos */
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  .card {
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .card:hover {
-    transform: translateY(-10px);
-  }
-  
-  /* Animaciones */
-  @keyframes slideInDown {
-    from {
-      transform: translateY(-100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-  
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-    }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
-  
+}

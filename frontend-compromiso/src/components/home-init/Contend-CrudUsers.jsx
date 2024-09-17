@@ -8,7 +8,6 @@ const Contend_CrudUsers = () => {
         <>
             <div className="" >
                 <NavBarAdministrator />
-                <NavBarAdministrator/>
                 <CrudUsers />
                 <FormUsers />
                 <FormQueryUsers />

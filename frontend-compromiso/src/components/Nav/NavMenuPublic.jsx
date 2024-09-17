@@ -3,10 +3,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import logo from '../../Public/images/logos/logo.png'; 
 import { FaHome, FaUser, FaBook, FaHistory, FaEye, FaCog, FaUserTie } from 'react-icons/fa';
 
-
 const NavMenuPublic = () => {
   const [activeLink, setActiveLink] = useState(""); 
-  const [rotatingIcon, setRotatingIcon] = useState(""); // Estado para manejar íconos rotando
+  const [rotatingIcon, setRotatingIcon] = useState(""); 
+  const [showNavBar, setShowNavBar] = useState(true); // Estado para controlar la visibilidad de la barra de navegación
   const navigate = useNavigate();
 
   const handleConsultaClick = () => {
@@ -14,15 +14,16 @@ const NavMenuPublic = () => {
   };
 
   const handleLoginClick = () => {
+    setShowNavBar(true); // Mostrar la barra de navegación al hacer clic en "login"
     navigate("/login-admin");
   };
 
   const handleLinkClick = (link) => {
-    setActiveLink(link); // Cambia el enlace activo inmediatamente con un clic
-    setRotatingIcon(link); // Activa la rotación del ícono
+    setActiveLink(link);
+    setRotatingIcon(link);
     setTimeout(() => {
-      setRotatingIcon(""); // Detiene la rotación después de la animación
-    }, 1000); // Duración de la rotación en milisegundos
+      setRotatingIcon("");
+    }, 1000);
   };
 
   // Definir los colores
@@ -30,7 +31,6 @@ const NavMenuPublic = () => {
   const activeColor = "#61dafb"; 
   const textColor = "#ffffff";
 
-  // Estilos en línea
   const headerStyle = {
     fontSize: "1.2rem",
     height: "70px",
@@ -85,111 +85,113 @@ const NavMenuPublic = () => {
 
   return (
     <>
-      <header
-        className="d-flex flex-wrap align-items-center justify-content-between py-3 px-4 shadow-sm"
-        style={headerStyle}
-      >
-        <div className="d-flex align-items-center">
-          <Link
-            to="/"
-            className="d-inline-flex align-items-center text-decoration-none"
-          >
-            <img
-              src={logo}
-              alt="Logo"
-              style={logoStyle}
-              className="d-inline-block align-top"
-            />
-          </Link>
-        </div>
-
-        <ul className="nav col-md-auto mb-2 justify-content-center mb-md-0" style={{ display: "flex", justifyContent: "center", listStyle: "none", padding: 0, margin: 0 }}>
-          <li>
+      {showNavBar && ( // Condicional para mostrar la barra de navegación
+        <header
+          className="d-flex flex-wrap align-items-center justify-content-between py-3 px-4 shadow-sm"
+          style={headerStyle}
+        >
+          <div className="d-flex align-items-center">
             <Link
               to="/"
-              className="nav-link"
-              style={{ 
-                ...navLinkStyle, 
-                ...(activeLink === "/" ? activeLinkStyle : {}) 
-              }}
-              onClick={() => handleLinkClick("/")}
+              className="d-inline-flex align-items-center text-decoration-none"
             >
-              <FaHome style={rotatingIcon === "/" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Home
+              <img
+                src={logo}
+                alt="Logo"
+                style={logoStyle}
+                className="d-inline-block align-top"
+              />
             </Link>
-          </li>
-          <li>
-            <Link
-              to="/contacts"
-              className="nav-link"
-              style={{ 
-                ...navLinkStyle, 
-                ...(activeLink === "/contacts" ? activeLinkStyle : {}) 
-              }}
-              onClick={() => handleLinkClick("/contacts")}
-            >
-              <FaUser style={rotatingIcon === "/contacts" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Contacts
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/manuals"
-              className="nav-link"
-              style={{ 
-                ...navLinkStyle, 
-                ...(activeLink === "/manuals" ? activeLinkStyle : {}) 
-              }}
-              onClick={() => handleLinkClick("/manuals")}
-            >
-              <FaBook style={rotatingIcon === "/manuals" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Manuals
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/reseña-historica"
-              className="nav-link"
-              style={{ 
-                ...navLinkStyle, 
-                ...(activeLink === "/reseña-historica" ? activeLinkStyle : {}) 
-              }}
-              onClick={() => handleLinkClick("/reseña-historica")}
-            >
-              <FaHistory style={rotatingIcon === "/reseña-historica" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Reseña Historica
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/mision-vision"
-              className="nav-link"
-              style={{ 
-                ...navLinkStyle, 
-                ...(activeLink === "/mision-vision" ? activeLinkStyle : {}) 
-              }}
-              onClick={() => handleLinkClick("/mision-vision")}
-            >
-              <FaCog style={rotatingIcon === "/mision-vision" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Mision y Vision
-            </Link>
-          </li>
-        </ul>
+          </div>
 
-        <div className="text-end" style={{ marginLeft: "auto" }}>
-          <button
-            type="button"
-            className="btn"
-            style={btnStyle}
-            onClick={handleLoginClick}
-          >
-            <FaUserTie style={{ ...iconStyle }} /> Módulo del Administrador
-          </button>
-          <button
-            type="button"
-            className="btn"
-            style={btnStyle}
-            onClick={handleConsultaClick}
-          >
-            <FaEye style={{ ...iconStyle }} /> Consulta
-          </button>
-        </div>
-      </header>
+          <ul className="nav col-md-auto mb-2 justify-content-center mb-md-0" style={{ display: "flex", justifyContent: "center", listStyle: "none", padding: 0, margin: 0 }}>
+            <li>
+              <Link
+                to="/"
+                className="nav-link"
+                style={{ 
+                  ...navLinkStyle, 
+                  ...(activeLink === "/" ? activeLinkStyle : {}) 
+                }}
+                onClick={() => handleLinkClick("/")}
+              >
+                <FaHome style={rotatingIcon === "/" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contacts"
+                className="nav-link"
+                style={{ 
+                  ...navLinkStyle, 
+                  ...(activeLink === "/contacts" ? activeLinkStyle : {}) 
+                }}
+                onClick={() => handleLinkClick("/contacts")}
+              >
+                <FaUser style={rotatingIcon === "/contacts" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Contacts
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/manuals"
+                className="nav-link"
+                style={{ 
+                  ...navLinkStyle, 
+                  ...(activeLink === "/manuals" ? activeLinkStyle : {}) 
+                }}
+                onClick={() => handleLinkClick("/manuals")}
+              >
+                <FaBook style={rotatingIcon === "/manuals" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Manuals
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/reseña-historica"
+                className="nav-link"
+                style={{ 
+                  ...navLinkStyle, 
+                  ...(activeLink === "/reseña-historica" ? activeLinkStyle : {}) 
+                }}
+                onClick={() => handleLinkClick("/reseña-historica")}
+              >
+                <FaHistory style={rotatingIcon === "/reseña-historica" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Reseña Historica
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/mision-vision"
+                className="nav-link"
+                style={{ 
+                  ...navLinkStyle, 
+                  ...(activeLink === "/mision-vision" ? activeLinkStyle : {}) 
+                }}
+                onClick={() => handleLinkClick("/mision-vision")}
+              >
+                <FaCog style={rotatingIcon === "/mision-vision" ? { ...iconStyle, ...rotatingStyle } : iconStyle} /> Mision y Vision
+              </Link>
+            </li>
+          </ul>
+
+          <div className="text-end" style={{ marginLeft: "auto" }}>
+            <button
+              type="button"
+              className="btn"
+              style={btnStyle}
+              onClick={handleLoginClick}
+            >
+              <FaUserTie style={{ ...iconStyle }} /> Módulo del Administrador
+            </button>
+            <button
+              type="button"
+              className="btn"
+              style={btnStyle}
+              onClick={handleConsultaClick}
+            >
+              <FaEye style={{ ...iconStyle }} /> Consulta
+            </button>
+          </div>
+        </header>
+      )}
     </>
   );
 };
