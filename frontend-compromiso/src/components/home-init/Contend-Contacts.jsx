@@ -5,7 +5,7 @@ const ContendContacts = () => {
   return (
     <>
       <div 
-        className="position-relative p-5 text-center text-muted bg-body border border-dashed rounded-5"
+        className=""
         style={{ fontSize: '1rem' }} 
       >
         <ContactUs />

@@ -53,7 +53,7 @@ const ContactUs = () => {
       carouselItems: [
         {
           img: imgMarlon,
-          caption: ': Es una persona muy organizada y meticulosa',
+          caption: 'Es una persona muy organizada y meticulosa',
         },
         {
           img: imgMarlon2,
@@ -96,18 +96,19 @@ const ContactUs = () => {
         <h1
           className="text-center mb-4"
           style={{
+            padding: '2rem',
             color: '#333',
-            fontFamily: "'Arial', sans-serif",
-            textAlign: 'center',
+            fontFamily: "'Georgia'",
             fontSize: '2rem',
-            fontWeight: 'bold',
+           //fontWeight: 'bold', letra en negrita 
+            marginTop: '80px', // Ajustado para asegurar que no quede oculto
           }}
         >
           Nuestros Integrantes
         </h1>
-        <div className="row">
+        <div className="row justify-content-center">
           {members.map((member, index) => (
-            <div className="col-lg-4" key={index}>
+            <div className="col-lg-4 col-md-6" key={index}>
               <div
                 className="member-card"
                 style={{
@@ -130,6 +131,8 @@ const ContactUs = () => {
                     objectFit: 'cover',
                     backgroundColor: '#e9ecef',
                     transition: 'background-color 0.3s ease',
+                    display: 'block',
+                    margin: '0 auto', // Centrar imagen
                   }}
                 />
                 <h2
@@ -148,6 +151,7 @@ const ContactUs = () => {
                     fontSize: '0.9rem',
                     lineHeight: '1.5',
                     marginBottom: '15px',
+                    fontWeight: 'bold', // Descripción en negrita
                   }}
                 >
                   {member.description}

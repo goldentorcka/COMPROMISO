@@ -1,0 +1,188 @@
+/* stylesFormUsers.css */
+
+/* Contenedor principal */
+.crud-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.main-content {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.content-wrapper {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Estilos del formulario */
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Título del formulario */
+.page-title {
+  text-align: center;
+  width: 100%;
+  font-size: 2rem;
+  text-transform: uppercase;
+  font-family: 'Playfair Display', serif; /* Ejemplo de una fuente elegante */
+  margin-bottom: 20px;
+}
+
+/* Grupo de formulario */
+.form-group {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+}
+
+/* Ajuste del padding para evitar que el texto quede debajo del icono */
+.form-group input,
+.form-group select {
+  padding: 8px 15px 8px 45px; /* Incremento del padding-left para que el texto no quede debajo del icono */
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.form-group i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #888;
+}
+
+/* Botón de envío */
+.submit-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: center;
+  margin-top: 10px;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Íconos específicos para cada campo */
+#nombre + i::before {
+  content: "\f007";
+}
+
+#apellido + i::before {
+  content: "\f007";
+}
+
+#codigo + i::before {
+  content: "\f02f";
+}
+
+#email + i::before {
+  content: "\f0e0";
+}
+
+#telefono + i::before {
+  content: "\f095";
+}
+
+#fecha + i::before {
+  content: "\f073";
+}
+
+#estado + i::before {
+  content: "\f0e7";
+}
+
+#rol + i::before {
+  content: "\f0b0";
+}
+
+#password + i::before {
+  content: "\f023";
+}
+
+/* Icono de ojo para mostrar/ocultar contraseña */
+#toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
+/* Ajustes para input y select */
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-group input,
+.form-group select {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Nueva funcionalidad de mostrar/ocultar contraseña */
+.input-group {
+  display: flex;
+  align-items: center;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  padding: 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.input-group i {
+  color: #555;
+}
+
+.toggle-password {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+/* Hover y transición para botón de envío */
+.submit-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}

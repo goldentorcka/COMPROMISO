@@ -1,0 +1,31 @@
+/* styles.css o un archivo CSS específico para el layout */
+.layout-container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 240px; /* Ajusta según el tamaño de tu sidebar */
+    background-color: #343a40;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  
+  .main-content {
+    margin-left: 240px; /* Debe coincidir con el ancho del sidebar */
+    padding: 20px;
+    width: calc(100% - 240px); /* Asegura que el contenido ocupe el espacio restante */
+    overflow: auto;
+  }
+  
+  .crud-wrapper {
+    max-width: 1200px; /* Ancho máximo del CRUD */
+    margin: auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  

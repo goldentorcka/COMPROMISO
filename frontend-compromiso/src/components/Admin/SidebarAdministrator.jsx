@@ -1,38 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUsers, faUserShield, faProjectDiagram, faBuilding, faLayerGroup, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUserShield, faProjectDiagram, faBuilding, faLayerGroup, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import { Link, useLocation } from 'react-router-dom';
-import './sidebar.css'; // Asegúrate de que la ruta sea correcta
+import '../styles/stylesSidebar.css';
 
 const SidebarAdministrator = () => {
-  const [activeLink, setActiveLink] = useState('/');
   const location = useLocation();
+  const [activeLink, setActiveLink] = useState(location.pathname);
+  const [isUserActive, setIsUserActive] = useState(true);
 
   useEffect(() => {
-    // Actualiza el enlace activo basado en la ruta actual
     setActiveLink(location.pathname);
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <div className="sidebar">
       <div className="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+        {/* Título principal */}
+        <div className="sidebar-title">
+          <h1>MÓDULOS</h1>
+        </div>
+
         <ul className="nav flex-column">
-          <li className="nav-item">
-            <Link
-              className={`nav-link d-flex align-items-center gap-2 ${activeLink === '/' ? 'active' : ''}`}
-              to="/"
-            >
-              <FontAwesomeIcon icon={faTachometerAlt} className="icon" />
-              Dashboard
-            </Link>
-          </li>
           <li className="nav-item">
             <Link
               className={`nav-link d-flex align-items-center gap-2 ${activeLink === '/CrudUsers' ? 'active' : ''}`}
               to="/CrudUsers"
             >
               <FontAwesomeIcon icon={faUsers} className="icon" />
-              CRUD USUARIOS
+              USUARIOS
             </Link>
           </li>
           <li className="nav-item">
@@ -41,7 +37,7 @@ const SidebarAdministrator = () => {
               to="/Responsables"
             >
               <FontAwesomeIcon icon={faUserShield} className="icon" />
-              CRUD RESPONSABLES
+              RESPONSABLES
             </Link>
           </li>
           <li className="nav-item">
@@ -50,7 +46,7 @@ const SidebarAdministrator = () => {
               to="/Areas"
             >
               <FontAwesomeIcon icon={faBuilding} className="icon" />
-              CRUD AREAS
+              AREAS
             </Link>
           </li>
           <li className="nav-item">
@@ -59,7 +55,7 @@ const SidebarAdministrator = () => {
               to="/Unidades"
             >
               <FontAwesomeIcon icon={faLayerGroup} className="icon" />
-              CRUD UNIDADES
+              UNIDADES
             </Link>
           </li>
           <li className="nav-item">
@@ -68,7 +64,7 @@ const SidebarAdministrator = () => {
               to="/Procesos"
             >
               <FontAwesomeIcon icon={faProjectDiagram} className="icon" />
-              CRUD PROCESOS
+              PROCESOS
             </Link>
           </li>
           <li className="nav-item">
@@ -77,7 +73,7 @@ const SidebarAdministrator = () => {
               to="/Procedimientos"
             >
               <FontAwesomeIcon icon={faFileAlt} className="icon" />
-              CRUD PROCEDIMIENTO
+              PROCEDIMIENTOS
             </Link>
           </li>
           <li className="nav-item">
@@ -86,7 +82,7 @@ const SidebarAdministrator = () => {
               to="/Formatos"
             >
               <FontAwesomeIcon icon={faCogs} className="icon" />
-              CRUD FORMATOS
+              FORMATOS
             </Link>
           </li>
         </ul>
@@ -97,15 +93,6 @@ const SidebarAdministrator = () => {
           <ul className="nav flex-column mb-auto">
             <li className="nav-item">
               <Link
-                className={`nav-link d-flex align-items-center gap-2 ${activeLink === '/settings' ? 'active' : ''}`}
-                to="/settings"
-              >
-                <FontAwesomeIcon icon={faCogs} className="icon" />
-                Settings
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
                 className={`nav-link d-flex align-items-center gap-2 ${activeLink === '/login-admin' ? 'active' : ''}`}
                 to="/login-admin"
               >
@@ -114,6 +101,14 @@ const SidebarAdministrator = () => {
               </Link>
             </li>
           </ul>
+        </div>
+
+        <div className="user-section d-flex align-items-center justify-content-between p-3 mt-auto">
+          <div className="user-info d-flex align-items-center">
+            <FontAwesomeIcon icon={faUserShield} className="icon user-icon" />
+            <span className="user-name ms-2">Usuario Nombre</span>
+          </div>
+          <div className={`status-indicator ${isUserActive ? 'active' : 'inactive'}`}></div>
         </div>
       </div>
     </div>

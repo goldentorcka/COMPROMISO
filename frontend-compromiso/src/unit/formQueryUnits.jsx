@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './styles.css'; // Asegúrate de importar el archivo CSS
+
 
 const FormQueryUnit = ({ unitQuery, setUnitQuery }) => {
   const [searchTerm, setSearchTerm] = useState('');

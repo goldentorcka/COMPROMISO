@@ -1,0 +1,93 @@
+/* Estilos principales */
+.container {
+    margin-top: 3rem;
+    padding: 3rem;
+    font-family: Georgia, serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+/* Contenedor principal para título, imagen e información */
+.content-container {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.logo {
+    width: 150px;
+    height: auto;
+    margin-bottom: 2rem;
+    animation: logoAnimation 5s infinite alternate;
+}
+
+@keyframes logoAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.title {
+    font-size: 3rem;
+    color: #2c3e50;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: titleFadeIn 2s ease-out;
+}
+
+@keyframes titleFadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.paragraph {
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: #7f8c8d;
+    text-align: justify;
+}
+
+/* Estilos de redes sociales */
+.social-icons {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.social-icon {
+    color: #2c3e50;
+    font-size: 2.5rem;
+    transition: transform 0.4s ease, color 0.4s ease, filter 0.4s ease;
+}
+
+.social-icon:hover {
+    transform: rotate(360deg) scale(1.5);
+    color: #3498db;
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.3));
+    animation: icon3D 1s ease-in-out infinite;
+}
+
+@keyframes icon3D {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+    50% {
+        transform: rotateX(15deg) rotateY(15deg);
+    }
+    100% {
+        transform: rotateX(0deg) rotateY(0deg);
+    }
+}

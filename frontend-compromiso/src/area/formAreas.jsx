@@ -1,14 +1,31 @@
 import React from 'react';
 import './styles.css'; // Asegúrate de importar el archivo CSS
+import { ReactSession } from 'react-client-session';
+
 
 const FormAreas = ({ area, setArea, handleSubmit, buttonForm }) => {
+
+//AGREGAR ESTE REACT-SESSION A TODOS LOS FORMULARIOS !!! Y A LOS CRUDS
+  const token = ReactSession.get("token");
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setArea((prevArea) => ({
       ...prevArea,
       [name]: value,
-    }));
+    }),
+  config);
   };
+
+
+
 
   return (
     <form onSubmit={handleSubmit} className="form">

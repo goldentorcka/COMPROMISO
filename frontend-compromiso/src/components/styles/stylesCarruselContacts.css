@@ -1,0 +1,93 @@
+.member-card {
+    text-align: center;
+    padding: 20px;
+    border: 1px solid #222;
+    border-radius: 10px;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 350px;
+    background-color: #121212;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    perspective: 1000px;
+    position: relative; /* Make sure we can position the play icon absolutely */
+  }
+  
+  /* Ajustar el posicionamiento específico */
+  .member-card.julian {
+    margin-top: 40px; /* Ajustar la altura de Julian */
+  }
+  
+  .member-card.marlon {
+    margin-top: 10px; /* Ajustar la altura de Marlon para que esté más alto */
+  }
+  
+  .member-card.sofia {
+    margin-top: 40px; /* Ajustar la altura de Sofía */
+  }
+  
+  .img-container {
+    width: 140px;
+    height: 140px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    transition: transform 1s ease-in-out;
+  }
+  
+  .profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transition: transform 1s ease-in-out;
+    object-fit: cover;
+  }
+  
+  .img-container:hover .profile-img {
+    transform: rotateY(360deg);
+  }
+  
+  .member-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+  }
+  
+  .audio-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+  
+  .img-container:hover .audio-icon {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.5);
+  }
+  
+  /* Redes sociales */
+  .social-icons {
+    margin-top: 15px;
+  }
+  
+  .social-icons a {
+    margin: 0 10px;
+    color: #fff;
+    font-size: 24px;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .social-icons a:hover {
+    color: #ff4081;
+    transform: scale(1.2);
+  }
+  

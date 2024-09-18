@@ -1,0 +1,212 @@
+/* Global Styles */
+.root {
+    min-height: 100vh;
+    background-color: #f9f9f9; /* Cambiado a un color más claro */
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .crudContainer {
+    display: flex;
+    min-height: calc(100vh - 60px);
+    width: calc(100% - 250px); /* Ajusta el ancho teniendo en cuenta el sidebar */
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    position: fixed; /* Fija el sidebar */
+    top: 0;
+    left: 0;
+    height: 100vh;
+  }
+  
+  .mainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-left: 250px; /* Ajusta el margen para que no se superponga con el sidebar */
+  }
+  
+  .pageTitle {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: #333;
+    font-weight: bold;
+  }
+  
+  .contentWrapper {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  /* Botón para Añadir */
+  .addButton {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #6b8e23, #4caf50); /* Gradiente animado */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .addButton:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  .icon {
+    margin-right: 8px;
+  }
+  
+  /* Tabla */
+  .tableWrapper {
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  
+  .unitTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tableHeader {
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .tableCell {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #333;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .tableRow {
+    background-color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .tableRow:hover {
+    background-color: #f9f9f9;
+    transform: scale(1.01);
+  }
+  
+  .actionButtons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .button {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 6px;
+    background-color: #007bff;
+    color: #fff;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .buttonDelete {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .buttonDelete:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+  }
+
+  /* Global Styles */
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: #ffffff;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .search-input {
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+    border-radius: 8px;
+    outline: none;
+    width: 100%;
+    transition: box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-input:focus {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .search-button {
+    background: #007bff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-left: 10px;
+    font-size: 1rem;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  .search-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  /* Icon */
+  .search-icon {
+    margin-right: 8px;
+    color: #007bff; /* Color del icono */
+    font-size: 1.2rem; /* Tamaño del icono */
+  }
+  

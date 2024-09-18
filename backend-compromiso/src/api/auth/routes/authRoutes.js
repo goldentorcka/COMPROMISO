@@ -1,61 +1,26 @@
-// @ts-nocheck
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const Usuario = require('../../usuario/models/usuarioModel.js'); // Asegúrate de que la ruta sea correcta
-const logger = require('../../../../config/logger.js');
+import express from 'express';
+import { 
+  createUsuario, 
+  loginUsuario, 
+  getUsuarioById, 
+  olvidePassword,
+  comprobarToken,
+  nuevoPassword
+} from '../controllers/authController.js'; // Controladores del usuario
 
-// Iniciar sesión
-const loginUsuario = async (req, res) => {
-  const { Cor_Usuario, password } = req.body;
+import checkAuth from '../../../../middlewares/authMiddleware.js'; // Middleware para autenticación
 
-  try {
-    // Verificación básica de que se proporcionen los campos
-    if (!Cor_Usuario || !password) {
-      return res.status(400).json({ error: 'Faltan el correo electrónico o la contraseña' });
-    }
+const router = express.Router();
 
-    // Buscar al usuario en la base de datos real
-    const usuario = await Usuario.findOne({ where: { Cor_Usuario } });
+// Área Pública
+router.post('/registro', createUsuario); // Ruta para registrar usuario
+router.post('/login', loginUsuario);     // Ruta para iniciar sesión
+router.post('/olvide-password', olvidePassword); // Ruta para solicitar recuperación de contraseña
+router.route('/olvide-password/:token')  // Ruta para validar token y restablecer contraseña
+  .get(comprobarToken)                    // Obtiene el token de recuperación de contraseña
+  .post(nuevoPassword);                   // Envío del nuevo password
 
-    if (!usuario) {
-      return res.status(401).json({ error: 'Correo electrónico o contraseña incorrectos' });
-    }
+// Área Privada (requiere autenticación)
+router.get('/perfil/:id', checkAuth, getUsuarioById); // Ruta para obtener perfil de usuario autenticado
 
-    // Comparar la contraseña proporcionada con la hasheada en la base de datos
-    const passwordMatch = await bcrypt.compare(password, usuario.password);
-
-    if (!passwordMatch) {
-      return res.status(401).json({ error: 'Correo electrónico o contraseña incorrectos' });
-    }
-
-    // Generar un token JWT
-    const token = jwt.sign(
-      { Id_Usuario: usuario.Id_Usuario, rol: usuario.rol },
-      process.env.JWT_SECRET || 'secretKey', // Usa la clave secreta del entorno o una por defecto
-      { expiresIn: '1h' }
-    );
-
-    // Actualizar el token en la base de datos (si tu modelo incluye un campo para el token)
-    await Usuario.update({ token }, { where: { Id_Usuario: usuario.Id_Usuario } });
-
-    // Si la autenticación es exitosa
-    return res.status(200).json({
-      message: 'Inicio de sesión exitoso',
-      user: {
-        Id_Usuario: usuario.Id_Usuario,
-        Nom_Usuario: usuario.Nom_Usuario,
-        Ape_Usuario: usuario.Ape_Usuario,
-        Cor_Usuario: usuario.Cor_Usuario,
-        rol: usuario.rol,
-        token
-      }
-    });
-  } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error en el servidor' });
-  }
-};
-
-module.exports = {
-  loginUsuario
-};
+export default router;

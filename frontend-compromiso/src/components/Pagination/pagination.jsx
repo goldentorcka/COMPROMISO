@@ -43,8 +43,9 @@ const Pagination = ({ URI, setDesde, setHasta }) => {
   useEffect(() => {
     const desde = (paginaActual - 1) * registrosPorPagina;
     const hasta = Math.min(paginaActual * registrosPorPagina, numRegistros);
-    setDesde(desde);
-    setHasta(hasta);
+    // Verifica si setDesde y setHasta son funciones antes de llamarlas
+    if (typeof setDesde === 'function') setDesde(desde);
+    if (typeof setHasta === 'function') setHasta(hasta);
   }, [paginaActual, numRegistros, registrosPorPagina, setDesde, setHasta]);
 
   const anterior = () => {

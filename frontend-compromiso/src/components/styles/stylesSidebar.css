@@ -1,0 +1,180 @@
+/* Sidebar */
+.sidebar {
+  width: 240px; /* Ajusta este valor según el tamaño del sidebar */
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background-color: #343a40;
+  padding-top: 1rem;
+  z-index: 1000; /* Asegura que esté siempre sobre otros elementos */
+  overflow-y: auto; /* Permite el scroll si el contenido es mayor que la altura del sidebar */
+  transition: width 0.3s ease; /* Transición suave para el tamaño */
+}
+
+/* Sidebar cuando está en modo reducido (opcional) */
+.sidebar.collapsed {
+  width: 80px; /* Ajusta este valor para el estado colapsado */
+}
+
+/* Contenido del Sidebar */
+.offcanvas-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Estilo de los elementos del menú */
+.nav-item {
+  margin-bottom: 1rem;
+}
+
+/* Estilo de los enlaces de navegación */
+.nav-link {
+  color: #ffffff; /* Color del texto */
+  font-size: 1rem;
+  transition: color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+  display: flex;
+  align-items: center;
+}
+
+/* Estilo cuando el enlace está activo */
+.nav-link.active {
+  background-color: #495057; /* Fondo cuando el enlace está activo */
+}
+
+/* Estilo de los íconos */
+.icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+/* Animación 3D para los íconos */
+.icon:hover {
+  transform: rotateY(360deg) scale(1.2); /* Rotación 3D y escalado */
+  color: #17a2b8; /* Cambia el color del ícono al pasar el ratón */
+}
+
+/* Contenedor del CRUD */
+.main-content {
+  margin-left: 240px; /* Deja espacio para el sidebar */
+  padding: 20px;
+}
+
+/* Contenedor del CRUD */
+.crud-wrapper {
+  max-width: 1200px; /* Ancho máximo del CRUD */
+  margin: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajustar la tabla */
+.table-responsive {
+  margin-top: 20px;
+}
+
+/* Centrar el contenido */
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Estilo de la sección de usuario */
+.user-section {
+  border-top: 1px solid #6c757d;
+  padding: 1rem;
+}
+
+.user-icon {
+  font-size: 1.5rem;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.status-indicator.active {
+  background-color: #28a745; /* Verde cuando está activo */
+}
+
+.status-indicator.inactive {
+  background-color: #dc3545; /* Rojo cuando está inactivo */
+}
+
+/* stylesSidebar.css */
+
+/* Estilos para el mensaje de bienvenida */
+.welcome-message {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+.welcome-message h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.welcome-message p {
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* Estilos para la pantalla de bienvenida al pie */
+.footer-welcome-message {
+  background-color: #f1f1f1;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.sidebar {
+  background-color: #2e2e2e; /* Fondo oscuro para la barra lateral */
+  color: #e0e0e0; /* Color del texto */
+}
+
+.sidebar-title {
+  text-align: center; /* Centra el texto */
+  padding: 30px 0; /* Aumenta el espaciado superior e inferior */
+  background: linear-gradient(135deg, #1e1e1e, #2e2e2e); /* Gradiente oscuro */
+  border-bottom: 2px solid #444; /* Línea inferior sutil */
+  margin-bottom: 30px; /* Espacio adicional debajo del título */
+}
+
+.sidebar-title h1 {
+  font-size: 1.75rem; /* Tamaño de fuente mayor para el título */
+  color: #ffffff; /* Color blanco para el texto del título */
+  margin: 0; /* Elimina margen predeterminado */
+  text-transform: uppercase; /* Texto en mayúsculas */
+  letter-spacing: 1px; /* Espaciado entre letras */
+}
+
+.nav-link {
+  color: #e0e0e0; /* Color de texto de los enlaces */
+}
+
+.nav-link.active {
+  background-color: #444; /* Fondo para el enlace activo */
+  border-radius: 4px; /* Bordes redondeados en el enlace activo */
+}
+
+.icon {
+  color: #e0e0e0; /* Color de los iconos */
+}
+
+.settings-logout {
+  margin-top: auto; /* Coloca la sección de configuración y cierre al final */
+}
+
+.settings-logout .nav-link {
+  color: #e0e0e0; /* Color de texto para enlaces de configuración y cierre */
+}
+

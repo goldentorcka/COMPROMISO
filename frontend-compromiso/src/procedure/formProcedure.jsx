@@ -1,8 +1,7 @@
-// FormProcedures.jsx
 import React from 'react';
-import './styles.css'; // Asegúrate de importar el archivo CSS
+import './styles.css';
 
-const FormProcedures = ({ procedure, setProcedure, handleSubmit, buttonForm }) => {
+const FormProcedures = ({ procedure, setProcedure, handleSubmit, buttonForm, processes }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProcedure((prevProcedure) => ({
@@ -26,15 +25,28 @@ const FormProcedures = ({ procedure, setProcedure, handleSubmit, buttonForm }) =
         />
       </div>
       <div className="form-group">
-        <label htmlFor="Id_Proceso">ID Proceso</label>
-        <input
-          type="number"
+        <label htmlFor="Id_Proceso">Proceso</label>
+        <select
           id="Id_Proceso"
           name="Id_Proceso"
           value={procedure.Id_Proceso}
           onChange={handleChange}
           className="search-input"
-        />
+          required
+        >
+          <option value="">Seleccionar Proceso</option>
+          {processes.length > 0 ? (
+            processes.map((process) => (
+              <option key={process.Id_Proceso} value={process.Id_Proceso}>
+                {process.Nom_Proceso}
+              </option>
+            ))
+          ) : (
+            <option value="" disabled>
+              Cargando procesos...
+            </option>
+          )}
+        </select>
       </div>
       <div className="form-group">
         <label htmlFor="estado">Estado</label>

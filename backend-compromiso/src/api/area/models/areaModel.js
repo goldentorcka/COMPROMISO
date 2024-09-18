@@ -2,7 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 
-const Area = sequelize.define('area', {
+const Area = sequelize.define('areas', {
   Id_Area: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

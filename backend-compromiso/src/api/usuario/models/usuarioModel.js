@@ -1,68 +1,57 @@
 // @ts-nocheck
-// models/usuarioModel.js
 const { DataTypes } = require('sequelize');
-const sequelize = require('../../../../config/database.js'); // Configuración de la base de datos
+const bcrypt = require('bcrypt');
+const sequelize = require('../../../../config/database.js');
 
-const Usuario = sequelize.define('usuario', {
+const Usuario = sequelize.define('usuarios', {
   Id_Usuario: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
-    field: 'Id_Usuario', // Asegúrate de que el nombre del campo coincida con el de la base de datos
+    primaryKey: true
   },
   Nom_Usuario: {
     type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'Nom_Usuario',
+    allowNull: false
   },
   Ape_Usuario: {
     type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'Ape_Usuario',
+    allowNull: false
   },
   Cod_Usuario: {
-    type: DataTypes.STRING(50),
-    allowNull: false,
-    field: 'Cod_Usuario',
+    type: DataTypes.STRING(255),
+    allowNull: false
   },
   Cor_Usuario: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    field: 'Cor_Usuario',
-  },
-  Nde_Usuario: {
-    type: DataTypes.STRING(20),
-    allowNull: false,
-    field: 'Nde_Usuario',
+    validate: {
+      isEmail: true
+    }
   },
   Fec_Usuario: {
     type: DataTypes.DATE,
-    allowNull: false,
-    field: 'Fec_Usuario',
+    allowNull: false
   },
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
-    allowNull: false,
-    field: 'estado',
+    allowNull: false
   },
   rol: {
     type: DataTypes.ENUM('Administrador'),
-    allowNull: false,
-    field: 'rol',
+    allowNull: false
   },
   token: {
-    type: DataTypes.STRING(255),
-    field: 'token',
+    type: DataTypes.STRING(255)
   },
   password: {
     type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'password',
-  },
+    allowNull: false
+  }
 }, {
-  timestamps: true,
-  createdAt: 'createdAt', // Asegúrate de que estos nombres coincidan con los nombres de tus campos
-  updatedAt: 'updatedAt',
+  timestamps: true, // createdAt y updatedAt automáticos
+  tableName: 'usuarios' // Asegura que coincida con el nombre de la tabla en la base de datos
 });
 
 module.exports = Usuario;
+
+
