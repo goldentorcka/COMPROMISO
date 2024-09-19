@@ -3,6 +3,14 @@ import React from 'react';
 const FormResponsables = ({ responsable, setResponsable, handleSubmit, buttonForm }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === 'Nom_Responsable' && (value.length < 3 || value.trim() === '')) {
+      alert('Por favor, ingrese un nombre válido');
+      return;
+    }
+    if (name === 'estado' && !['Activo', 'Inactivo'].includes(value)) {
+      alert('Por favor, seleccione un estado válido');
+      return;
+    }
     setResponsable({
       ...responsable,
       [name]: value
@@ -17,7 +25,7 @@ const FormResponsables = ({ responsable, setResponsable, handleSubmit, buttonFor
           type="text"
           className="form-control"
           id="nombre"
-          name="Nom_Responsable" // Asegúrate de que el nombre coincida con el estado
+          name="Nom_Responsable"
           value={responsable.Nom_Responsable}
           onChange={handleChange}
           required

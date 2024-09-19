@@ -1,0 +1,64 @@
+/* Asegúrate de que el contenedor de la tabla tenga un buen padding y margen */
+.table-responsive {
+    padding: 20px;
+    margin: 20px;
+    background-color: #f8f9fa; /* Fondo suave para resaltar la tabla */
+    border-radius: 8px; /* Bordes redondeados para un look más moderno */
+  }
+  
+  /* Estiliza el formulario para que se vea bien integrado con la tabla */
+  form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px; /* Espacio entre el formulario y el botón */
+  }
+  
+  /* Estilo para el botón de búsqueda */
+  .btn-primary {
+    background-color: #007bff; /* Color azul principal de Bootstrap */
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3; /* Color más oscuro para el hover */
+  }
+  
+  /* Estilos para la tabla */
+  .table {
+    width: 100%;
+    border-collapse: collapse; /* Asegura que las bordas estén unidas */
+  }
+  
+  .table thead th {
+    background-color: #007bff; /* Color azul principal para el encabezado */
+    color: white;
+    text-align: center; /* Centra el texto en los encabezados */
+  }
+  
+  .table tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Color de fondo alternado para filas pares */
+  }
+  
+  .table tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* Color de fondo para filas impares */
+  }
+  
+  .table tbody td {
+    padding: 12px; /* Espaciado en las celdas */
+    text-align: left; /* Alinea el texto a la izquierda */
+    border-bottom: 1px solid #ddd; /* Línea de separación sutil */
+  }
+  
+  .table-bordered {
+    border: 1px solid #ddd; /* Línea de separación en la tabla */
+  }
+  
+  .table-bordered thead th {
+    border-bottom: 2px solid #ddd; /* Línea de separación más fuerte en el encabezado */
+  }
+  

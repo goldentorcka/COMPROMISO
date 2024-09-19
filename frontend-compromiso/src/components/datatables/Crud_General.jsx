@@ -17,6 +17,14 @@ const FormGeneral = ({ initialValues, fields, onSubmit, onCancel, buttonText }) 
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (fields.some(field => field.required && !formData[field.name])) {
+      alert('Por favor, complete todos los campos requeridos');
+      return;
+    }
+    if (fields.some(field => field.type === 'select' && !formData[field.name])) {
+      alert('Por favor, seleccione un valor para el campo');
+      return;
+    }
     onSubmit(formData);
   };
 

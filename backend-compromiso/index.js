@@ -1,26 +1,13 @@
 // @ts-nocheck
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const helmet = require('helmet'); 
+const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const fs = require('fs');
 const https = require('https');
 const sequelize = require('./config/database.js');
 const logger = require('./config/logger.js');
-
-// Validación de variables de entorno
-const requiredEnvVars = [
-  'DATABASE_CLIENT', 'DATABASE_HOST', 'DATABASE_PORT',
-  'DATABASE_NAME', 'DATABASE_USERNAME', 'DATABASE_PASSWORD'
-];
-
-requiredEnvVars.forEach(envVar => {
-  if (!process.env[envVar]) {
-    console.error(`Error: Falta la variable de entorno ${envVar}`);
-    process.exit(1); // Salir si falta una variable importante
-  }
-});
 
 // Importa los routers
 const responsablesRouter = require('./src/api/responsable/routes/responsableRoutes.js');
@@ -29,13 +16,13 @@ const procedimientosRouter = require('./src/api/procedimiento/routes/procedimien
 const areasRouter = require('./src/api/area/routes/areaRoutes.js');
 const unidadesRouter = require('./src/api/unidad/routes/unidadRoutes.js');
 const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
-const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
+// const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 
 // Importa Swagger
 const { swaggerDocs, swaggerSetup } = require('./swagger.js');
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3001; // Usa el puerto del archivo .env
 
 // Configura Rate Limiting
 const apiLimiter = rateLimit({
@@ -46,7 +33,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 // Configura CORS
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://tu-dominio-de-produccion.com'];
 app.use(cors({
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
@@ -81,7 +68,7 @@ app.use('/api/procedimientos', procedimientosRouter);
 app.use('/api/areas', areasRouter);
 app.use('/api/unidades', unidadesRouter);
 app.use('/api/formatos', formatosRouter);
-app.use('/api/usuarios', usuariosRouter);
+// app.use('/api/usuarios', usuariosRouter);
 
 // Manejo de errores 404 (ruta no encontrada)
 app.use((req, res, next) => {

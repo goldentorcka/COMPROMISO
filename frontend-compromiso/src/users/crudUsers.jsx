@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api.js';
+import clienteAxios from '../api';
 import Swal from 'sweetalert2';
 import FormUsers from './formUsers.jsx';
 import Pagination from '../components/Pagination/Pagination';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de crear este archivo para el modal
+import Modal from '../components/Modal/Init-Modal.jsx';
 import '../components/styles/stylesCrudUsers.css'; // Importa el archivo CSS
+import TableComponent from '../components/datatables/ComponentTableGeneral.jsx';
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
@@ -21,14 +22,16 @@ const CrudUsers = () => {
     password: ""
   });
   const [buttonForm, setButtonForm] = useState("Enviar");
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     getAllUsers();
   }, [desde, hasta]);
 
+  // Función para obtener todos los usuarios
   const getAllUsers = async () => {
     try {
       const response = await clienteAxios.get('/api/usuarios');
@@ -38,17 +41,19 @@ const CrudUsers = () => {
     }
   };
 
+  // Función para obtener un usuario por ID y abrir el modal
   const getUser = async (Id_Usuario) => {
     try {
       const response = await clienteAxios.get(`/api/usuarios/${Id_Usuario}`);
       setUser(response.data);
       setButtonForm("Actualizar");
-      setIsModalOpen(true); // Abrir el modal al obtener un usuario
+      setIsModalOpen(true);
     } catch (error) {
       console.error("Error al obtener el usuario:", error);
     }
   };
 
+  // Función para eliminar un usuario
   const deleteUser = async (Id_Usuario) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
@@ -64,17 +69,17 @@ const CrudUsers = () => {
       try {
         await clienteAxios.delete(`/api/usuarios/${Id_Usuario}`);
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
-        getAllUsers(); // Actualiza la lista de usuarios después de eliminar
+        getAllUsers();
       } catch (error) {
         console.error("Error al eliminar el usuario:", error);
       }
     }
   };
 
+  // Función para manejar el envío del formulario (añadir o actualizar usuario)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      console.log("Datos enviados:", user); // Agrega esto para depurar
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/usuarios', user);
         Swal.fire('Agregado!', 'El usuario ha sido agregado.', 'success');
@@ -82,14 +87,15 @@ const CrudUsers = () => {
         await clienteAxios.put(`/api/usuarios/${user.Id_Usuario}`, user);
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
-      resetForm(); // Limpia el formulario
-      getAllUsers(); // Actualiza la lista de usuarios
-      setIsModalOpen(false); // Cerrar el modal al enviar el formulario
+      resetForm();
+      getAllUsers();
+      setIsModalOpen(false);
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
 
+  // Función para resetear el formulario
   const resetForm = () => {
     setUser({
       Nom_Usuario: "",
@@ -105,6 +111,50 @@ const CrudUsers = () => {
     setButtonForm("Enviar");
   };
 
+  // Función para manejar la búsqueda (deberías agregar lógica para buscar en la API)
+  const handleSearch = (formData) => {
+    console.log(formData);
+  };
+
+  const columns = [
+    { title: 'ID', data: 'Id_Usuario' },
+    { title: 'Nombre', data: 'Nom_Usuario' },
+    { title: 'Apellido', data: 'Ape_Usuario' },
+    { title: 'Código', data: 'Cod_Usuario' },
+    { title: 'Correo', data: 'Cor_Usuario' },
+    { title: 'Número de Documento', data: 'Nde_Usuario' },
+    { title: 'Fecha', data: 'Fec_Usuario' },
+    { title: 'Estado', data: 'estado' },
+    { title: 'Rol', data: 'rol' },
+    {
+      title: 'Acciones',
+      data: '',
+      render: (data, type, row) => (
+        <div className="action-buttons">
+          <button onClick={() => getUser(row.Id_Usuario)}>Editar</button>
+          <button onClick={() => deleteUser(row.Id_Usuario)}>Eliminar</button>
+        </div>
+      )
+    }
+  ];
+
+  const form = (
+    <div>
+      <div className="form-control">
+        <input
+          type="text"
+          name="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar usuarios..."
+        />
+        <span className="search-icon">
+          <i className="fas fa-search"></i>
+        </span>
+      </div>
+    </div>
+  );
+
   return (
     <div className="root">
       <SidebarAdministrator className="sidebar" />
@@ -115,10 +165,10 @@ const CrudUsers = () => {
             className="openModalButton"
             onClick={() => {
               resetForm();
-              setIsModalOpen(true); // Abrir el modal para añadir un usuario
+              setIsModalOpen(true);
             }}
           >
-            Añadir Usuario
+            Añadir
           </button>
           
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
@@ -130,55 +180,12 @@ const CrudUsers = () => {
             />
           </Modal>
           
-          <div className="tableWrapper">
-            <table className="userTable">
-              <thead>
-                <tr>
-                  <th className="tableHeader">ID</th>
-                  <th className="tableHeader">Nombre</th>
-                  <th className="tableHeader">Apellido</th>
-                  <th className="tableHeader">Código</th>
-                  <th className="tableHeader">Correo</th>
-                  <th className="tableHeader">Número de Documento</th>
-                  <th className="tableHeader">Fecha</th>
-                  <th className="tableHeader">Estado</th>
-                  <th className="tableHeader">Rol</th>
-                  <th className="tableHeader">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(userList) && userList.slice(desde, hasta).map((user) => (
-                  <tr key={user.Id_Usuario}>
-                    <td className="tableCell">{user.Id_Usuario}</td>
-                    <td className="tableCell">{user.Nom_Usuario}</td>
-                    <td className="tableCell">{user.Ape_Usuario}</td>
-                    <td className="tableCell">{user.Cod_Usuario}</td>
-                    <td className="tableCell">{user.Cor_Usuario}</td>
-                    <td className="tableCell">{user.Nde_Usuario}</td>
-                    <td className="tableCell">{user.Fec_Usuario}</td>
-                    <td className="tableCell">{user.estado}</td>
-                    <td className="tableCell">{user.rol}</td>
-                    <td className="tableCell">
-                      <div className="actionButtons">
-                        <button
-                          className="button editButton"
-                          onClick={() => getUser(user.Id_Usuario)}
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="button deleteButton"
-                          onClick={() => deleteUser(user.Id_Usuario)}
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <TableComponent
+            data={userList.slice(desde, hasta)}
+            columns={columns}
+            form={form}
+            onSearch={handleSearch}
+          />
 
           <Pagination
             totalItems={userList.length}
@@ -196,4 +203,3 @@ const CrudUsers = () => {
 };
 
 export default CrudUsers;
-

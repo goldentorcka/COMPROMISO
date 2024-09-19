@@ -23,19 +23,19 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/loginFormAdmin" element={<LoginFormAdmin />} />
+        <Route path="/login-admin" element={<LoginFormAdmin />} />
         <Route path="/olvidePassword" element={<OlvidePassword />} />
-        <Route path="/manuales" element={<Contend_Manuals />} />
-        <Route path="/se/admin" element={<NavMenuSE />} />
-        <Route path="/recursos-humanos" element={<ContendR_H />} />
-        <Route path="/admin/crud-users" element={<CrudUsers />} />
-        <Route path="/admin/crud-responsables" element={<CrudResponsables />} />
-        <Route path="/admin/crud-procedures" element={<CrudProcedure />} />
-        <Route path="/admin/crud-processes" element={<CrudProcesses />} />
-        <Route path="/admin/crud-unidades" element={<CrudUnidades />} />
-        <Route path="/admin/crud-areas" element={<CrudArea />} />
-        <Route path="/contactos" element={<ContendContacts />} />
-        <Route path="/admin/layout" element={<Layout />} />
+        <Route path="/manuals" element={<Contend_Manuals />} />
+        <Route path="/mision-vision" element={<NavMenuSE />} />
+        <Route path="/resena-historica" element={<ContendR_H />} />
+        <Route path="/admin/Usuarios" element={<CrudUsers />} />
+        <Route path="/admin/Responsables" element={<CrudResponsables />} />
+        <Route path="/admin/Procedimientos" element={<CrudProcedure />} />
+        <Route path="/admin/Procesos" element={<CrudProcesses />} />
+        <Route path="/admin/Unidades" element={<CrudUnidades />} />
+        <Route path="/admin/Areas" element={<CrudArea />} />
+        <Route path="/contacts" element={<ContendContacts />} />
+        <Route path="/Administrator" element={<Layout />} />
       </Routes>
       <AsistenteVirtual /> {/* Aquí integras el Asistente Virtual */}
     </BrowserRouter>

@@ -1,27 +1,180 @@
-/* stylesResponsiblesCrud.css */
+/* Estilos generales */
+.crud-root {
+  display: flex;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
 
-.search-form {
+.crud-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+/* Estilo de la barra lateral */
+.sidebar {
+  background-color: #343a40;
+  color: #ffffff;
+  padding: 20px;
+  height: 100%;
+  width: 250px;
+}
+
+/* Estilo del contenido principal */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.page-title {
+  font-size: 24px;
+  color: #212529;
+  margin-bottom: 20px;
+}
+
+.content-wrapper {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos de los botones */
+.add-button {
+  background-color: #17a2b8;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 10px;
+  transition: transform 0.3s ease;
+  margin-bottom: 20px;
 }
 
-.search-input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 0.5rem;
+.add-button:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.search-button {
-  background-color: #007bff;
-  color: #fff;
+/* Estilos de las acciones de la tabla */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.edit-button, .delete-button {
+  padding: 10px;
   border: none;
-  border-radius: 4px;
-  padding: 0.5rem;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.search-button:hover {
-  background-color: #0056b3;
+.edit-button {
+  background-color: #4caf50;
+  color: white;
+}
+
+.delete-button {
+  background-color: #f44336;
+  color: white;
+}
+
+/* Estilos de exportación */
+.export-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.export-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdf-btn {
+  background-color: #dc3545;
+}
+
+.excel-btn {
+  background-color: #28a745;
+}
+
+.sql-btn {
+  background-color: #ffc107;
+}
+
+/* Estilos de la tabla */
+.table-wrapper {
+  margin-top: 20px;
+}
+
+.DataTable {
+  width: 100%;
+  border: 1px solid #6c757d;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.DataTable tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.DataTable tbody tr:nth-of-type(even) {
+  background-color: #fff;
+}
+
+.DataTable tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.DataTable thead th {
+  background-color: #343a40;
+  color: #fff;
+}
+
+.DataTable tbody td {
+  padding: 10px;
+  text-align: center;
+}
+
+/* Estilos del modal */
+.modal {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* Estilos del formulario */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-control {
+  padding: 10px;
+  border: 1px solid #6c757d;
+  border-radius: 5px;
+}
+
+.form-control:focus {
+  border-color: #17a2b8;
+  box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
 }

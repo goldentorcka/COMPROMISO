@@ -4,7 +4,7 @@ const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js')
 
 const Area = require('../../area/models/areaModel.js');
 
-const Unidad = sequelize.define('unidad', {
+const Unidad = sequelize.define('unidads', {
   Id_Unidad: {
     type: DataTypes.INTEGER,
     autoIncrement: true,

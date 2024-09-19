@@ -14,10 +14,10 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/"
+              to="/admin/Eslogan"
             >
               <FontAwesomeIcon icon={faTachometerAlt} className="icon" />
-              Dashboard
+              CALGDOCS
             </NavLink>
           </li>
           <li className="nav-item">

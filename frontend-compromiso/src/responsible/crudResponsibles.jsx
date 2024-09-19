@@ -61,6 +61,7 @@ const CrudResponsables = () => {
         Swal.fire('Eliminado!', 'El registro ha sido eliminado.', 'success');
         getAllResponsables();
       } catch (error) {
+        Swal.fire('Error', error.response.data.message, 'error');
         console.error('Error al eliminar el responsable:', error);
       }
     }
@@ -79,6 +80,7 @@ const CrudResponsables = () => {
       setIsModalOpen(false);
       getAllResponsables();
     } catch (error) {
+      Swal.fire('Error', error.response.data.message, 'error');
       console.error('Error al enviar el formulario:', error);
     }
   };

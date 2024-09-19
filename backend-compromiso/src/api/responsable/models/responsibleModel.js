@@ -1,25 +1,26 @@
 // @ts-nocheck
-const { DataTypes } = require('sequelize');
-const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
+const Sequelize = require('sequelize');
+const db = require('../../../../config/database.js');
 
-const Responsable = sequelize.define('responsable', {
-  Id_Responsable: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
+const Responsable = db.define('Responsables', {
+  id: {
+    type: Sequelize.INTEGER,
     primaryKey: true,
+    autoIncrement: true
   },
-  Nom_Responsable: {
-    type: DataTypes.STRING,
+  nombre: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  apellido: {
+    type: Sequelize.STRING,
+    allowNull: false
+  },
+  email: {
+    type: Sequelize.STRING,
     allowNull: false,
-  },
-  estado: {
-    type: DataTypes.ENUM('Sí', 'No'),
-    allowNull: false,
-  },
-}, {
-  timestamps: true,
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
+    unique: true
+  }
 });
 
 module.exports = Responsable;

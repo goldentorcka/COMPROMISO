@@ -1,20 +1,54 @@
 import React, { useState } from 'react';
 import NavMenuPublic from '../Nav/NavMenuPublic';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 // Importa los archivos PDF
 import techManual from '../../../src/Public/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
 import userManual from '../../../src/Public/pdf/OPERACIONES_BASICAS.pdf';
 
+const MySwal = withReactContent(Swal);
+
 const ManualViewer = () => {
-  // Manejo del estado de los modales
   const [showTechModal, setShowTechModal] = useState(false);
   const [showUserModal, setShowUserModal] = useState(false);
 
-  // Funciones para abrir/cerrar los modales
-  const handleTechModalClose = () => setShowTechModal(false);
+  const handleTechModalClose = () => {
+    MySwal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas cerrar este modal?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#007bff',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cerrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShowTechModal(false);
+      }
+    });
+  };
+
   const handleTechModalShow = () => setShowTechModal(true);
 
-  const handleUserModalClose = () => setShowUserModal(false);
+  const handleUserModalClose = () => {
+    MySwal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Deseas cerrar este modal?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#007bff',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cerrar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setShowUserModal(false);
+      }
+    });
+  };
+
   const handleUserModalShow = () => setShowUserModal(true);
 
   return (
@@ -28,7 +62,12 @@ const ManualViewer = () => {
         {/* Manual Técnico */}
         <div style={manualCardStyle}>
           <h2 style={manualTitleStyle}>Manual Técnico</h2>
-          <button onClick={handleTechModalShow} style={buttonStyle}>
+          <button 
+            onClick={handleTechModalShow} 
+            style={buttonStyle}
+            onMouseEnter={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
+            onMouseLeave={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
+          >
             Ver Manual Técnico
           </button>
         </div>
@@ -36,7 +75,12 @@ const ManualViewer = () => {
         {/* Manual de Usuario */}
         <div style={manualCardStyle}>
           <h2 style={manualTitleStyle}>Manual de Usuario</h2>
-          <button onClick={handleUserModalShow} style={buttonStyle}>
+          <button 
+            onClick={handleUserModalShow} 
+            style={buttonStyle}
+            onMouseEnter={(e) => e.target.style.backgroundColor = buttonHoverStyle.backgroundColor}
+            onMouseLeave={(e) => e.target.style.backgroundColor = buttonStyle.backgroundColor}
+          >
             Ver Manual de Usuario
           </button>
         </div>
@@ -46,8 +90,15 @@ const ManualViewer = () => {
       {showTechModal && (
         <div style={modalOverlayStyle}>
           <div style={modalStyle}>
-            <button onClick={handleTechModalClose} style={closeButtonStyle}>X</button>
-            <h3 style={modalTitleStyle}>Manual Técnico</h3>
+            <button 
+              onClick={handleTechModalClose} 
+              style={closeButtonStyle}
+            >
+              <span style={closeButtonIconStyle}>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/x.png" alt="Cerrar" style={iconStyle} />
+              </span>
+            </button>
+            <h3 style={modalTitleStyle}>MANUAL TÉCNICO</h3>
             <iframe
               src={techManual}
               style={iframeStyle}
@@ -69,8 +120,15 @@ const ManualViewer = () => {
       {showUserModal && (
         <div style={modalOverlayStyle}>
           <div style={modalStyle}>
-            <button onClick={handleUserModalClose} style={closeButtonStyle}>X</button>
-            <h3 style={modalTitleStyle}>Manual de Usuario</h3>
+            <button 
+              onClick={handleUserModalClose} 
+              style={closeButtonStyle}
+            >
+              <span style={closeButtonIconStyle}>
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/x.png" alt="Cerrar" style={iconStyle} />
+              </span>
+            </button>
+            <h3 style={modalTitleStyle}>MANUAL DE USUARIO</h3>
             <iframe
               src={userManual}
               style={iframeStyle}
@@ -94,16 +152,16 @@ const ManualViewer = () => {
 // Estilos en línea
 const containerStyle = {
   textAlign: 'center',
-  padding: '100px 20px', // Se agregó un mayor margen superior para que quede debajo de la barra de navegación
+  padding: '100px 20px',
   backgroundColor: '#f4f4f4',
-  minHeight: '100vh'
+  minHeight: '100vh',
 };
 
 const mainTitleStyle = {
   fontSize: '2.5rem',
   marginBottom: '40px',
   color: '#333',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
 };
 
 const manualCardStyle = {
@@ -122,7 +180,7 @@ const manualTitleStyle = {
   fontSize: '1.75rem',
   marginBottom: '20px',
   color: '#555',
-  fontWeight: '500'
+  fontWeight: '500',
 };
 
 const buttonStyle = {
@@ -136,6 +194,7 @@ const buttonStyle = {
   boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
   transition: 'background-color 0.3s ease',
   marginTop: '10px',
+  textAlign: 'center',
 };
 
 const buttonHoverStyle = {
@@ -152,47 +211,69 @@ const modalOverlayStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  zIndex: 1000
+  zIndex: 1000,
+  width: '100vw',
+  height: '100vh',
 };
 
 const modalStyle = {
   backgroundColor: '#fff',
-  padding: '30px',
   borderRadius: '10px',
-  width: '80%',
-  maxWidth: '900px',
+  width: '60%',
+  height: '70%',
+  maxWidth: '700px',
   position: 'relative',
   boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+  display: 'flex',
+  flexDirection: 'column',
+  padding: '20px',
+};
+
+const iframeStyle = {
+  width: '100%',
+  height: '400px',
+  border: 'none',
+  marginBottom: '20px',
+  flex: 1,
+};
+
+const modalFooterStyle = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginTop: '10px',
+  padding: '10px',
 };
 
 const closeButtonStyle = {
   position: 'absolute',
-  top: '15px',
-  right: '15px',
+  top: '10px',
+  right: '10px',
   backgroundColor: 'transparent',
   border: 'none',
-  fontSize: '22px',
   cursor: 'pointer',
-  color: '#555'
+  zIndex: 1001,
+  padding: '10px',
+  transition: 'transform 0.2s ease',
+};
+
+const closeButtonIconStyle = {
+  color: '#555',
+  fontSize: '22px',
+};
+
+const iconStyle = {
+  width: '24px',
+  height: '24px',
 };
 
 const modalTitleStyle = {
   marginBottom: '25px',
   color: '#333',
   fontWeight: 'bold',
-};
-
-const iframeStyle = {
-  width: '100%',
-  height: '500px',
-  border: 'none',
-  marginBottom: '20px'
-};
-
-const modalFooterStyle = {
-  display: 'flex',
-  justifyContent: 'space-between',
-  marginTop: '20px',
+  fontSize: '1.5rem',
+  textAlign: 'center',
+  fontFamily: 'Georgia, serif',
+  textTransform: 'uppercase',
 };
 
 const modalButtonStyle = {
@@ -202,8 +283,6 @@ const modalButtonStyle = {
   borderRadius: '5px',
   textDecoration: 'none',
   fontSize: '16px',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
 };
 
 const downloadButtonStyle = {
@@ -213,8 +292,6 @@ const downloadButtonStyle = {
   borderRadius: '5px',
   textDecoration: 'none',
   fontSize: '16px',
-  cursor: 'pointer',
-  transition: 'background-color 0.3s ease',
 };
 
 export default ManualViewer;
