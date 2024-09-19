@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faIdCard, faEnvelope, faCalendarAlt, faLock } from '@fortawesome/free-solid-svg-icons';
 
 const FormUser = ({ handleSubmit, buttonForm }) => {
   const [Nombre, setNombre] = useState('');
@@ -79,7 +81,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
       <form onSubmit={onSubmit}>
         {/* Nombre */}
         <div className="form-group">
-          <label>Nombre</label>
+          <label><FontAwesomeIcon icon={faUser} /> Nombre</label>
           <input
             type="text"
             value={Nombre}
@@ -91,7 +93,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Apellido */}
         <div className="form-group">
-          <label>Apellido</label>
+          <label><FontAwesomeIcon icon={faUser} /> Apellido</label>
           <input
             type="text"
             value={Apellido}
@@ -103,7 +105,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Código */}
         <div className="form-group">
-          <label>Código</label>
+          <label><FontAwesomeIcon icon={faIdCard} /> Código</label>
           <input
             type="text"
             value={Codigo}
@@ -115,7 +117,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Correo */}
         <div className="form-group">
-          <label>Correo</label>
+          <label><FontAwesomeIcon icon={faEnvelope} /> Correo</label>
           <input
             type="email"
             value={Correo}
@@ -127,7 +129,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Fecha de Nacimiento */}
         <div className="form-group">
-          <label>Fecha de Nacimiento</label>
+          <label><FontAwesomeIcon icon={faCalendarAlt} /> Fecha de Nacimiento</label>
           <input
             type="date"
             value={FechaNacimiento}
@@ -139,7 +141,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Estado */}
         <div className="form-group">
-          <label>Estado</label>
+          <label><FontAwesomeIcon icon={faUser} /> Estado</label>
           <select
             value={Estado}
             onChange={(e) => setEstado(e.target.value)}
@@ -151,7 +153,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Rol */}
         <div className="form-group">
-          <label>Rol</label>
+          <label><FontAwesomeIcon icon={faUser} /> Rol</label>
           <select
             value={Rol}
             onChange={(e) => setRol(e.target.value)}
@@ -163,7 +165,7 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
         {/* Contraseña */}
         <div className="form-group">
-          <label>Contraseña</label>
+          <label><FontAwesomeIcon icon={faLock} /> Contraseña</label>
           <div className="input-group">
             <input
               type={showPassword ? 'text' : 'password'}

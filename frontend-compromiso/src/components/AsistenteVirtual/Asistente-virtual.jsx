@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../styles/AsistenteVirtual.css'
+import axios from 'axios';
+import '../styles/AsistenteVirtual.css';
+
 const AsistenteVirtual = () => {
   const [showChatbot, setShowChatbot] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [listening, setListening] = useState(false);
   const [photoTaken, setPhotoTaken] = useState(null);
+  const [userValid, setUserValid] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
-  // Verificar si SpeechRecognition está disponible
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
@@ -50,8 +52,24 @@ const AsistenteVirtual = () => {
 
   const sendMessageToAPI = async (message) => {
     try {
-      const response = await processMessage(message);
-      autoTypeMessage(response, setMessages, speakMessage);
+      const userResponse = await axios.post('/api/validateUser', { username: message });
+      if (userResponse.data.valid) {
+        setUserValid(true);
+      } else {
+        setUserValid(false);
+      }
+
+      const response = await axios.post('https://api.ollama.com/models/your-model-endpoint', {
+        message: message,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${process.env.REACT_APP_OLLAMA_API_KEY}`,
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const responseMessage = response.data.response;
+      autoTypeMessage(responseMessage, setMessages, speakMessage);
     } catch (error) {
       console.error('Error al procesar el mensaje:', error);
       setMessages((prevMessages) => [
@@ -69,37 +87,9 @@ const AsistenteVirtual = () => {
     }
   };
 
-  const processMessage = async (message) => {
-    const lowerCaseMessage = message.toLowerCase();
-    let responses = [];
-
-    if (lowerCaseMessage.includes('noticias')) {
-      responses.push(await queryNews());
-    } else if (lowerCaseMessage.includes('wiki') || lowerCaseMessage.includes('wikipedia')) {
-      responses.push(await searchWikipedia(message));
-    } else if (lowerCaseMessage.includes('wolfram')) {
-      responses.push(await queryWolframAlpha(message));
-    } else if (lowerCaseMessage.includes('clima') || lowerCaseMessage.includes('weather')) {
-      responses.push(await queryWeather(message));
-    } else if (lowerCaseMessage.includes('moneda') || lowerCaseMessage.includes('currency')) {
-      responses.push(await queryCurrency(message));
-    } else if (lowerCaseMessage.includes('quién te creó') || lowerCaseMessage.includes('creador')) {
-      return '¡Claro! Soy creado por Marlon Javier Cumbe Loaiza, un aprendiz en Análisis y Desarrollo de Software en SENA. Puedes encontrar más información en https://www.sena.edu.co.';
-    } else {
-      return 'Estoy aquí para ayudarte con noticias, información técnica, clima, conversiones de divisas o cualquier otra consulta. ¿En qué puedo asistirte hoy?';
-    }
-
-    if (responses.length > 0) {
-      const bestResponse = await compareResponses(responses);
-      return bestResponse;
-    } else {
-      return 'Lo siento, no entendí tu pregunta. ¿Puedes reformularla?';
-    }
-  };
-
-  const compareResponses = async (responses) => {
-    const sortedResponses = responses.sort((a, b) => a.length - b.length);
-    return sortedResponses.join('\n\n');
+  const autoTypeMessage = (message, setMessages, speakMessage) => {
+    setMessages((prevMessages) => [...prevMessages, { role: 'assistant', content: message }]);
+    speakMessage(message);
   };
 
   const handleSubmit = (e) => {
@@ -140,7 +130,7 @@ const AsistenteVirtual = () => {
           'Ocp-Apim-Subscription-Key': subscriptionKey,
           'Content-Type': 'application/octet-stream',
         },
-        body: imageData.split(',')[1], // Enviar la imagen en base64
+        body: imageData.split(',')[1],
       });
 
       const data = await response.json();
@@ -192,6 +182,7 @@ const AsistenteVirtual = () => {
           {photoTaken && <img src={photoTaken} alt="Foto capturada" />}
         </div>
       )}
+      {userValid && <div className="admin-panel">Aquí va el panel administrador</div>}
     </div>
   );
 };

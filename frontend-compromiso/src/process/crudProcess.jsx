@@ -2,54 +2,51 @@ import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/Pagination';
-import FormProcess from './formProcess.jsx';
-import FormQueryProcess from './formQueryProcess.jsx';
+import FormProcess from './FormProcess.jsx';
+import FormQueryProcess from './FormQueryProcess.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
-import Modal from '../components/Modal/Init-Modal.jsx'; // Asegúrate de tener este archivo para el modal
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // Añade esta línea para usar FontAwesomeIcon
-import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons'; // Añade esta línea para el icono
+import Modal from '../components/Modal/Init-Modal.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faProjectDiagram } from '@fortawesome/free-solid-svg-icons';
+import ActionButtons from '../components/Buttons/ActionsButton.jsx'; // Asegúrate de tener este componente
 
 const styles = {
   root: {
+    display: 'flex',
     minHeight: '100vh',
     backgroundColor: '#f4f4f4',
-    overflowX: 'hidden',
   },
   crudContainer: {
     display: 'flex',
-    minHeight: 'calc(100vh - 60px)',
-    width: '107%',
+    flex: 1,
+    padding: '20px',
+    marginLeft: '240px',
   },
   sidebar: {
-    width: '250px',
-    backgroundColor: '#333',
-    color: '#fff',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: '20px',
+    width: '240px',
+    backgroundColor: '#343a40',
   },
   mainContent: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: '20px',
-    marginTop: '20px',
   },
   pageTitle: {
     textAlign: 'center',
     marginBottom: '20px',
     fontSize: '2rem',
+    fontFamily: 'Georgia, serif',
+    textTransform: 'uppercase',
   },
   contentWrapper: {
     width: '100%',
     maxWidth: '1200px',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: '20px',
-    paddingLeft: '20px',
+    padding: '0 20px',
   },
   addButton: {
     display: 'flex',
@@ -61,10 +58,10 @@ const styles = {
     border: 'none',
     borderRadius: '5px',
     cursor: 'pointer',
-    marginLeft: '190px',
+    marginBottom: '20px',
   },
   icon: {
-    marginRight: '8px', // Espacio entre el icono y el texto
+    marginRight: '8px',
   },
   tableWrapper: {
     width: '100%',
@@ -75,18 +72,17 @@ const styles = {
     width: '100%',
     borderCollapse: 'collapse',
     backgroundColor: '#fff',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   },
   tableHeader: {
     backgroundColor: '#f9f9f9',
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   tableCell: {
     border: '1px solid #ddd',
     padding: '10px',
     textAlign: 'center',
-  },
-  icon: {
-    marginRight: '8px', // Espacio entre el icono y el texto
   },
   actionButtons: {
     display: 'flex',
@@ -114,18 +110,18 @@ const CrudProcess = () => {
   const [buttonForm, setButtonForm] = useState('Enviar');
   const [desde, setDesde] = useState(0);
   const [hasta, setHasta] = useState(10);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Estado para el modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     getAllProcesses();
-    getAllResponsables(); // Obtener responsables al cargar el componente
+    getAllResponsables();
   }, [desde, hasta]);
 
   const getAllProcesses = async () => {
     try {
       const response = await clienteAxios.get('/api/procesos');
       setProcessList(response.data);
-      setProcessQuery(response.data); // Inicializar processQuery con todos los procesos
+      setProcessQuery(response.data);
     } catch (error) {
       console.error('Error al obtener los procesos:', error);
     }
@@ -134,7 +130,7 @@ const CrudProcess = () => {
   const getAllResponsables = async () => {
     try {
       const response = await clienteAxios.get('/api/responsables');
-      setResponsables(response.data); // Inicializar la lista de responsables
+      setResponsables(response.data);
     } catch (error) {
       console.error('Error al obtener responsables:', error);
     }
@@ -145,7 +141,7 @@ const CrudProcess = () => {
       const response = await clienteAxios.get(`/api/procesos/${Id_Proceso}`);
       setProcess(response.data);
       setButtonForm('Actualizar');
-      setIsModalOpen(true); // Abrir el modal al obtener un proceso
+      setIsModalOpen(true);
     } catch (error) {
       console.error('Error al obtener el proceso:', error);
     }
@@ -175,6 +171,7 @@ const CrudProcess = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       if (buttonForm === 'Enviar') {
         await clienteAxios.post('/api/procesos', process);
@@ -185,7 +182,7 @@ const CrudProcess = () => {
       }
       resetForm();
       getAllProcesses();
-      setIsModalOpen(false); // Cerrar el modal al enviar el formulario
+      setIsModalOpen(false);
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
     }
@@ -200,7 +197,6 @@ const CrudProcess = () => {
     setButtonForm('Enviar');
   };
 
-  // Encuentra el nombre del responsable usando el ID
   const getResponsableName = (id) => {
     const responsable = responsables.find(r => r.Id_Responsable === id);
     return responsable ? responsable.Nom_Responsable : 'Desconocido';
@@ -208,8 +204,8 @@ const CrudProcess = () => {
 
   return (
     <div style={styles.root}>
+      <SidebarAdministrator style={styles.sidebar} />
       <div style={styles.crudContainer}>
-        <SidebarAdministrator style={styles.sidebar} />
         <div style={styles.mainContent}>
           <h1 style={styles.pageTitle}>Gestión de Procesos</h1>
           <div style={styles.contentWrapper}>
@@ -217,12 +213,12 @@ const CrudProcess = () => {
               style={styles.addButton}
               onClick={() => {
                 resetForm();
-                setIsModalOpen(true); // Abrir el modal para agregar un proceso
+                setIsModalOpen(true);
               }}
             >
-            <FontAwesomeIcon icon={faProjectDiagram} style={styles.icon} /> Añadir
+              <FontAwesomeIcon icon={faProjectDiagram} style={styles.icon} /> Añadir
             </button>
-            
+
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
               <FormProcess
                 process={process}
@@ -233,7 +229,7 @@ const CrudProcess = () => {
                 responsables={responsables}
               />
             </Modal>
-            
+
             <div style={styles.tableWrapper}>
               <FormQueryProcess
                 processQuery={processQuery}
@@ -250,37 +246,29 @@ const CrudProcess = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {Array.isArray(processQuery) &&
-                    processQuery.slice(desde, hasta).map((process) => (
-                      <tr key={process.Id_Proceso}>
-                        <td style={styles.tableCell}>{process.Id_Proceso}</td>
-                        <td style={styles.tableCell}>{process.Nom_Proceso}</td>
-                        <td style={styles.tableCell}>{getResponsableName(process.Id_Responsable)}</td>
-                        <td style={styles.tableCell}>{process.estado}</td>
-                        <td style={styles.tableCell}>
-                          <div style={styles.actionButtons}>
-                            <button
-                              style={styles.button}
-                              onClick={() => getProcess(process.Id_Proceso)}
-                            >
-                              ✏️
-                            </button>
-                            <button
-                              style={styles.button}
-                              onClick={() => deleteProcess(process.Id_Proceso)}
-                            >
-                              🗑️
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                  {processList.slice(desde, hasta).map((process) => (
+                    <tr key={process.Id_Proceso}>
+                      <td style={styles.tableCell}>{process.Id_Proceso}</td>
+                      <td style={styles.tableCell}>{process.Nom_Proceso}</td>
+                      <td style={styles.tableCell}>{getResponsableName(process.Id_Responsable)}</td>
+                      <td style={styles.tableCell}>{process.estado}</td>
+                      <td style={styles.tableCell}>
+                        <ActionButtons
+                          onEdit={() => getProcess(process.Id_Proceso)}
+                          onDelete={() => deleteProcess(process.Id_Proceso)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
+
               <Pagination
-                URI="/api/procesos"
+                desde={desde}
                 setDesde={setDesde}
+                hasta={hasta}
                 setHasta={setHasta}
+                data={processList}
               />
             </div>
           </div>

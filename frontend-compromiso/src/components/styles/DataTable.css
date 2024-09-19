@@ -1,0 +1,16 @@
+.custom-datatable {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden; /* Para asegurar que el borde se aplique correctamente */
+    background-color: #fff; /* Fondo blanco */
+}
+
+.custom-datatable .header {
+    padding: 10px;
+    background-color: #f7f7f7; /* Color de fondo del encabezado */
+    border-bottom: 1px solid #ddd;
+}
+
+.custom-table {
+    border: none; /* Quitar bordes innecesarios de la tabla */
+}

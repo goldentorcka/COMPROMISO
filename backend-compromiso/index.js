@@ -16,13 +16,36 @@ const procedimientosRouter = require('./src/api/procedimiento/routes/procedimien
 const areasRouter = require('./src/api/area/routes/areaRoutes.js');
 const unidadesRouter = require('./src/api/unidad/routes/unidadRoutes.js');
 const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
-// const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
+const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 
 // Importa Swagger
-const { swaggerDocs, swaggerSetup } = require('./swagger.js');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const port = process.env.PORT || 3001; // Usa el puerto del archivo .env
+
+// Configuración de Swagger
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'API de Compromiso',
+      version: '1.0.0',
+      description: 'Documentación de la API de Compromiso con funcionalidades de gestión de usuarios, procesos, procedimientos, áreas, unidades, formatos y responsables.',
+    },
+    servers: [
+      {
+        url: `https://localhost:${port}`,
+        description: 'Servidor local',
+      },
+    ],
+  },
+  apis: ['./src/api/**/*.js'], // Ruta a los archivos con anotaciones Swagger
+};
+
+const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
 const app = express();
-const port = process.env.PORT || 3001; // Usa el puerto del archivo .env
 
 // Configura Rate Limiting
 const apiLimiter = rateLimit({
@@ -59,7 +82,7 @@ app.get('/', (req, res) => {
 });
 
 // Documentación de la API con Swagger
-app.use('/api-docs', swaggerDocs, swaggerSetup);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 // Rutas de la API
 app.use('/api/responsables', responsablesRouter);
@@ -68,7 +91,7 @@ app.use('/api/procedimientos', procedimientosRouter);
 app.use('/api/areas', areasRouter);
 app.use('/api/unidades', unidadesRouter);
 app.use('/api/formatos', formatosRouter);
-// app.use('/api/usuarios', usuariosRouter);
+app.use('/api/usuarios', usuariosRouter);
 
 // Manejo de errores 404 (ruta no encontrada)
 app.use((req, res, next) => {

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../api';
+import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormUsers from './formUsers.jsx';
 import Pagination from '../components/Pagination/Pagination';
+import FormUsers from './formUsers.jsx';
+import FormQueryUsers from './formQueryUsers.jsx'; 
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
-import '../components/styles/stylesCrudUsers.css'; // Importa el archivo CSS
-import TableComponent from '../components/datatables/ComponentTableGeneral.jsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import ActionButtons from '../components/Buttons/ActionsButton.jsx';
+import CustomDataTable from '../components/datatables/Datatable.jsx'; // Importa el componente DataTable
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
@@ -21,27 +24,24 @@ const CrudUsers = () => {
     rol: "Administrador",
     password: ""
   });
+  const [userQuery, setUserQuery] = useState([]);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [desde, setDesde] = useState(0);
-  const [hasta, setHasta] = useState(10);
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
     getAllUsers();
-  }, [desde, hasta]);
+  }, []);
 
-  // Función para obtener todos los usuarios
   const getAllUsers = async () => {
     try {
       const response = await clienteAxios.get('/api/usuarios');
       setUserList(response.data);
+      setUserQuery(response.data);
     } catch (error) {
       console.error("Error al obtener los usuarios:", error);
     }
   };
 
-  // Función para obtener un usuario por ID y abrir el modal
   const getUser = async (Id_Usuario) => {
     try {
       const response = await clienteAxios.get(`/api/usuarios/${Id_Usuario}`);
@@ -53,7 +53,6 @@ const CrudUsers = () => {
     }
   };
 
-  // Función para eliminar un usuario
   const deleteUser = async (Id_Usuario) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',
@@ -76,7 +75,6 @@ const CrudUsers = () => {
     }
   };
 
-  // Función para manejar el envío del formulario (añadir o actualizar usuario)
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -88,14 +86,13 @@ const CrudUsers = () => {
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
       resetForm();
-      getAllUsers();
       setIsModalOpen(false);
+      getAllUsers();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
     }
   };
 
-  // Función para resetear el formulario
   const resetForm = () => {
     setUser({
       Nom_Usuario: "",
@@ -111,91 +108,74 @@ const CrudUsers = () => {
     setButtonForm("Enviar");
   };
 
-  // Función para manejar la búsqueda (deberías agregar lógica para buscar en la API)
   const handleSearch = (formData) => {
     console.log(formData);
+    // Implementar lógica de búsqueda si es necesario
   };
 
   const columns = [
-    { title: 'ID', data: 'Id_Usuario' },
-    { title: 'Nombre', data: 'Nom_Usuario' },
-    { title: 'Apellido', data: 'Ape_Usuario' },
-    { title: 'Código', data: 'Cod_Usuario' },
-    { title: 'Correo', data: 'Cor_Usuario' },
-    { title: 'Número de Documento', data: 'Nde_Usuario' },
-    { title: 'Fecha', data: 'Fec_Usuario' },
-    { title: 'Estado', data: 'estado' },
-    { title: 'Rol', data: 'rol' },
+    { field: 'id', header: 'ID', width: '10%' },
+    { field: 'Nom_Usuario', header: 'Nombre', width: '20%' },
+    { field: 'Ape_Usuario', header: 'Apellido', width: '20%' },
+    { field: 'Cod_Usuario', header: 'Código', width: '20%' },
+    { field: 'Cor_Usuario', header: 'Correo', width: '30%' },
     {
-      title: 'Acciones',
-      data: '',
-      render: (data, type, row) => (
-        <div className="action-buttons">
-          <button onClick={() => getUser(row.Id_Usuario)}>Editar</button>
-          <button onClick={() => deleteUser(row.Id_Usuario)}>Eliminar</button>
-        </div>
+      field: 'actions', header: 'Acciones', width: '10%',
+      body: (rowData) => (
+        <ActionButtons 
+          onEdit={() => getUser(rowData.id)} 
+          onDelete={() => deleteUser(rowData.id)} 
+        />
       )
     }
   ];
 
-  const form = (
-    <div>
-      <div className="form-control">
-        <input
-          type="text"
-          name="search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Buscar usuarios..."
-        />
-        <span className="search-icon">
-          <i className="fas fa-search"></i>
-        </span>
-      </div>
-    </div>
-  );
-
   return (
-    <div className="root">
-      <SidebarAdministrator className="sidebar" />
-      <div className="mainContent">
-        <h1 className="pageTitle">Gestión de Usuarios</h1>
-        <div className="contentWrapper">
+    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>
+      <SidebarAdministrator style={{ width: '240px', backgroundColor: '#343a40' }} />
+      <div style={{ flex: 1, padding: '20px', marginLeft: '240px' }}>
+        <h1 style={{ textAlign: 'center', marginBottom: '20px', fontSize: '2rem', fontFamily: 'Georgia, serif', textTransform: 'uppercase' }}>
+          Gestión de Usuarios
+        </h1>
+        <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px', padding: '0 20px' }}>
           <button
-            className="openModalButton"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '10px 20px',
+              fontSize: '1rem',
+              backgroundColor: '#4caf50',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer',
+              marginBottom: '20px',
+            }}
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
             }}
           >
+            <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-          
+
           <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
             <FormUsers
               user={user}
               setUser={setUser}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
+              resetForm={resetForm}
             />
           </Modal>
-          
-          <TableComponent
-            data={userList.slice(desde, hasta)}
-            columns={columns}
-            form={form}
-            onSearch={handleSearch}
+
+          <FormQueryUsers
+            userQuery={userQuery}
+            setUserQuery={setUserQuery}
           />
 
-          <Pagination
-            totalItems={userList.length}
-            itemsPerPage={10}
-            currentPage={Math.floor(desde / 10) + 1}
-            onPageChange={(pageNumber) => {
-              setDesde((pageNumber - 1) * 10);
-              setHasta(pageNumber * 10);
-            }}
-          />
+          <CustomDataTable data={userList} columns={columns} />
         </div>
       </div>
     </div>

@@ -92,15 +92,6 @@ const SidebarAdministrator = () => {
             <li className="nav-item">
               <NavLink
                 className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-                to="/settings"
-              >
-                <FontAwesomeIcon icon={faCogs} className="icon" />
-                Settings
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
                 to="/login-admin"
               >
                 <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
