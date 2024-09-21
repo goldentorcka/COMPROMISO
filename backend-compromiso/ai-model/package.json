@@ -1,0 +1,9 @@
+{
+    "name": "ai-model",
+    "version": "1.0.0",
+    "dependencies": {
+      "@tensorflow/tfjs": "^3.13.0",
+      "@tensorflow/tfjs-node": "^3.13.0",
+      "brain.js": "^2.1.0"
+    }
+  }

@@ -1,4 +1,4 @@
-// @ts-nocheck
+// areaModel.js
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 

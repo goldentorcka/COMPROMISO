@@ -1,26 +1,36 @@
 // @ts-nocheck
-const Sequelize = require('sequelize');
-const db = require('../../../../config/database.js');
+const { DataTypes } = require('sequelize');
+const sequelize = require('../../../../config/database.js');
 
-const Responsable = db.define('Responsables', {
-  id: {
-    type: Sequelize.INTEGER,
+const Responsable = sequelize.define('Responsables', {
+  Id_Responsable: {
+    type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    field: 'Id_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
   },
-  nombre: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  apellido: {
-    type: Sequelize.STRING,
-    allowNull: false
-  },
-  email: {
-    type: Sequelize.STRING,
+  Nom_Responsable: {
+    type: DataTypes.STRING(255),
     allowNull: false,
-    unique: true
+    field: 'Nom_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
+  },
+  estado: {
+    type: DataTypes.ENUM('Sí', 'No'),
+    allowNull: false
+  }, 
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'createdAt' // Asegúrate de usar el nombre de la columna en la base de datos
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    field: 'updatedAt' // Asegúrate de usar el nombre de la columna en la base de datos
   }
+}, {
+  tableName: 'responsables', // Asegúrate de que el nombre de la tabla esté en minúsculas
+  timestamps: true // Esto hará que Sequelize maneje los campos createdAt y updatedAt automáticamente
 });
 
 module.exports = Responsable;

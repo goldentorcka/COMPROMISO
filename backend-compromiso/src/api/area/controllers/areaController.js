@@ -1,6 +1,6 @@
 // @ts-nocheck
-const Area = require('../models/areaModel.js');  // Ruta tal como la diste
-const logger = require('../../../../config/logger.js');  // Ruta tal como la diste
+const Area = require('../models/areaModel.js');  
+const logger = require('../../../../config/logger.js');  
 
 const getAreas = async (req, res) => {
   try {

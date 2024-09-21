@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/Pagination';
+import Pagination from '../components/Pagination/pagination.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -44,7 +44,7 @@ const CrudResponsables = () => {
       Swal.fire('Error', 'No se pudo obtener el responsable.', 'error');
     }
   };
-
+   
   const deleteResponsable = async (Id_Responsable) => {
     const result = await Swal.fire({
       title: '¿Estás seguro?',

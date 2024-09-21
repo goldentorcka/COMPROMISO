@@ -1,6 +1,6 @@
 // @ts-nocheck
 const Responsable = require('../models/responsibleModel.js');
-const logger = require('../../../../config/logger.js');
+const {logger} = require('../../../../config/logger.js');  // Ruta del logger
 
 const getResponsables = async (req, res) => {
   try {

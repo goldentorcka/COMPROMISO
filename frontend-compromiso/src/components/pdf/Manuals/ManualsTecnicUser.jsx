@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import NavMenuPublic from '../Nav/NavMenuPublic';
+import NavMenuPublic from '../../Nav/NavMenuPublic';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 // Importa los archivos PDF
-import techManual from '../../../src/Public/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
-import userManual from '../../../src/Public/pdf/OPERACIONES_BASICAS.pdf';
+import techManual from '../../../Public/pdf/Manual_de_las_Buenas_Prácticas_de_Ordeño.pdf';
+import userManual from '../../../Public/pdf/OPERACIONES_BASICAS.pdf';
 
 const MySwal = withReactContent(Swal);
 

@@ -1,5 +1,5 @@
 import React from "react"
-import ManualViewer from "../../components/Manuals/ManualsTecnicUser.jsx"
+import ManualViewer from "../../components/pdf/Manuals/ManualsTecnicUser.jsx"
 const Contend_Manuals = ({ techManual, userManual }) => {
     return (
       <div>

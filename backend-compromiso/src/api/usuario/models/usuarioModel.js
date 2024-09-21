@@ -2,67 +2,35 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
-const Usuario = sequelize.define('Usuario', {
-  Id_Usuario: {
+const Responsable = sequelize.define('Responsables', {
+  Id_Responsable: {
     type: DataTypes.INTEGER,
-    autoIncrement: true,
     primaryKey: true,
+    autoIncrement: true,
+    field: 'Id_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
   },
-  Nom_Usuario: {
-    type: DataTypes.STRING,
+  Nom_Responsable: {
+    type: DataTypes.STRING(255),
     allowNull: false,
-  },
-  Ape_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  Cod_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  Cor_Usuario: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    validate: {
-      isEmail: true, // Valida que el correo sea una dirección válida
-    },
-  },
-  Fec_Usuario: {
-    type: DataTypes.DATE,
-    allowNull: false,
+    field: 'Nom_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
   },
   estado: {
     type: DataTypes.ENUM('Sí', 'No'),
-    allowNull: false,
-  },
-  rol: {
-    type: DataTypes.ENUM('Administrador'),
-    allowNull: false,
-  },
-  token: {
-    type: DataTypes.STRING,
-  },
-  password: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  resetPasswordToken: {
-    type: DataTypes.STRING,
-  },
-  resetPasswordExpires: {
-    type: DataTypes.DATE,
+    allowNull: false
   },
   createdAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
+    allowNull: false,
+    field: 'createdAt' // Asegúrate de usar el nombre de la columna en la base de datos
   },
   updatedAt: {
     type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-  },
+    allowNull: false,
+    field: 'updatedAt' // Asegúrate de usar el nombre de la columna en la base de datos
+  }
 }, {
-  tableName: 'usuarios',
-  timestamps: true,
+  tableName: 'responsables', // Asegúrate de que el nombre de la tabla esté en minúsculas
+  timestamps: true // Esto hará que Sequelize maneje los campos createdAt y updatedAt automáticamente
 });
 
-module.exports = Usuario;
+module.exports = Responsable;

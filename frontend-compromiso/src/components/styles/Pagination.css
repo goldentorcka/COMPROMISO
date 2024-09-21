@@ -3,30 +3,56 @@
   justify-content: center;
   align-items: center;
   margin: 20px 0;
+  position: relative; /* Permitir posicionamiento absoluto de los iconos */
 }
 
 .pagination-button {
-  background-color: #007bff;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--primary-color-text);
   border: none;
-  padding: 10px 20px;
+  padding: 0.5rem 1rem;
   margin: 0 5px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: var(--border-radius);
   transition: background-color 0.3s ease;
 }
 
 .pagination-button:hover {
-  background-color: #0056b3;
+  background-color: var(--primary-color-dark); /* Define esta variable en tu CSS si es necesario */
 }
 
 .pagination-button:disabled {
-  background-color: #cccccc;
+  background-color: var(--surface-c);
   cursor: not-allowed;
 }
 
 .pagination-info {
-  font-size: 16px;
+  font-size: 1rem;
   margin: 0 15px;
   font-weight: bold;
+}
+
+.download-container {
+  display: flex;
+  align-items: center; /* Alinear iconos verticalmente */
+  position: relative; /* Para el posicionamiento absoluto de los iconos */
+}
+
+.download-icons {
+  display: flex; /* Alinear iconos horizontalmente */
+  position: absolute; /* Permite que se superpongan sin mover el paginador */
+  left: 100%; /* Posicionar a la derecha del botón de descarga */
+  top: 0; /* Alinear verticalmente con el botón */
+  margin-left: 10px; /* Espacio entre el botón y los iconos */
+  z-index: 1000; /* Asegurarse de que se muestre por encima de otros elementos */
+}
+
+.icon-item {
+  padding: 0.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.icon-item:hover {
+  background-color: var(--surface-hover);
 }
