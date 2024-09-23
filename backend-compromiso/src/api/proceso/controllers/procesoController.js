@@ -2,109 +2,105 @@
 const Proceso = require('../models/procesoModel.js');
 const logger = require('../../../../config/logger.js');
 
+// Validar campos obligatorios
+const validateProceso = (proceso) => {
+  const { Nom_Proceso, Id_Responsable, estado, Tip_Proceso } = proceso;
+  let errors = [];
+
+  if (!Nom_Proceso) errors.push("El campo 'Nom_Proceso' es obligatorio.");
+  if (!Id_Responsable) errors.push("El campo 'Id_Responsable' es obligatorio.");
+  if (estado !== 'Activo' && estado !== 'Inactivo') errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
+  if (!Tip_Proceso) errors.push("El campo 'Tip_Proceso' es obligatorio.");
+
+  return errors;
+};
+
+// Obtener todos los procesos
 const getProcesos = async (req, res) => {
   try {
     const procesos = await Proceso.findAll();
-    if (procesos.length === 0) {
-      res.status(404).json({ message: 'No se encontraron procesos' });
-    } else {
-      res.json(procesos);
-    }
+    res.status(procesos.length === 0 ? 404 : 200).json(procesos.length === 0 ? { message: 'No se encontraron procesos' } : procesos);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Obtener un proceso por ID
 const getProcesoById = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+
   try {
-    const proceso = await Proceso.findByPk(req.params.id);
-    if (!proceso) {
-      res.status(404).json({ message: 'Proceso no encontrado' });
-    } else {
-      res.json(proceso);
-    }
+    const proceso = await Proceso.findByPk(id);
+    if (!proceso) return res.status(404).json({ message: 'Proceso no encontrado' });
+    res.json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Crear un nuevo proceso
 const createProceso = async (req, res) => {
   try {
-    const { Nom_Proceso, Id_Responsable, estado } = req.body;
-
-    // Validar que los campos requeridos estén presentes
-    if (!Nom_Proceso || !Id_Responsable || !estado) {
-      return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
+    const errors = validateProceso(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: 'Errores de validación', errors });
     }
 
-    // Validar que el estado sea 'Sí' o 'No'
-    if (estado !== 'Sí' && estado !== 'No') {
-      return res.status(400).json({ error: 'Estado inválido' });
-    }
-
-    // Crear el proceso si todas las validaciones son correctas
-    const proceso = await Proceso.create({ Nom_Proceso, Id_Responsable, estado });
+    const proceso = await Proceso.create(req.body);
     res.status(201).json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-
-    // Manejo de errores con un mensaje genérico
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
       return res.status(400).json({ error: 'Error en el procesamiento de datos' });
     }
-    return res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-
+s
+// Actualizar un proceso existente
 const updateProceso = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+
   try {
-    const proceso = await Proceso.findByPk(req.params.id);
+    const proceso = await Proceso.findByPk(id);
+    if (!proceso) return res.status(404).json({ message: 'Proceso no encontrado' });
 
-    if (!proceso) {
-      return res.status(404).json({ message: 'Proceso no encontrado' });
+    const errors = validateProceso(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: 'Errores de validación', errors });
     }
 
-    const [updated] = await Proceso.update(req.body, {
-      where: { Id_Proceso: req.params.id },
-    });
-
-    if (updated) {
-      const updatedProceso = await Proceso.findByPk(req.params.id);
-      res.json(updatedProceso);
-    } else {
-      res.status(404).json({ message: 'Proceso no encontrado' });
-    }
+    await Proceso.update(req.body, { where: { Id_Proceso: id } });
+    const updatedProceso = await Proceso.findByPk(id);
+    res.json(updatedProceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Eliminar un proceso por ID
 const deleteProceso = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+
   try {
-    const proceso = await Proceso.findByPk(req.params.id);
+    const proceso = await Proceso.findByPk(id);
+    if (!proceso) return res.status(404).json({ message: 'Proceso no encontrado' });
 
-    if (!proceso) {
-      return res.status(404).json({ message: 'Proceso no encontrado' });
-    }
-
-    const deleted = await Proceso.destroy({
-      where: { Id_Proceso: req.params.id },
-    });
-
-    if (deleted) {
-      res.status(204).end();
-    } else {
-      res.status(404).json({ message: 'Proceso no encontrado' });
-    }
+    await Proceso.destroy({ where: { Id_Proceso: id } });
+    res.status(204).end();
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Exportar las funciones
 module.exports = {
   getProcesos,
   getProcesoById,

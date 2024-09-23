@@ -1,32 +1,39 @@
-/* Caja del chatbot */
-.chatbot {
+/* src/components/AsistenteVirtual/AsistenteVirtual.css */
+.asistente-virtual {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  width: 400px;
-  height: 600px;
-  perspective: 1000px;
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease-in-out;
-  z-index: 1000; /* Asegura que el chatbot esté por encima de otros elementos */
-}
-
-/* Botón del asistente en la esquina inferior derecha */
-.chatbot-toggle {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #00bfa5;
-  border: none;
+  width: 300px;
   padding: 15px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.3s, box-shadow 0.3s;
-  font-size: 1.2em;
-  z-index: 1001; /* Botón sobre la interfaz */
+  background-color: white;
+  border: 2px solid #007bff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease-in-out;
 }
 
-.chatbot-toggle:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 20px rgba(0, 255, 100, 0.7); /* Efecto luminoso */
+.asistente-virtual p {
+  font-size: 16px;
+  color: #333;
+}
+
+.asistente-virtual input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.asistente-virtual input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.asistente-virtual p {
+  transition: color 0.3s ease-in-out;
+}
+
+.asistente-virtual p[processing="true"] {
+  color: #ff9800;
 }

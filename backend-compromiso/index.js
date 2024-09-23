@@ -13,16 +13,16 @@ const logger = require('./config/logger.js');
 const responsablesRouter = require('./src/api/responsable/routes/responsableRoutes.js');
 const procesosRouter = require('./src/api/proceso/routes/Routesproceso.js');
 const procedimientosRouter = require('./src/api/procedimiento/routes/procedimientoRoutes.js');
-const areasRouter = require('./src/api/area/routes/areaRoutes.js');
-const unidadesRouter = require('./src/api/unidad/routes/unidadRoutes.js');
-const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
+// const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
 const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
+const asistenteRouter = require('./src/api/asistente/routes/asistenteRoutes.js');
 
 // Importa Swagger
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsdoc = require('swagger-jsdoc');
 
-const port = process.env.PORT || 3001; // Usa el puerto del archivo .env
+const app = express();
+const port = process.env.PORT || 3001;  // Usa el puerto del archivo .env
 
 // Configuración de Swagger
 const swaggerOptions = {
@@ -33,25 +33,18 @@ const swaggerOptions = {
       version: '1.0.0',
       description: 'Documentación de la API de Compromiso con funcionalidades de gestión de usuarios, procesos, procedimientos, áreas, unidades, formatos y responsables.',
     },
-    servers: [
-      {
-        url: `https://localhost:${port}`,
-        description: 'Servidor local',
-      },
-    ],
+    servers: [{ url: `https://localhost:${port}`, description: 'Servidor local' }],
   },
-  apis: ['./src/api/**/*.js'], // Ruta a los archivos con anotaciones Swagger
+  apis: ['./src/api/**/*.js'],
 };
 
 const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
-const app = express();
-
 // Configura Rate Limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutos
-  max: 100, // Limita cada IP a 100 solicitudes por ventana
-  message: 'Demasiadas solicitudes de esta IP, por favor intente de nuevo después de 15 minutos.'
+  windowMs: 15 * 60 * 1000,  // 15 minutos
+  max: 100,
+  message: 'Demasiadas solicitudes de esta IP, por favor intente de nuevo después de 15 minutos.',
 });
 app.use('/api/', apiLimiter);
 
@@ -88,13 +81,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use('/api/responsables', responsablesRouter);
 app.use('/api/procesos', procesosRouter);
 app.use('/api/procedimientos', procedimientosRouter);
-app.use('/api/areas', areasRouter);
-app.use('/api/unidades', unidadesRouter);
-app.use('/api/formatos', formatosRouter);
+// app.use('/api/formatos', formatosRouter);
 app.use('/api/usuarios', usuariosRouter);
+app.use('/api/asistente', asistenteRouter);
 
-// Manejo de errores 404 (ruta no encontrada)
-app.use((req, res, next) => {
+// Manejo de errores 404
+app.use((req, res) => {
   res.status(404).send('Ruta no encontrada');
 });
 
@@ -104,22 +96,27 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
-// Lee los certificados SSL
-const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
-const certificate = fs.readFileSync('localhost.pem', 'utf8');
-const credentials = { key: privateKey, cert: certificate };
+// Lee los certificados SSL solo si estamos en producción
+let server;
+if (process.env.NODE_ENV === 'production') {
+  const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
+  const certificate = fs.readFileSync('localhost.pem', 'utf8');
+  const credentials = { key: privateKey, cert: certificate };
 
-// Crea el servidor HTTPS
-const httpsServer = https.createServer(credentials, app);
+  server = https.createServer(credentials, app);
+} else {
+  server = app;
+}
 
-// Conexión a la base de datos y arranque del servidor HTTPS
+// Conexión a la base de datos y arranque del servidor
 sequelize.authenticate()
   .then(() => {
     console.log('Conexión exitosa a la base de datos');
-    httpsServer.listen(port, () => {
-      console.log(`Servidor HTTPS corriendo en https://localhost:${port}`);
+    server.listen(port, () => {
+      console.log(`Servidor corriendo en ${process.env.NODE_ENV === 'production' ? 'HTTPS' : 'HTTP'}://localhost:${port}`);
     });
   })
   .catch(err => {
-    console.error('Error al conectar con la base de datos:', err);
+    logger.error(`Error al conectar con la base de datos: ${err.message}`);
+    process.exit(1);  // Sale si no puede conectarse a la base de datos
   });

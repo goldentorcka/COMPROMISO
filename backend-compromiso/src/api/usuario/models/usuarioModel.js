@@ -2,35 +2,57 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
-const Responsable = sequelize.define('Responsables', {
-  Id_Responsable: {
+const Usuario = sequelize.define('Usuario', {
+  Id_Usuario: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    field: 'Id_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
+    field: 'Id_Usuario'
   },
-  Nom_Responsable: {
+  Rol_Usuario: {
+    type: DataTypes.ENUM('Administrador'),
+    allowNull: false,
+    field: 'Rol_Usuario'
+  },
+  Nom_Usuario: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    field: 'Nom_Responsable' // Asegúrate de usar el nombre de la columna en la base de datos
+    field: 'Nom_Usuario'
+  },
+  Usuario: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    field: 'Usuario'
+  },
+  Correo_Usuario: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    field: 'Correo_Usuario'
+  },
+  Contraseña_Usuario: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    field: 'Contraseña_Usuario'
   },
   estado: {
-    type: DataTypes.ENUM('Sí', 'No'),
-    allowNull: false
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
+    allowNull: false,
+    defaultValue: 'Activo', // Valor por defecto
+    field: 'estado'
   },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: 'createdAt' // Asegúrate de usar el nombre de la columna en la base de datos
+    field: 'createdAt'
   },
   updatedAt: {
     type: DataTypes.DATE,
     allowNull: false,
-    field: 'updatedAt' // Asegúrate de usar el nombre de la columna en la base de datos
+    field: 'updatedAt'
   }
 }, {
-  tableName: 'responsables', // Asegúrate de que el nombre de la tabla esté en minúsculas
-  timestamps: true // Esto hará que Sequelize maneje los campos createdAt y updatedAt automáticamente
+  tableName: 'usuarios',
+  timestamps: true // Sequelize manejará createdAt y updatedAt automáticamente
 });
 
-module.exports = Responsable;
+module.exports = Usuario;

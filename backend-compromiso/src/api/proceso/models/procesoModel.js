@@ -10,18 +10,15 @@ const Proceso = sequelize.define('proceso', {
     primaryKey: true,
   },
   Nom_Proceso: {
-    type: DataTypes.STRING,
+    type: DataTypes.STRING(300), // Ajustado al tamaño especificado
     allowNull: false,
   },
-  Id_Responsable: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: Responsable,
-      key: 'Id_Responsable',
-    },
+  Tip_Proceso: {
+    type: DataTypes.ENUM('Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'),
+    allowNull: false,
   },
   estado: {
-    type: DataTypes.ENUM('Sí', 'No'),
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
   },
 }, {

@@ -14,7 +14,7 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Eslogan"
+              to="/administrator"
             >
               <FontAwesomeIcon icon={faTachometerAlt} className="icon" />
               CALGDOCS
@@ -23,7 +23,7 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Usuarios"
+              to="/administrator/Usuarios"
             >
               <FontAwesomeIcon icon={faUsers} className="icon" />
               USUARIOS
@@ -32,7 +32,7 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Responsables"
+              to="/administrator/Responsables"
             >
               <FontAwesomeIcon icon={faUserShield} className="icon" />
               RESPONSABLES
@@ -41,25 +41,7 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Areas"
-            >
-              <FontAwesomeIcon icon={faBuilding} className="icon" />
-              AREAS
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink
-              className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Unidades"
-            >
-              <FontAwesomeIcon icon={faLayerGroup} className="icon" />
-              UNIDADES
-            </NavLink>
-          </li>
-          <li className="nav-item">
-            <NavLink
-              className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Procesos"
+              to="/administrator/Procesos"
             >
               <FontAwesomeIcon icon={faProjectDiagram} className="icon" />
               PROCESOS
@@ -68,16 +50,16 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Procedimientos"
+              to="/administrator/Procedimientos"
             >
               <FontAwesomeIcon icon={faFileAlt} className="icon" />
-              PROCEDIMIENTO
+              PROCEDIMIENTOS
             </NavLink>
           </li>
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/admin/Formatos"
+              to="/administrator/Formatos"
             >
               <FontAwesomeIcon icon={faCogs} className="icon" />
               FORMATOS
