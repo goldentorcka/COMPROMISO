@@ -39,8 +39,8 @@ const createProcedimiento = async (req, res) => {
       return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
     }
 
-    // Validar que el estado sea 'Sí' o 'No'
-    if (estado !== 'Sí' && estado !== 'No') {
+    // Validar que el estado sea 'Activo' o 'Inactivo'
+    if (estado !== 'Activo' && estado !== 'Inactivo') {
       return res.status(400).json({ error: 'Estado inválido' });
     }
 
@@ -60,6 +60,18 @@ const createProcedimiento = async (req, res) => {
 
 const updateProcedimiento = async (req, res) => {
   try {
+    const { Nom_Procedimiento, Id_Proceso, estado } = req.body;
+
+    // Validar que al menos un campo esté presente para actualizar
+    if (!Nom_Procedimiento && !Id_Proceso && !estado) {
+      return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
+    }
+
+    // Validar que el estado, si se proporciona, sea 'Activo' o 'Inactivo'
+    if (estado && estado !== 'Activo' && estado !== 'Inactivo') {
+      return res.status(400).json({ error: 'Estado inválido' });
+    }
+
     const [updated] = await Procedimiento.update(req.body, {
       where: { Id_Procedimiento: req.params.id },
     });

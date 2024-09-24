@@ -1,6 +1,6 @@
 // FormQueryProcess.jsx
 import React, { useState } from 'react';
-import './styles.css'; // Asegúrate de importar el archivo CSS
+// import './styles.css'; // Asegúrate de importar el archivo CSS
 
 const FormQueryProcess = ({ processQuery, setProcessQuery }) => {
   const [searchTerm, setSearchTerm] = useState('');

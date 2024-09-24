@@ -3,7 +3,6 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 const Proceso = require('../../proceso/models/procesoModel');
 
-
 const Procedimiento = sequelize.define('procedimiento', {
   Id_Procedimiento: {
     type: DataTypes.INTEGER,
@@ -20,9 +19,10 @@ const Procedimiento = sequelize.define('procedimiento', {
       model: Proceso,
       key: 'Id_Proceso',
     },
+    allowNull: false,
   },
   estado: {
-    type: DataTypes.ENUM('Sí', 'No'),
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
   },
 }, {
@@ -31,6 +31,7 @@ const Procedimiento = sequelize.define('procedimiento', {
   updatedAt: 'updatedAt',
 });
 
+// Definición de las relaciones
 Proceso.hasMany(Procedimiento, { foreignKey: 'Id_Proceso' });
 Procedimiento.belongsTo(Proceso, { foreignKey: 'Id_Proceso' });
 

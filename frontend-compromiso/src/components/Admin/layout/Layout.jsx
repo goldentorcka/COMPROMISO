@@ -1,21 +1,24 @@
-// src/components/Admin/layout/Layout.jsx
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import SidebarAdministrator from '../SidebarAdministrator';
-import '../../styles/layaout.css';
+import Home_Admin from '../usersAdmin/home_Admin'; // Asegúrate de que la ruta sea correcta
 import appIcon from '../../../Public/images/logos/logo.png'; // Asegúrate de tener el ícono aquí
 
 const Layout = () => {
+  const location = useLocation();
+
   return (
-    <div className="layout-container">
-      <header className="app-header">
-        <img src={appIcon} alt="App Icon" className="app-icon" />
-        <h1>Mi Aplicación</h1>
-      </header>
+    <div className="layout">
       <SidebarAdministrator />
-      <main className="main-content">
-        <Outlet />
-      </main>
+
+      <div className="main-content">
+        {/* Mostrar el Home_Admin en la ruta base "/administrator" */}
+        {location.pathname === '/administrator' ? (
+          <Home_Admin />
+        ) : (
+          <Outlet /> 
+        )}
+      </div>
     </div>
   );
 };

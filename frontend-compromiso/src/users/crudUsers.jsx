@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/Pagination';
+import Pagination from '../components/Pagination/pagination';
 import FormUsers from './formUsers.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 import ActionButtons from '../components/Buttons/ActionsButton.jsx';
 import CustomDataTable from '../components/datatables/Datatable.jsx';
+
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
@@ -22,6 +23,7 @@ const CrudUsers = () => {
   });
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDataTableVisible, setIsDataTableVisible] = useState(true); // Nuevo estado
 
   useEffect(() => {
     getAllUsers();
@@ -54,6 +56,7 @@ const CrudUsers = () => {
       }
       resetForm();
       setIsModalOpen(false);
+      setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario
       getAllUsers();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
@@ -83,7 +86,7 @@ const CrudUsers = () => {
     if (!/^[A-Za-z0-9_]+$/.test(Usuario)) {
       return 'El usuario solo puede contener letras, números y guiones bajos.';
     }
-    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(Correo_Usuario)) {
+    if (!/^[\w-.]+..([\w-]+\.)+[\w-]{2,4}$/.test(Correo_Usuario)) {
       return 'El correo electrónico no es válido.';
     }
     if (Contraseña_Usuario.length < 6) {
@@ -98,7 +101,6 @@ const CrudUsers = () => {
     { field: 'Usuario', header: 'Usuario', width: '20%' },
     { field: 'Correo_Usuario', header: 'Correo', width: '30%' },
     {
-      // field: 'actions', header: 'Acciones', width: '10%',
       body: (rowData) => (
         <ActionButtons 
           onEdit={() => getUser(rowData.id)} 
@@ -132,13 +134,17 @@ const CrudUsers = () => {
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
+              setIsDataTableVisible(false); // Ocultar el DataTable al abrir el formulario
             }}
           >
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-
-          <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          
+          <Modal isOpen={isModalOpen} onClose={() => {
+            setIsModalOpen(false);
+            setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario
+          }}>
             <FormUsers
               user={user}
               setUser={setUser}
@@ -148,7 +154,7 @@ const CrudUsers = () => {
             />
           </Modal>
 
-          <CustomDataTable data={userList} columns={columns} />
+          {isDataTableVisible && <CustomDataTable data={userList} columns={columns} />}
         </div>
       </div>
     </div>

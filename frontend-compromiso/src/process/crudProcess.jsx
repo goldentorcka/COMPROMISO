@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/Pagination';
-import FormProcess from './FormProcess.jsx';
-import FormQueryProcess from './FormQueryProcess.jsx';
+import Pagination from '../components/Pagination/pagination';
+import FormProcess from './formProcess.jsx';
+// import FormQueryProcess from './FormQueryProcess.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -18,9 +18,10 @@ const styles = {
   },
   crudContainer: {
     display: 'flex',
-    flex: 1,
+    flex: 1,  // Esto asegura que el CRUD ocupe todo el espacio restante
     padding: '20px',
-    marginLeft: '240px',
+    marginLeft: '240px',  // El mismo ancho del sidebar para que no lo superponga
+    boxSizing: 'border-box',  // Para que los paddings no afecten el tamaño del contenedor
   },
   sidebar: {
     width: '240px',
@@ -31,6 +32,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'flex-start',  // Añadir este para evitar centrar verticalmente
   },
   pageTitle: {
     textAlign: 'center',
@@ -98,13 +100,14 @@ const styles = {
   },
 };
 
+
 const CrudProcess = () => {
   const [processList, setProcessList] = useState([]);
   const [process, setProcess] = useState({
     Nom_Proceso: '',
     Id_Responsable: '',
     estado: 'No',
-  });
+  });  
   const [processQuery, setProcessQuery] = useState([]);
   const [responsables, setResponsables] = useState([]);
   const [buttonForm, setButtonForm] = useState('Enviar');
@@ -231,10 +234,10 @@ const CrudProcess = () => {
             </Modal>
 
             <div style={styles.tableWrapper}>
-              <FormQueryProcess
+              {/* <FormQueryProcess
                 processQuery={processQuery}
                 setProcessQuery={setProcessQuery}
-              />
+              /> */}
               <table style={styles.processTable}>
                 <thead>
                   <tr>

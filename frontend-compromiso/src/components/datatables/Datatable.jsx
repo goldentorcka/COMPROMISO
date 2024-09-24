@@ -3,19 +3,20 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import { Dropdown } from 'primereact/dropdown';
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'; 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
 import '../styles/Datatable.css';
 import { saveAs } from 'file-saver';
-import Pagination from '../../components/Pagination/pagination';
+import Pagination from '../Pagination/pagination.jsx';
 import ProductTable from '../../components/Buttons/EditDeleter.jsx';
 
 const CustomDataTable = ({ data, columns, rowsPerPageOptions = [5, 10, 15, { label: 'Todos', value: 'all' }], initialRows = 5 }) => {
     const [rows, setRows] = useState(initialRows);
     const [paginaActual, setPaginaActual] = useState(1);
     const [showDownloadOptions, setShowDownloadOptions] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false); // Nuevo estado para controlar el modal
 
     const totalRegistros = data.length;
 
@@ -58,48 +59,16 @@ const CustomDataTable = ({ data, columns, rowsPerPageOptions = [5, 10, 15, { lab
 
     const handleEdit = (editedProduct) => {
         console.log('Editar producto:', editedProduct);
-        Swal.fire({
-            title: 'Edición de Registro',
-            text: 'Implementa aquí la lógica para editar el registro',
-            icon: 'info',
-            confirmButtonText: 'OK'
-        });
+        setIsModalOpen(true); // Abre el modal y oculta la tabla
     };
 
     const handleDelete = (productId) => {
         console.log('Eliminar producto con ID:', productId);
-        Swal.fire({
-            title: 'Eliminar Registro',
-            text: 'Implementa aquí la lógica para eliminar el registro',
-            icon: 'info',
-            confirmButtonText: 'OK'
-        });
+        setIsModalOpen(true); // Abre el modal y oculta la tabla
     };
 
     return (
-        <div className="custom-datatable card">
-            <div className="header p-d-flex p-ai-center">
-                <Button
-                    icon="pi pi-refresh"
-                    className="p-button-rounded p-button-secondary p-button-icon-only"
-                    onClick={() => setPaginaActual(1)}
-                />
-                <Dropdown
-                    value={rows}
-                    options={rowsPerPageOptions.map(option => (typeof option === 'object' ? option : { label: option, value: option }))}
-                    onChange={(e) => {
-                        setRows(e.value);
-                        setPaginaActual(1);
-                    }}
-                    placeholder="Filas por página"
-                />
-                <Button
-                    icon="pi pi-download"
-                    className="p-button-rounded p-button-info p-button-icon-only custom-download-button"
-                    onClick={() => setShowDownloadOptions(!showDownloadOptions)}
-                />
-            </div>
-
+        <div className={`custom-datatable card ${isModalOpen ? 'hidden' : ''}`}>
             <DataTable value={currentRecords} className="p-datatable-responsive-scroll custom-table">
                 {columns.map((col, index) => (
                     <Column key={index} field={col.field} header={col.header} style={{ width: col.width }} />
@@ -116,12 +85,7 @@ const CustomDataTable = ({ data, columns, rowsPerPageOptions = [5, 10, 15, { lab
                 />
             </DataTable>
 
-            {showDownloadOptions && (
-                <div className="download-options">
-                    <Button label="Descargar JSON" icon="pi pi-file" className="p-button-success" onClick={() => handleDownload('json')} />
-                    <Button label="Descargar CSV" icon="pi pi-file-excel" className="p-button-success" onClick={() => handleDownload('csv')} />
-                </div>
-            )}
+          
 
             <Pagination
                 totalRegistros={totalRegistros}

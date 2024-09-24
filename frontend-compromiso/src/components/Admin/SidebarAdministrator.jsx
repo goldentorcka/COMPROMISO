@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faUsers, faUserShield, faProjectDiagram, faBuilding, faLayerGroup, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faUsers, faUserShield, faProjectDiagram, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import '../styles/stylesSidebar.css';
 
 const SidebarAdministrator = () => {
@@ -9,7 +9,7 @@ const SidebarAdministrator = () => {
 
   return (
     <div className="sidebar">
-      <div className="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+      <div className="sidebar-content d-md-flex flex-column p-0 pt-lg-3">
         <ul className="nav flex-column">
           <li className="nav-item">
             <NavLink

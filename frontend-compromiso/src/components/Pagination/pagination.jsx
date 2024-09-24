@@ -12,7 +12,7 @@ function Pagination({ totalRegistros, registrosPorPagina, paginaActual, setPagin
   };
 
   const handleDownloadClick = (e) => {
-    e.stopPropagation(); // Evitar que el clic propague al contenedor principal
+    e.stopPropagation(); // Evitar que el clic propague al contenedor principalfrontend-compromiso/src/components/Pagination/pagination.jsx
     setShowIcons(!showIcons);
   };
 

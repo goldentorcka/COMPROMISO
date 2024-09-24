@@ -1,24 +1,17 @@
 /* Sidebar */
 .sidebar {
-  width: 240px; /* Ajusta este valor según el tamaño del sidebar */
+  width: 240px;
   position: fixed;
   top: 0;
   left: 0;
   height: 100%;
-  background-color: #343a40;
+  background-color: #343a40; /* Color de fondo del sidebar */
+  z-index: 1000;
+  overflow-y: hidden; /* Elimina la barra de desplazamiento */
   padding-top: 1rem;
-  z-index: 1000; /* Asegura que esté siempre sobre otros elementos */
-  overflow-y: auto; /* Permite el scroll si el contenido es mayor que la altura del sidebar */
-  transition: width 0.3s ease; /* Transición suave para el tamaño */
 }
 
-/* Sidebar cuando está en modo reducido (opcional) */
-.sidebar.collapsed {
-  width: 80px; /* Ajusta este valor para el estado colapsado */
-}
-
-/* Contenido del Sidebar */
-.offcanvas-body {
+.sidebar-content {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -31,16 +24,16 @@
 
 /* Estilo de los enlaces de navegación */
 .nav-link {
-  color: #ffffff; /* Color del texto */
+  color: #ffffff; /* Letras blancas */
   font-size: 1rem;
-  transition: color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+  transition: color 0.3s ease, transform 0.3s ease;
   display: flex;
   align-items: center;
 }
 
 /* Estilo cuando el enlace está activo */
 .nav-link.active {
-  background-color: #495057; /* Fondo cuando el enlace está activo */
+  background-color: #495057;
 }
 
 /* Estilo de los íconos */
@@ -53,41 +46,20 @@
 /* Animación 3D para los íconos */
 .icon:hover {
   transform: rotateY(360deg) scale(1.2); /* Rotación 3D y escalado */
-  color: #17a2b8; /* Cambia el color del ícono al pasar el ratón */
+  color: #17a2b8;
 }
 
-/* Contenedor del CRUD */
+/* Ajusta el contenido principal al lado del sidebar */
 .main-content {
-  margin-left: 240px; /* Deja espacio para el sidebar */
+  margin-left: 240px;
   padding: 20px;
 }
 
-/* Contenedor del CRUD */
-.crud-wrapper {
-  max-width: 1200px; /* Ancho máximo del CRUD */
-  margin: auto;
-  padding: 20px;
-  background-color: #f8f9fa;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Ajustar la tabla */
-.table-responsive {
-  margin-top: 20px;
-}
-
-/* Centrar el contenido */
-.center-content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-/* Estilo de la sección de usuario */
+/* Sección de usuario */
 .user-section {
   border-top: 1px solid #6c757d;
   padding: 1rem;
+  color: #ffffff; /* Letras blancas para la sección de usuario */
 }
 
 .user-icon {

@@ -1,4 +1,5 @@
 // @ts-nocheck
+const nodemailer = require('nodemailer');
 const Usuario = require('../models/usuarioModel.js');  // Ruta del modelo de usuario
 const logger = require('../../../../config/logger.js');  // Ruta del logger
 

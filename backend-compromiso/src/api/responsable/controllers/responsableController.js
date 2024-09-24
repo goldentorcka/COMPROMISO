@@ -1,78 +1,112 @@
 // @ts-nocheck
 const Responsable = require('../models/responsibleModel.js');
-const {logger} = require('../../../../config/logger.js');  // Ruta del logger
+const { logger } = require('../../../../config/logger.js'); // Ruta del logger
 
+// Validar campos obligatorios
+const validateResponsable = (responsable) => {
+  const { Nom_Responsable, estado } = responsable;
+  let errors = [];
+
+  if (!Nom_Responsable) errors.push("El campo 'Nom_Responsable' es obligatorio.");
+  if (!estado) errors.push("El campo 'estado' es obligatorio.");
+
+  return errors;
+};
+
+// Obtener todos los responsables
 const getResponsables = async (req, res) => {
   try {
     const responsables = await Responsable.findAll();
-    if (responsables.length === 0) {
-      res.status(404).json({ message: 'No se encontraron responsables' });
-    } else {
-      res.json(responsables);
-    }
+    res.status(responsables.length === 0 ? 404 : 200).json(responsables.length === 0 ? { message: 'No se encontraron responsables' } : responsables);
   } catch (error) {
-    logger.error(`Error al obtener responsables: ${error}`);
-    res.status(500).json({ message: 'Error al obtener responsables' });
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Obtener un responsable por ID
 const getResponsableById = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const responsable = await Responsable.findByPk(id);
-    if (!responsable) {
-      res.status(404).json({ message: `No se encontró el responsable con id ${id}` });
-    } else {
-      res.json(responsable);
-    }
-  } catch (error) {
-    logger.error(`Error al obtener responsable con id ${req.params.id}: ${error}`);
-    res.status(500).json({ message: 'Error al obtener responsable' });
-  }
-};
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
 
-const createResponsable = async (req, res) => {
   try {
-    const responsable = await Responsable.create(req.body);
+    const responsable = await Responsable.findByPk(id);
+    if (!responsable) return res.status(404).json({ message: 'Responsable no encontrado' });
     res.json(responsable);
   } catch (error) {
-    logger.error(`Error al crear responsable: ${error}`);
-    res.status(500).json({ message: 'Error al crear responsable' });
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Crear un nuevo responsable
+const createResponsable = async (req, res) => {
+  try {
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'No se proporcionaron datos' });
+    }
+    
+    const errors = validateResponsable(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: 'Errores de validación', errors });
+    }
+
+    const responsable = await Responsable.create(req.body);
+    res.status(201).json(responsable);
+  } catch (error) {
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
+// Actualizar un responsable existente
 const updateResponsable = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+
   try {
-    const id = req.params.id;
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({ message: 'No se proporcionaron datos para actualizar' });
+    }
+
+    const errors = validateResponsable(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ message: 'Errores de validación', errors });
+    }
+
     const responsable = await Responsable.findByPk(id);
     if (!responsable) {
-      res.status(404).json({ message: `No se encontró el responsable con id ${id}` });
-    } else {
-      await responsable.update(req.body);
-      res.json(responsable);
+      return res.status(404).json({ message: 'Responsable no encontrado' });
     }
+
+    await responsable.update(req.body);
+    res.json(responsable);
   } catch (error) {
-    logger.error(`Error al actualizar responsable con id ${req.params.id}: ${error}`);
-    res.status(500).json({ message: 'Error al actualizar responsable' });
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Eliminar un responsable por ID
 const deleteResponsable = async (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+
   try {
-    const id = req.params.id;
     const responsable = await Responsable.findByPk(id);
     if (!responsable) {
-      res.status(404).json({ message: `No se encontró el responsable con id ${id}` });
-    } else {
-      await responsable.destroy();
-      res.json({ message: `Responsable con id ${id} eliminado` });
+      return res.status(404).json({ message: 'Responsable no encontrado' });
     }
+
+    await responsable.destroy();
+    res.status(204).end();
   } catch (error) {
-    logger.error(`Error al eliminar responsable con id ${req.params.id}: ${error}`);
-    res.status(500).json({ message: 'Error al eliminar responsable' });
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
+// Exportar las funciones
 module.exports = {
   getResponsables,
   getResponsableById,

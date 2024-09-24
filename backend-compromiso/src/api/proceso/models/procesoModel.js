@@ -21,6 +21,16 @@ const Proceso = sequelize.define('proceso', {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
   },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
 }, {
   timestamps: true,
   createdAt: 'createdAt',

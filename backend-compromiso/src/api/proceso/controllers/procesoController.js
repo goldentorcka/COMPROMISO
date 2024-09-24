@@ -9,9 +9,9 @@ const validateProceso = (proceso) => {
 
   if (!Nom_Proceso) errors.push("El campo 'Nom_Proceso' es obligatorio.");
   if (!Id_Responsable) errors.push("El campo 'Id_Responsable' es obligatorio.");
-  if (estado !== 'Activo' && estado !== 'Inactivo') errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
-  if (!Tip_Proceso) errors.push("El campo 'Tip_Proceso' es obligatorio.");
-
+  if (!['Activo', 'Inactivo'].includes(estado)) errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
+  if (!['Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'].includes(Tip_Proceso)) errors.push("El tipo de proceso no es válido.");
+  
   return errors;
 };
 
@@ -59,7 +59,7 @@ const createProceso = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
-s
+
 // Actualizar un proceso existente
 const updateProceso = async (req, res) => {
   const id = parseInt(req.params.id, 10);
@@ -100,7 +100,6 @@ const deleteProceso = async (req, res) => {
   }
 };
 
-// Exportar las funciones
 module.exports = {
   getProcesos,
   getProcesoById,

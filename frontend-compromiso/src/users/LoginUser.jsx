@@ -66,12 +66,17 @@ const LoginFormAdmin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Mostrar mensaje de bienvenida al iniciar sesión
     setAlerta({ message: "¡Bienvenido! Has iniciado sesión en el aplicativo." });
+  
+    // Redirigir al administrador después de 3 segundos
     setTimeout(() => {
       setAlerta({});
-      navigate("/Administrator");
-    }, 3000); // Oculta la alerta después de 3 segundos
+      navigate("/administrator"); // Redirige al home admin
+    }, 3000); // Tiempo de espera de 3 segundos antes de redirigir
   };
+  
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
