@@ -18,25 +18,14 @@ const FormUser = ({ handleSubmit, buttonForm }) => {
 
   const validateForm = () => {
     const newErrors = {};
-
-    if (!Nombre) {
-      newErrors.Nombre = 'El nombre es obligatorio.';
-    }
-
-    if (!Usuario) {
-      newErrors.Usuario = 'El usuario es obligatorio.';
-    }
-
+    if (!Nombre) newErrors.Nombre = 'El nombre es obligatorio.';
+    if (!Usuario) newErrors.Usuario = 'El usuario es obligatorio.';
     if (!Correo) {
       newErrors.Correo = 'El correo es obligatorio.';
     } else if (!correoRegex.test(Correo)) {
       newErrors.Correo = 'El correo electrónico no es válido.';
     }
-
-    if (!Password) {
-      newErrors.Password = 'La contraseña es obligatoria.';
-    }
-
+    if (!Password) newErrors.Password = 'La contraseña es obligatoria.';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };

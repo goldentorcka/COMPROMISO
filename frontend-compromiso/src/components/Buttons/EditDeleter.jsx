@@ -56,7 +56,7 @@ const ProductTable = ({ product, columns, onEdit, onDelete }) => {
     };
 
     return (
-        <>
+        <tr> {/* Aquí envolvemos todo en una fila de tabla */}
             {Array.isArray(columns) && columns.map((column) => (
                 <td key={column.field} className="p-editable-column">
                     {isEditing ? (
@@ -134,7 +134,7 @@ const ProductTable = ({ product, columns, onEdit, onDelete }) => {
                     </>
                 )}
             </td>
-        </>
+        </tr>
     );
 };
 

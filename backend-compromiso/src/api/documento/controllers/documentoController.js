@@ -79,7 +79,7 @@ const createDocumento = async (req, res) => {
 
     // Manejo de errores con un mensaje genérico
     if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'Error en el procesamiento de datos' });
+      return res.status(400).json({ error: 'Error en el procesamiento de datos: ' + error.message });
     }
     return res.status(500).json({ error: 'Error interno del servidor' });
   }

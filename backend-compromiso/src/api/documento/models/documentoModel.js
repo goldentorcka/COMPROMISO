@@ -13,6 +13,9 @@ const Documento = sequelize.define('documentos', {
   Cod_Documento: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      is: /^[a-zA-Z0-9-_]+$/i // Permite solo letras, números, guiones y guiones bajos
+    }
   },
   Fec_Elaboracion_Documento: {
     type: DataTypes.DATE,
@@ -36,10 +39,16 @@ const Documento = sequelize.define('documentos', {
   Nom_Documento: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      is: /^[a-zA-Z0-9\s]+$/ // Permite solo letras, números y espacios
+    }
   },
   Nom_Documento_Magnetico: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      is: /^[a-zA-Z0-9\s]+$/ // Permite solo letras, números y espacios
+    }
   },
   Id_Procedimiento: {
     type: DataTypes.INTEGER,

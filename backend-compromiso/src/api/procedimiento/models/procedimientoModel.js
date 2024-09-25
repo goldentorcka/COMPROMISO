@@ -12,6 +12,9 @@ const Procedimiento = sequelize.define('procedimientos', {
   Nom_Procedimiento: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      is: /^[A-Za-zñÑáéíóúÁÉÍÓÚ\s]+$/i, // Solo letras y espacios
+    },
   },
   Id_Proceso: {
     type: DataTypes.INTEGER,

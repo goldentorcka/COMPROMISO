@@ -15,7 +15,7 @@ const Responsable = sequelize.define('responsables', {
     field: 'Nom_Responsable' // Nombre de la columna en la base de datos
   },
   estado: {
-    type: DataTypes.ENUM('Activo', 'Inactivo'), // Cambia a 'Activo' e 'Inactivo'
+    type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
     field: 'estado' // Nombre de la columna en la base de datos
   }, 

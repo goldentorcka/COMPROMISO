@@ -1,7 +1,6 @@
 // @ts-nocheck
 const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
-const Responsable = require('../../responsable/models/responsibleModel.js');
 
 const Proceso = sequelize.define('procesos', {
   Id_Proceso: {
@@ -10,8 +9,18 @@ const Proceso = sequelize.define('procesos', {
     primaryKey: true,
   },
   Nom_Proceso: {
-    type: DataTypes.STRING(300), // Ajustado al tamaño especificado
+    type: DataTypes.STRING(300),
     allowNull: false,
+    validate: {
+      notEmpty: { msg: "El nombre del proceso no puede estar vacío." },
+      isAlpha: { msg: "El nombre del proceso solo puede contener letras." },
+      noSpecialChars(value) {
+        const regex = /^[a-zA-Z\s]*$/;
+        if (!regex.test(value)) {
+          throw new Error("El nombre del proceso no puede contener números, puntos, comas o caracteres especiales.");
+        }
+      },
+    },
   },
   Tip_Proceso: {
     type: DataTypes.ENUM('Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'),
@@ -36,8 +45,5 @@ const Proceso = sequelize.define('procesos', {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
 });
-
-Responsable.hasMany(Proceso, { foreignKey: 'Id_Responsable' });
-Proceso.belongsTo(Responsable, { foreignKey: 'Id_Responsable' });
 
 module.exports = Proceso;

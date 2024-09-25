@@ -12,11 +12,11 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 const CrudProcesos = () => {
   const [procesoList, setProcesoList] = useState([]);
   const [proceso, setProceso] = useState({
-    Nom_Proceso: "",
-    Tip_Proceso: "Proceso de Innovacion",
-    estado: "Activo",
+    Nom_Proceso: '',
+    Tip_Proceso: 'Proceso de Innovacion',
+    estado: 'Activo',
   });
-  const [buttonForm, setButtonForm] = useState("Enviar");
+  const [buttonForm, setButtonForm] = useState('Enviar');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataTableVisible, setIsDataTableVisible] = useState(true);
 
@@ -29,7 +29,7 @@ const CrudProcesos = () => {
       const response = await clienteAxios.get('/api/procesos');
       setProcesoList(response.data);
     } catch (error) {
-      console.error("Error al obtener los procesos:", error);
+      console.error('Error al obtener los procesos:', error);
     }
   };
 
@@ -42,7 +42,7 @@ const CrudProcesos = () => {
     }
 
     try {
-      if (buttonForm === "Enviar") {
+      if (buttonForm === 'Enviar') {
         await clienteAxios.post('/api/procesos', proceso);
         Swal.fire('Agregado!', 'El proceso ha sido agregado.', 'success');
       } else {
@@ -54,17 +54,17 @@ const CrudProcesos = () => {
       setIsDataTableVisible(true);
       getAllProcesos();
     } catch (error) {
-      console.error("Error al enviar el formulario:", error);
+      console.error('Error al enviar el formulario:', error);
     }
   };
 
   const resetForm = () => {
     setProceso({
-      Nom_Proceso: "",
-      Tip_Proceso: "Proceso de Innovacion",
-      estado: "Activo",
+      Nom_Proceso: '',
+      Tip_Proceso: 'Proceso de Innovacion',
+      estado: 'Activo',
     });
-    setButtonForm("Enviar");
+    setButtonForm('Enviar');
   };
 
   const validateProceso = (proceso) => {
@@ -82,18 +82,18 @@ const CrudProcesos = () => {
     { field: 'estado', header: 'Estado', width: '20%' },
     {
       body: (rowData) => (
-        <ActionButtons 
-          onEdit={() => getProceso(rowData.Id_Proceso)} 
-          onDelete={() => deleteProceso(rowData.Id_Proceso)} 
+        <ActionButtons
+          onEdit={() => getProceso(rowData.Id_Proceso)}
+          onDelete={() => deleteProceso(rowData.Id_Proceso)}
         />
-      )
-    }
+      ),
+    },
   ];
 
   const getProceso = (id) => {
-    const selectedProceso = procesoList.find(proc => proc.Id_Proceso === id);
+    const selectedProceso = procesoList.find((proc) => proc.Id_Proceso === id);
     setProceso(selectedProceso);
-    setButtonForm("Actualizar");
+    setButtonForm('Actualizar');
     setIsModalOpen(true);
     setIsDataTableVisible(false);
   };
@@ -101,21 +101,21 @@ const CrudProcesos = () => {
   const deleteProceso = async (id) => {
     const confirmDelete = await Swal.fire({
       title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
+      text: '¡No podrás revertir esto!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminarlo!'
+      confirmButtonText: 'Sí, eliminarlo!',
     });
-    
+
     if (confirmDelete.isConfirmed) {
       try {
         await clienteAxios.delete(`/api/procesos/${id}`);
         Swal.fire('Eliminado!', 'El proceso ha sido eliminado.', 'success');
         getAllProcesos();
       } catch (error) {
-        console.error("Error al eliminar el proceso:", error);
+        console.error('Error al eliminar el proceso:', error);
       }
     }
   };
@@ -123,11 +123,36 @@ const CrudProcesos = () => {
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>
       <SidebarAdministrator />
-      <div style={{ flex: 1, padding: '20px', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-        <h1 style={{ marginBottom: '20px', fontSize: '2rem', fontFamily: 'Georgia, serif', textTransform: 'uppercase' }}>
+      <div
+        style={{
+          flex: 1,
+          padding: '20px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+        }}
+      >
+        <h1
+          style={{
+            marginBottom: '20px',
+            fontSize: '2rem',
+            fontFamily: 'Georgia, serif',
+            textTransform: 'uppercase',
+          }}
+        >
           Gestión de Procesos
         </h1>
-        <div style={{ width: '100%', maxWidth: '1200px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '1200px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '20px',
+          }}
+        >
           <button
             style={{
               display: 'flex',
@@ -150,17 +175,19 @@ const CrudProcesos = () => {
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-          
-          <Modal isOpen={isModalOpen} onClose={() => {
-            setIsModalOpen(false);
-            setIsDataTableVisible(true);
-          }}>
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+              setIsDataTableVisible(true);
+            }}
+          >
             <FormProcess
-              proceso={proceso}
-              setProceso={setProceso}
+              process={proceso}
+              setProcess={setProceso}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              resetForm={resetForm}
             />
           </Modal>
 

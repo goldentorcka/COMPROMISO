@@ -113,7 +113,7 @@ sequelize.authenticate()
   .then(() => {
     console.log('Conexión exitosa a la base de datos');
     server.listen(port, () => {
-      console.log(`Servidor corriendo en ${process.env.NODE_ENV === 'production' ? 'HTTPS' : 'HTTP'}://localhost:${port}`);
+      console.log(`Servidor corriendo en ${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://localhost:${port}`);
     });
   })
   .catch(err => {

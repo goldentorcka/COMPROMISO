@@ -2,57 +2,53 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
-const Usuario = sequelize.define('usuarios', {
+const Usuario = sequelize.define('Usuario', {
   Id_Usuario: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    field: 'Id_Usuario'
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
   },
   Rol_Usuario: {
-    type: DataTypes.ENUM('Administrador'),
-    allowNull: false,
-    field: 'Rol_Usuario'
+      type: DataTypes.ENUM('SuperAdministrador', 'Administrador'),
+      allowNull: false,
   },
   Nom_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'Nom_Usuario'
+      type: DataTypes.STRING(255),
+      allowNull: false,
   },
   Usuario: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-    field: 'Usuario'
+      type: DataTypes.STRING(100),
+      allowNull: false,
+      unique: true,
   },
   Correo_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'Correo_Usuario'
+      type: DataTypes.STRING(255),
+      allowNull: false,
+      unique: true,
   },
   Contraseña_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-    field: 'Contraseña_Usuario'
+      type: DataTypes.STRING(255),
+      allowNull: false,
+  },
+  permisos: {
+      type: DataTypes.JSON,
+      allowNull: true,
   },
   estado: {
-    type: DataTypes.ENUM('Activo', 'Inactivo'),
-    allowNull: false,
-    defaultValue: 'Activo', // Valor por defecto
-    field: 'estado'
+      type: DataTypes.ENUM('Activo', 'Inactivo'),
+      allowNull: false,
+      defaultValue: 'Activo',
   },
   createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'createdAt'
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
   },
   updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    field: 'updatedAt'
-  }
-}, {
-  tableName: 'usuarios',
-  timestamps: true // Sequelize manejará createdAt y updatedAt automáticamente
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+  },
 });
 
 module.exports = Usuario;

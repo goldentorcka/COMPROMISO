@@ -39,11 +39,6 @@ const createProcedimiento = async (req, res) => {
       return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
     }
 
-    // Validar que el estado sea 'Activo' o 'Inactivo'
-    if (estado !== 'Activo' && estado !== 'Inactivo') {
-      return res.status(400).json({ error: 'Estado inválido' });
-    }
-
     // Crear el procedimiento si todas las validaciones son correctas
     const procedimiento = await Procedimiento.create({ Nom_Procedimiento, Id_Proceso, estado });
     res.status(201).json(procedimiento);

@@ -1,17 +1,28 @@
 // @ts-nocheck
 const Proceso = require('../models/procesoModel.js');
-const logger = require('../../../../config/logger.js');
+const { logger } = require('../../../../config/logger.js');
 
 // Validar campos obligatorios
 const validateProceso = (proceso) => {
-  const { Nom_Proceso, Id_Responsable, estado, Tip_Proceso } = proceso;
+  const { Nom_Proceso, estado, Tip_Proceso } = proceso;
   let errors = [];
 
-  if (!Nom_Proceso) errors.push("El campo 'Nom_Proceso' es obligatorio.");
-  if (!Id_Responsable) errors.push("El campo 'Id_Responsable' es obligatorio.");
-  if (!['Activo', 'Inactivo'].includes(estado)) errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
-  if (!['Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'].includes(Tip_Proceso)) errors.push("El tipo de proceso no es válido.");
-  
+  // Validar que Nom_Proceso solo contenga letras y no caracteres especiales
+  const regex = /^[a-zA-Z\s]*$/;
+  if (!Nom_Proceso) {
+    errors.push("El campo 'Nom_Proceso' es obligatorio.");
+  } else if (!regex.test(Nom_Proceso)) {
+    errors.push("El 'Nom_Proceso' solo puede contener letras, sin números o caracteres especiales.");
+  }
+
+  if (!['Activo', 'Inactivo'].includes(estado)) {
+    errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
+  }
+
+  if (!['Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'].includes(Tip_Proceso)) {
+    errors.push("El tipo de proceso no es válido.");
+  }
+
   return errors;
 };
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
 import Pagination from '../components/Pagination/pagination';
-import FormUsers from './formUsers.jsx';
+import FormUser from './formUsers.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -38,20 +38,19 @@ const CrudUsers = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationError = validateUser(user);
+  const handleSubmit = async (userData) => {
+    const validationError = validateUser(userData);
     if (validationError) {
       Swal.fire('Error', validationError, 'error');
       return;
     }
-
+  
     try {
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/api/usuarios', user);
+        await clienteAxios.post('/api/usuarios', userData);
         Swal.fire('Agregado!', 'El usuario ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/api/usuarios/${user.Id_Usuario}`, user);
+        await clienteAxios.put(`/api/usuarios/${user.Id_Usuario}`, userData);
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
       resetForm();
@@ -62,6 +61,7 @@ const CrudUsers = () => {
       console.error("Error al enviar el formulario:", error);
     }
   };
+  
 
   const resetForm = () => {
     setUser({
@@ -145,7 +145,7 @@ const CrudUsers = () => {
             setIsModalOpen(false);
             setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario
           }}>
-            <FormUsers
+            <FormUser
               user={user}
               setUser={setUser}
               handleSubmit={handleSubmit}
