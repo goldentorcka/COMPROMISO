@@ -13,7 +13,7 @@ const logger = require('./config/logger.js');
 const responsablesRouter = require('./src/api/responsable/routes/responsableRoutes.js');
 const procesosRouter = require('./src/api/proceso/routes/Routesproceso.js');
 const procedimientosRouter = require('./src/api/procedimiento/routes/procedimientoRoutes.js');
-// const formatosRouter = require('./src/api/formato/routes/formatoRoutes.js');
+const documentosRouter = require('./src/api/documento/routes/documentoRoutes.js');
 const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 const asistenteRouter = require('./src/api/asistente/routes/asistenteRoutes.js');
 
@@ -31,7 +31,7 @@ const swaggerOptions = {
     info: {
       title: 'API de Compromiso',
       version: '1.0.0',
-      description: 'Documentación de la API de Compromiso con funcionalidades de gestión de usuarios, procesos, procedimientos, áreas, unidades, formatos y responsables.',
+      description: 'Documentación de la API de Compromiso con funcionalidades de gestión de usuarios, procesos, procedimientos, áreas, unidades, documentos y responsables.',
     },
     servers: [{ url: `https://localhost:${port}`, description: 'Servidor local' }],
   },
@@ -81,7 +81,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 app.use('/api/responsables', responsablesRouter);
 app.use('/api/procesos', procesosRouter);
 app.use('/api/procedimientos', procedimientosRouter);
-// app.use('/api/formatos', formatosRouter);
+app.use('/api/documentos', documentosRouter);
 app.use('/api/usuarios', usuariosRouter);
 app.use('/api/asistente', asistenteRouter);
 

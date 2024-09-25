@@ -1,14 +1,14 @@
 // @ts-nocheck
-const Formato = require('../models/formatoModel.js');
+const Documento = require('../models/documentoModel.js');
 const logger = require('../../../../config/logger.js');
 
-const getFormatos = async (req, res) => {
+const getDocumentos = async (req, res) => {
   try {
-    const formatos = await Formato.findAll();
-    if (formatos.length === 0) {
-      res.status(404).json({ message: 'No se encontraron formatos' });
+    const documentos = await Documento.findAll();
+    if (documentos.length === 0) {
+      res.status(404).json({ message: 'No se encontraron documentos' });
     } else {
-      res.json(formatos);
+      res.json(documentos);
     }
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
@@ -16,13 +16,13 @@ const getFormatos = async (req, res) => {
   }
 };
 
-const getFormatoById = async (req, res) => {
+const getDocumentoById = async (req, res) => {
   try {
-    const formato = await Formato.findByPk(req.params.id);
-    if (formato) {
-      res.json(formato);
+    const documento = await Documento.findByPk(req.params.id);
+    if (documento) {
+      res.json(documento);
     } else {
-      res.status(404).json({ message: 'Formato no encontrado' });
+      res.status(404).json({ message: 'Documento no encontrado' });
     }
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
@@ -30,34 +30,50 @@ const getFormatoById = async (req, res) => {
   }
 };
 
-const createFormato = async (req, res) => {
+const createDocumento = async (req, res) => {
   try {
-    const { Cod_Formato, Fec_Actualizacion, Ver_Formato, Est_Formato, Id_Responsable, Nom_Formato, Nom_Magnetico, Id_Procedimiento, Id_Unidad } = req.body;
+    const {
+      Cod_Documento,
+      Fec_Elaboracion_Documento,
+      Ver_Documento,
+      estado,
+      Id_Responsable,
+      Nom_Documento,
+      Nom_Documento_Magnetico,
+      Id_Procedimiento,
+    } = req.body;
 
     // Validar que todos los campos requeridos estén presentes
-    if (!Cod_Formato || !Fec_Actualizacion || !Ver_Formato || !Est_Formato || !Nom_Formato || !Nom_Magnetico || !Id_Procedimiento || !Id_Unidad) {
+    if (
+      !Cod_Documento ||
+      !Fec_Elaboracion_Documento ||
+      !Ver_Documento ||
+      !estado ||
+      !Nom_Documento ||
+      !Nom_Documento_Magnetico ||
+      !Id_Procedimiento
+    ) {
       return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
     }
 
     // Validar que el estado sea 'Activo' o 'Inactivo'
-    if (Est_Formato !== 'Activo' && Est_Formato !== 'Inactivo') {
+    if (estado !== 'Activo' && estado !== 'Inactivo') {
       return res.status(400).json({ error: 'Estado inválido' });
     }
 
-    // Crear el formato si todas las validaciones son correctas
-    const formato = await Formato.create({
-      Cod_Formato,
-      Fec_Actualizacion,
-      Ver_Formato,
-      Est_Formato,
+    // Crear el documento si todas las validaciones son correctas
+    const documento = await Documento.create({
+      Cod_Documento,
+      Fec_Elaboracion_Documento,
+      Ver_Documento,
+      estado,
       Id_Responsable,
-      Nom_Formato,
-      Nom_Magnetico,
+      Nom_Documento,
+      Nom_Documento_Magnetico,
       Id_Procedimiento,
-      Id_Unidad
     });
 
-    res.status(201).json(formato);
+    res.status(201).json(documento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
 
@@ -69,17 +85,46 @@ const createFormato = async (req, res) => {
   }
 };
 
-const updateFormato = async (req, res) => {
+const updateDocumento = async (req, res) => {
   try {
-    const [updated] = await Formato.update(req.body, {
-      where: { Id_Formato: req.params.id },
+    const {
+      Cod_Documento,
+      Fec_Elaboracion_Documento,
+      Ver_Documento,
+      estado,
+      Id_Responsable,
+      Nom_Documento,
+      Nom_Documento_Magnetico,
+      Id_Procedimiento,
+    } = req.body;
+
+    // Validar que todos los campos requeridos estén presentes
+    if (
+      !Cod_Documento ||
+      !Fec_Elaboracion_Documento ||
+      !Ver_Documento ||
+      !estado ||
+      !Nom_Documento ||
+      !Nom_Documento_Magnetico ||
+      !Id_Procedimiento
+    ) {
+      return res.status(400).json({ error: 'Datos requeridos faltantes o inválidos' });
+    }
+
+    // Validar que el estado sea 'Activo' o 'Inactivo'
+    if (estado !== 'Activo' && estado !== 'Inactivo') {
+      return res.status(400).json({ error: 'Estado inválido' });
+    }
+
+    const [updated] = await Documento.update(req.body, {
+      where: { Id_Documento: req.params.id },
     });
 
     if (updated) {
-      const updatedFormato = await Formato.findByPk(req.params.id);
-      res.json(updatedFormato);
+      const updatedDocumento = await Documento.findByPk(req.params.id);
+      res.json(updatedDocumento);
     } else {
-      res.status(404).json({ message: 'Formato no encontrado' });
+      res.status(404).json({ message: 'Documento no encontrado' });
     }
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
@@ -87,16 +132,16 @@ const updateFormato = async (req, res) => {
   }
 };
 
-const deleteFormato = async (req, res) => {
+const deleteDocumento = async (req, res) => {
   try {
-    const deleted = await Formato.destroy({
-      where: { Id_Formato: req.params.id },
+    const deleted = await Documento.destroy({
+      where: { Id_Documento: req.params.id },
     });
 
     if (deleted) {
       res.status(204).end();
     } else {
-      res.status(404).json({ message: 'Formato no encontrado' });
+      res.status(404).json({ message: 'Documento no encontrado' });
     }
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
@@ -105,9 +150,9 @@ const deleteFormato = async (req, res) => {
 };
 
 module.exports = {
-  getFormatos,
-  getFormatoById,
-  createFormato,
-  updateFormato,
-  deleteFormato,
+  getDocumentos,
+  getDocumentoById,
+  createDocumento,
+  updateDocumento,
+  deleteDocumento,
 };

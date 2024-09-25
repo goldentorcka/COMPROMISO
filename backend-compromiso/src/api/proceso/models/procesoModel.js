@@ -3,7 +3,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
 const Responsable = require('../../responsable/models/responsibleModel.js');
 
-const Proceso = sequelize.define('proceso', {
+const Proceso = sequelize.define('procesos', {
   Id_Proceso: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
