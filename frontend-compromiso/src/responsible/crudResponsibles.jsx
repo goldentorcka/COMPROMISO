@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/pagination'; // Si es necesario
 import FormResponsables from './formResponsibles.jsx'; // Asegúrate de tener este componente
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
@@ -33,9 +32,9 @@ const CrudResponsables = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const validationError = validateResponsable(responsable);
+  const handleSubmit = async (e, responsableData) => {
+    e.preventDefault(); // Aquí se llama a preventDefault en el evento
+    const validationError = validateResponsable(responsableData);
     if (validationError) {
       Swal.fire('Error', validationError, 'error');
       return;
@@ -43,15 +42,14 @@ const CrudResponsables = () => {
 
     try {
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/api/responsables', responsable);
+        await clienteAxios.post('/api/responsables', responsableData);
         Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/api/responsables/${responsable.Id_Responsable}`, responsable);
+        await clienteAxios.put(`/api/responsables/${responsableData.Id_Responsable}`, responsableData);
         Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
       resetForm();
       setIsModalOpen(false);
-      setIsDataTableVisible(true);
       getAllResponsables();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
@@ -161,11 +159,17 @@ const CrudResponsables = () => {
               setResponsable={setResponsable}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              resetForm={resetForm}
             />
           </Modal>
 
-          {isDataTableVisible && <CustomDataTable data={responsableList} columns={columns} />}
+          {isDataTableVisible && 
+            <CustomDataTable 
+              data={responsableList} 
+              columns={columns} 
+              onEdit={getResponsable} 
+              onDelete={deleteResponsable} 
+            />
+          }
         </div>
       </div>
     </div>

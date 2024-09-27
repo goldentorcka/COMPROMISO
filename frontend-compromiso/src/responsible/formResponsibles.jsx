@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-const FormResponsables = ({ handleSubmit, buttonForm }) => {
+const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
   const [Nom_Responsable, setNom_Responsable] = useState('');
   const [Estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
+
+  // Efecto para cargar los datos del responsable cuando se recibe uno nuevo
+  useEffect(() => {
+    if (responsable) {
+      setNom_Responsable(responsable.Nom_Responsable || ''); // Asegúrate de que el campo existe
+      setEstado(responsable.estado || 'Activo'); // Establece el estado por defecto
+    }
+  }, [responsable]);
 
   const validateForm = () => {
     const newErrors = {};
@@ -19,9 +27,9 @@ const FormResponsables = ({ handleSubmit, buttonForm }) => {
   };
 
   const onSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Aquí se llama a preventDefault en el evento
     if (validateForm()) {
-      handleSubmit({
+      handleSubmit(e, { // Pasa el evento junto con los datos
         Nom_Responsable,
         estado: Estado
       });

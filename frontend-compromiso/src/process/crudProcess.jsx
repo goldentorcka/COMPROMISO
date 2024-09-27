@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormProcess from './formProcess.jsx'; // Asegúrate de tener este componente
+import FormProcess from './formProcess.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,6 +12,7 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 const CrudProcesos = () => {
   const [procesoList, setProcesoList] = useState([]);
   const [proceso, setProceso] = useState({
+    Id_Proceso: '',  // Agregado para manejar el ID
     Nom_Proceso: '',
     Tip_Proceso: 'Proceso de Innovacion',
     estado: 'Activo',
@@ -60,6 +61,7 @@ const CrudProcesos = () => {
 
   const resetForm = () => {
     setProceso({
+      Id_Proceso: '',  // Reiniciar ID
       Nom_Proceso: '',
       Tip_Proceso: 'Proceso de Innovacion',
       estado: 'Activo',

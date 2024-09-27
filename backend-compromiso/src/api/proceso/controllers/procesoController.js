@@ -54,20 +54,18 @@ const getProcesoById = async (req, res) => {
 
 // Crear un nuevo proceso
 const createProceso = async (req, res) => {
-  try {
-    const errors = validateProceso(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ message: 'Errores de validación', errors });
-    }
+  const { Nom_Proceso, Tip_Proceso, estado } = req.body;
 
-    const proceso = await Proceso.create(req.body);
-    res.status(201).json(proceso);
+  // Validar que Nom_Proceso solo contenga letras
+  if (!/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(Nom_Proceso)) {
+    return res.status(400).json({ message: 'El nombre del proceso solo puede contener letras.' });
+  }
+
+  try {
+    const nuevoProceso = await Proceso.create({ Nom_Proceso, Tip_Proceso, estado });
+    return res.status(201).json(nuevoProceso);
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
-      return res.status(400).json({ error: 'Error en el procesamiento de datos' });
-    }
-    res.status(500).json({ error: 'Error interno del servidor' });
+    return res.status(500).json({ message: error.message });
   }
 };
 
