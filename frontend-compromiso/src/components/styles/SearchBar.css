@@ -1,0 +1,31 @@
+.search-bar {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    padding: 10px 20px 10px 50px; /* Aumenta el padding izquierdo para el icono */
+    width: 300px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #007bff; /* Cambia el color del borde al enfocarse */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px; /* Ajusta la posición del ícono */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #007bff;
+    transition: transform 0.3s ease;
+}
+
+.search-icon:hover {
+    transform: translateY(-50%) scale(1.2) rotate(360deg); /* Animación de 3D */
+}

@@ -99,15 +99,18 @@ const deleteProceso = async (req, res) => {
 
   try {
     const proceso = await Proceso.findByPk(id);
-    if (!proceso) return res.status(404).json({ message: 'Proceso no encontrado' });
+    if (!proceso) {
+      return res.status(404).json({ message: 'Proceso no encontrado' });
+    }
 
-    await Proceso.destroy({ where: { Id_Proceso: id } });
+    await proceso.destroy();
     res.status(204).end();
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
 
 module.exports = {
   getProcesos,

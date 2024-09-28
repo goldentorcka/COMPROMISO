@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormResponsables from './formResponsibles.jsx'; // Asegúrate de tener este componente
+import FormResponsables from './formResponsibles.jsx'; 
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,10 +11,7 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
-  const [responsable, setResponsable] = useState({
-    Nom_Responsable: "",
-    estado: "Activo",
-  });
+  const [responsable, setResponsable] = useState(null); // Cambiado a null para manejar el ID
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataTableVisible, setIsDataTableVisible] = useState(true);
@@ -29,11 +26,12 @@ const CrudResponsables = () => {
       setResponsableList(response.data);
     } catch (error) {
       console.error("Error al obtener los responsables:", error);
+      Swal.fire('Error', 'No se pudieron obtener los responsables', 'error');
     }
   };
 
   const handleSubmit = async (e, responsableData) => {
-    e.preventDefault(); // Aquí se llama a preventDefault en el evento
+    e.preventDefault();
     const validationError = validateResponsable(responsableData);
     if (validationError) {
       Swal.fire('Error', validationError, 'error');
@@ -44,8 +42,8 @@ const CrudResponsables = () => {
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/responsables', responsableData);
         Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
-      } else {
-        await clienteAxios.put(`/api/responsables/${responsableData.Id_Responsable}`, responsableData);
+      } else if (buttonForm === "Actualizar" && responsable) {
+        await clienteAxios.put(`/api/responsables/${responsable.Id_Responsable}`, responsableData);
         Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
       resetForm();
@@ -53,14 +51,12 @@ const CrudResponsables = () => {
       getAllResponsables();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+      Swal.fire('Error', 'No se pudo guardar el responsable', 'error');
     }
   };
 
   const resetForm = () => {
-    setResponsable({
-      Nom_Responsable: "",
-      estado: "Activo",
-    });
+    setResponsable(null); // Resetear responsable a null
     setButtonForm("Enviar");
   };
 
@@ -82,19 +78,17 @@ const CrudResponsables = () => {
     {
       body: (rowData) => (
         <ActionButtons 
-          onEdit={() => getResponsable(rowData.Id_Responsable)} 
+          onEdit={() => getResponsable(rowData)} // Pasar la fila completa
           onDelete={() => deleteResponsable(rowData.Id_Responsable)} 
         />
       )
     }
   ];
 
-  const getResponsable = (id) => {
-    const selectedResponsable = responsableList.find(res => res.Id_Responsable === id);
-    setResponsable(selectedResponsable);
+  const getResponsable = (rowData) => {
+    setResponsable(rowData); // Asignar el responsable completo
     setButtonForm("Actualizar");
     setIsModalOpen(true);
-    setIsDataTableVisible(false);
   };
 
   const deleteResponsable = async (id) => {
@@ -115,6 +109,7 @@ const CrudResponsables = () => {
         getAllResponsables();
       } catch (error) {
         console.error("Error al eliminar el responsable:", error);
+        Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
       }
     }
   };
@@ -143,31 +138,47 @@ const CrudResponsables = () => {
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
-              setIsDataTableVisible(false);
             }}
           >
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
           
-          <Modal isOpen={isModalOpen} onClose={() => {
-            setIsModalOpen(false);
-            setIsDataTableVisible(true);
-          }}>
-            <FormResponsables
-              responsable={responsable}
-              setResponsable={setResponsable}
-              handleSubmit={handleSubmit}
-              buttonForm={buttonForm}
-            />
-          </Modal>
+          {isModalOpen && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 999,
+            }} />
+          )}
+
+          <Modal 
+              isOpen={isModalOpen} 
+              onClose={() => {
+                setIsModalOpen(false);
+                setIsDataTableVisible(true);
+              }}
+              title={buttonForm === "Enviar" ? "Agregar Responsable" : "Actualizar Responsable"}
+            >
+              <FormResponsables
+                responsable={responsable} // Aquí se pasa el responsable seleccionado
+                handleSubmit={handleSubmit}
+                buttonForm={buttonForm}
+              />
+            </Modal>
 
           {isDataTableVisible && 
-            <CustomDataTable 
-              data={responsableList} 
-              columns={columns} 
-              onEdit={getResponsable} 
-              onDelete={deleteResponsable} 
+            <CustomDataTable
+              data={responsableList} // Cambiado a responsableList
+              columns={columns} // Cambiado a columns
+              onEdit={getResponsable} // Editar responsable
+              onDelete={deleteResponsable} // Eliminar responsable
+              searchField="Nom_Responsable" // Búsqueda por nombre
+              exportFields={['Id_Responsable', 'Nom_Responsable', 'estado']} // Especifica los campos a exportar
             />
           }
         </div>
