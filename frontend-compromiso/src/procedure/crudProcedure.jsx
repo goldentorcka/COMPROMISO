@@ -10,12 +10,14 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudProcedimientos = () => {
   const [procedimientoList, setProcedimientoList] = useState([]);
-  const [procedimiento, setProcedimiento] = useState(null); // Cambiado a null para manejar el ID
+  const [procedimiento, setProcedimiento] = useState(null);
+  const [processes, setProcesses] = useState([]); // Estado para guardar los procesos
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     getAllProcedimientos();
+    getAllProcesses(); // Cargar los procesos al montar el componente
   }, []);
 
   const getAllProcedimientos = async () => {
@@ -25,6 +27,16 @@ const CrudProcedimientos = () => {
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
       Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
+    }
+  };
+
+  const getAllProcesses = async () => {
+    try {
+      const response = await clienteAxios.get('/api/procesos'); // Ajusta la URL según tu API
+      setProcesses(response.data); // Guardar los procesos en el estado
+    } catch (error) {
+      console.error("Error al obtener los procesos:", error);
+      Swal.fire('Error', 'No se pudieron obtener los procesos', 'error');
     }
   };
 
@@ -54,7 +66,7 @@ const CrudProcedimientos = () => {
   };
 
   const resetForm = () => {
-    setProcedimiento(null); // Resetear procedimiento a null
+    setProcedimiento(null); 
     setButtonForm("Enviar");
   };
 
@@ -77,7 +89,7 @@ const CrudProcedimientos = () => {
   ];
 
   const getProcedimiento = (rowData) => {
-    setProcedimiento(rowData); // Asignar el procedimiento completo
+    setProcedimiento(rowData); 
     setButtonForm("Actualizar");
     setIsModalOpen(true);
   };
@@ -162,6 +174,7 @@ const CrudProcedimientos = () => {
               procedimiento={procedimiento}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
+              processes={processes} // Pasar los procesos al formulario
             />
           </Modal>
 
