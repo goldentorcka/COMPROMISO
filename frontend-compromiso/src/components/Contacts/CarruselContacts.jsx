@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import NavMenuPublic from '../Nav/NavMenuPublic.jsx';
-import imgJulian from '../../../src/Public/images/ImagesMenbersGroup/IMG_Julian_Montaña.jpeg';
-import imgMarlon from '../../../src/Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.jpeg';
-import imgSofia1 from '../../../src/Public/images/ImagesMenbersGroup/sofia1.jpeg';
-import imgSofia2 from '../../../src/Public/images/ImagesMenbersGroup/sofia2.jpeg';
-import imgSofia3 from '../../../src/Public/images/ImagesMenbersGroup/sofia3.jpeg';
-import imgJulian1 from '../../../src/Public/images/ImagesMenbersGroup/julia1.jpeg';
-import imgJulian2 from '../../../src/Public/images/ImagesMenbersGroup/julian2.jpeg';
-import imgMarlon2 from '../../../src/Public/images/ImagesMenbersGroup/cumbe.jpeg';
-import imgMarlon3 from '../../../src/Public/images/ImagesMenbersGroup/cumbe2.jpeg';
+import imgJulian from '../../../Public/images/ImagesMenbersGroup/IMG_Julian_Montaña.jpeg';
+import imgMarlon from '../../../Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.jpeg';
+import imgSofia1 from '../../../Public/images/ImagesMenbersGroup/sofia1.jpeg';
+import imgSofia2 from '../../../Public/images/ImagesMenbersGroup/sofia2.jpeg';
+import imgSofia3 from '../../../Public/images/ImagesMenbersGroup/sofia3.jpeg';
+import imgJulian1 from '../../../Public/images/ImagesMenbersGroup/julia1.jpeg';
+import imgJulian2 from '../../../Public/images/ImagesMenbersGroup/julian2.jpeg';
+import imgMarlon2 from '../../../Public/images/ImagesMenbersGroup/cumbe.jpeg';
+import imgMarlon3 from '../../../Public/images/ImagesMenbersGroup/cumbe2.jpeg';
 import DetailsModal from '../Modal/DetailsModal.jsx';
 
 const ContactUs = () => {

@@ -1,9 +1,9 @@
 // src/pages/LoginFormAdmin.jsx
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import userIcon from "../Public/images/IconLogin/Correo.svg";
-import lockIcon from "../Public/images/IconLogin/Password.svg";
-import logo from "../Public/images/logos/logo.png";
+import userIcon from "../../Public/images/IconLogin/Correo.svg";
+import lockIcon from "../../Public/images/IconLogin/Password.svg";
+import logo from "../../Public/images/logos/logo.png";
 import CustomAlert from "../components/Alert/AlertaLogin.jsx"; // Asegúrate de que el nombre del archivo coincida
 import NavMenuPublic from "../components/Nav/NavMenuPublic";
 import { FaEye, FaEyeSlash } from "react-icons/fa";

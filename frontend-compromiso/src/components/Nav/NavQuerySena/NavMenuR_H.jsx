@@ -2,7 +2,7 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaFacebook, FaInstagram, FaTiktok, FaBloggerB } from "react-icons/fa";
 import NavMenuPublic from '../NavMenuPublic.jsx';
-import reseñaImage from '../../../Public/images/logos/logoSE.png';
+import reseñaImage from '../../../../Public/images/logos/logoSE.png';
 import '../../styles/stylesNavR_H.css';
 
 const NavMenuReseña = () => {

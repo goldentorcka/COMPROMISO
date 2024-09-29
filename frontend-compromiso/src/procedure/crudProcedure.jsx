@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormProcedure from './formProcedure.jsx'; // Asegúrate de tener este componente
+import FormProcedure from './formProcedure.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import ActionButtons from '../components/Buttons/ActionsButton.jsx';
 import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudProcedimientos = () => {
   const [procedimientoList, setProcedimientoList] = useState([]);
-  const [procedimiento, setProcedimiento] = useState({
-    Nom_Procedimiento: "",
-    Id_Proceso: "", // Asegúrate de llenar esto correctamente en tu formulario
-    estado: "Activo",
-  });
+  const [procedimiento, setProcedimiento] = useState(null); // Cambiado a null para manejar el ID
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDataTableVisible, setIsDataTableVisible] = useState(true);
 
   useEffect(() => {
     getAllProcedimientos();
@@ -30,12 +24,13 @@ const CrudProcedimientos = () => {
       setProcedimientoList(response.data);
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
+      Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, procedimientoData) => {
     e.preventDefault();
-    const validationError = validateProcedimiento(procedimiento);
+    const validationError = validateProcedimiento(procedimientoData);
     if (validationError) {
       Swal.fire('Error', validationError, 'error');
       return;
@@ -43,33 +38,29 @@ const CrudProcedimientos = () => {
 
     try {
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/api/procedimientos', procedimiento);
+        await clienteAxios.post('/api/procedimientos', procedimientoData);
         Swal.fire('Agregado!', 'El procedimiento ha sido agregado.', 'success');
-      } else {
-        await clienteAxios.put(`/api/procedimientos/${procedimiento.Id_Procedimiento}`, procedimiento);
+      } else if (buttonForm === "Actualizar" && procedimiento) {
+        await clienteAxios.put(`/api/procedimientos/${procedimiento.Id_Procedimiento}`, procedimientoData);
         Swal.fire('Actualizado!', 'El procedimiento ha sido actualizado.', 'success');
       }
       resetForm();
       setIsModalOpen(false);
-      setIsDataTableVisible(true);
       getAllProcedimientos();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+      Swal.fire('Error', 'No se pudo guardar el procedimiento', 'error');
     }
   };
 
   const resetForm = () => {
-    setProcedimiento({
-      Nom_Procedimiento: "",
-      Id_Proceso: "", // Asegúrate de llenar esto correctamente en tu formulario
-      estado: "Activo",
-    });
+    setProcedimiento(null); // Resetear procedimiento a null
     setButtonForm("Enviar");
   };
 
   const validateProcedimiento = (procedimiento) => {
     const { Nom_Procedimiento, Id_Proceso } = procedimiento;
-    if (!Nom_Procedimiento) {
+    if (!Nom_Procedimiento || Nom_Procedimiento.trim() === "") {
       return 'El nombre del procedimiento es obligatorio.';
     }
     if (!Id_Proceso) {
@@ -82,26 +73,16 @@ const CrudProcedimientos = () => {
     { field: 'Id_Procedimiento', header: 'ID', width: '10%' },
     { field: 'Nom_Procedimiento', header: 'Nombre', width: '50%' },
     { field: 'Id_Proceso', header: 'ID Proceso', width: '20%' },
-    { field: 'estado', header: 'Estado', width: '20%' },
-    {
-      body: (rowData) => (
-        <ActionButtons 
-          onEdit={() => getProcedimiento(rowData.Id_Procedimiento)} 
-          onDelete={() => deleteProcedimiento(rowData.Id_Procedimiento)} 
-        />
-      )
-    }
+    { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
-  const getProcedimiento = (id) => {
-    const selectedProcedimiento = procedimientoList.find(proc => proc.Id_Procedimiento === id);
-    setProcedimiento(selectedProcedimiento);
+  const getProcedimiento = (rowData) => {
+    setProcedimiento(rowData); // Asignar el procedimiento completo
     setButtonForm("Actualizar");
     setIsModalOpen(true);
-    setIsDataTableVisible(false);
   };
 
-  const deleteProcedimiento = async (id) => {
+  const deleteProcedimiento = async (rowData) => {
     const confirmDelete = await Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto!",
@@ -111,14 +92,19 @@ const CrudProcedimientos = () => {
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminarlo!'
     });
-    
+
     if (confirmDelete.isConfirmed) {
       try {
-        await clienteAxios.delete(`/api/procedimientos/${id}`);
-        Swal.fire('Eliminado!', 'El procedimiento ha sido eliminado.', 'success');
-        getAllProcedimientos();
+        const response = await clienteAxios.delete(`/api/procedimientos/${rowData.Id_Procedimiento}`);
+        if (response.status === 204) {
+          Swal.fire('Eliminado!', 'El procedimiento ha sido eliminado.', 'success');
+          getAllProcedimientos();
+        } else {
+          Swal.fire('Error', 'No se pudo eliminar el procedimiento', 'error');
+        }
       } catch (error) {
         console.error("Error al eliminar el procedimiento:", error);
+        Swal.fire('Error', 'No se pudo eliminar el procedimiento', 'error');
       }
     }
   };
@@ -147,27 +133,46 @@ const CrudProcedimientos = () => {
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
-              setIsDataTableVisible(false);
             }}
           >
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-          
-          <Modal isOpen={isModalOpen} onClose={() => {
-            setIsModalOpen(false);
-            setIsDataTableVisible(true);
-          }}>
+
+          {isModalOpen && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 999,
+            }} />
+          )}
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => {
+              setIsModalOpen(false);
+            }}
+            title={buttonForm === "Enviar" ? "Agregar Procedimiento" : "Actualizar Procedimiento"}
+          >
             <FormProcedure
               procedimiento={procedimiento}
-              setProcedimiento={setProcedimiento}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              resetForm={resetForm}
             />
           </Modal>
 
-          {isDataTableVisible && <CustomDataTable data={procedimientoList} columns={columns} />}
+          <CustomDataTable
+            data={procedimientoList}
+            columns={columns}
+            onEdit={getProcedimiento}
+            onDelete={deleteProcedimiento}
+            searchField="Nom_Procedimiento"
+            exportFields={['Id_Procedimiento', 'Nom_Procedimiento', 'Id_Proceso', 'estado']}
+          />
         </div>
       </div>
     </div>

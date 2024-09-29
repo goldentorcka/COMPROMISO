@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import NavBarAdministrator from "../Admin/NavBarAdmin.jsx";
 
 const Home_init = () => {
-    const imageBasePath = '/src/Public/images/imagenHome-Init/';
+    const imageBasePath = '../../../Public/images/imagenHome-Init/';
     const images = [
         `${imageBasePath}imagen1.jpeg`,
         `${imageBasePath}imagen2.jpeg`,

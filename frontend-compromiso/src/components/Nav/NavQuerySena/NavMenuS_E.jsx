@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NavMenuPublic from '../NavMenuPublic.jsx';
 
 const NavMenuSE = () => {
-    const imageBasePath = '/src/Public/images/imagenM-V/';
+    const imageBasePath = '../../../../Public/images/imagenM-V/';
     const images = [
         `${imageBasePath}ImagenM-VSE.jpg`,
         `${imageBasePath}ImagenM-VSE2.jpg`,

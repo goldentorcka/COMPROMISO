@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
   const [nomProceso, setNomProceso] = useState('');
-  const [tipProceso, setTipProceso] = useState(''); 
+  const [tipProceso, setTipProceso] = useState('');
   const [estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
   const [id, setId] = useState(null);
@@ -42,7 +42,7 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // Validar que solo contenga letras para Nom_Proceso
     if (name === 'nomProceso' && !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value)) {
       return; // No permite caracteres no permitidos
@@ -58,18 +58,15 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
     }
   };
 
-  const onSubmit = async (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      const processData = {
+      handleSubmit(e, {
         id,
         Nom_Proceso: nomProceso,
         Tip_Proceso: tipProceso,
         estado,
-      };
-
-      // Llamar a la función handleSubmit
-      handleSubmit(e, processData);
+      });
       resetForm();
     }
   };
@@ -83,55 +80,57 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      {/* Nombre del Proceso */}
-      <div className="form-group">
-        <label htmlFor="nomProceso">Nombre del Proceso:</label>
-        <input
-          type="text"
-          name="nomProceso"
-          value={nomProceso}
-          onChange={handleChange}
-          required
-          aria-describedby="nomProcesoError"
-        />
-        {errors.nomProceso && <span id="nomProcesoError" className="error">{errors.nomProceso}</span>}
-      </div>
+    <div className="form-container">
+      <form onSubmit={onSubmit}>
+        {/* Nombre del Proceso */}
+        <div className="form-group">
+          <label htmlFor="nomProceso">Nombre del Proceso:</label>
+          <input
+            type="text"
+            name="nomProceso"
+            value={nomProceso}
+            onChange={handleChange}
+            required
+            aria-describedby="nomProcesoError"
+          />
+          {errors.nomProceso && <span id="nomProcesoError" className="error">{errors.nomProceso}</span>}
+        </div>
 
-      {/* Tipo de Proceso */}
-      <div className="form-group">
-        <label htmlFor="tipProceso">Tipo de Proceso:</label>
-        <select
-          name="tipProceso"
-          value={tipProceso}
-          onChange={handleChange}
-          required
-        >
-          {tiposProceso.map((tipo) => (
-            <option key={tipo.value} value={tipo.value}>
-              {tipo.label}
-            </option>
-          ))}
-        </select>
-        {errors.tipProceso && <span className="error">{errors.tipProceso}</span>}
-      </div>
+        {/* Tipo de Proceso */}
+        <div className="form-group">
+          <label htmlFor="tipProceso">Tipo de Proceso:</label>
+          <select
+            name="tipProceso"
+            value={tipProceso}
+            onChange={handleChange}
+            required
+          >
+            {tiposProceso.map((tipo) => (
+              <option key={tipo.value} value={tipo.value}>
+                {tipo.label}
+              </option>
+            ))}
+          </select>
+          {errors.tipProceso && <span className="error">{errors.tipProceso}</span>}
+        </div>
 
-      {/* Estado */}
-      <div className="form-group">
-        <label htmlFor="estado">Estado:</label>
-        <select name="estado" value={estado} onChange={handleChange}>
-          <option value="Activo">Activo</option>
-          <option value="Inactivo">Inactivo</option>
-        </select>
-      </div>
+        {/* Estado */}
+        <div className="form-group">
+          <label htmlFor="estado">Estado:</label>
+          <select name="estado" value={estado} onChange={handleChange}>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </div>
 
-      {/* ID del Proceso (oculto) */}
-      {id && <input type="hidden" value={id} />}
+        {/* ID del Proceso (oculto) */}
+        {id && <input type="hidden" value={id} />}
 
-      <button type="submit" className="btn-submit">
-        {buttonForm || 'Crear Proceso'}
-      </button>
-    </form>
+        <button type="submit" className="btn-submit">
+          {buttonForm}
+        </button>
+      </form>
+    </div>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import logo from '../../Public/images/logos/logo.png';
+import logo from '../../../Public/images/logos/logo.png';
 import { FaUser, FaBook, FaHistory, FaEye, FaCog } from 'react-icons/fa';
 
 const NavMenuPublic = () => {

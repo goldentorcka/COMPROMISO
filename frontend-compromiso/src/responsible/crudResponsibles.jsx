@@ -11,7 +11,7 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
-  const [responsable, setResponsable] = useState(null); // Cambiado a null para manejar el ID
+  const [responsable, setResponsable] = useState(null); // Inicializado como null para manejar el ID
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataTableVisible, setIsDataTableVisible] = useState(true);
@@ -74,15 +74,7 @@ const CrudResponsables = () => {
   const columns = [
     { field: 'Id_Responsable', header: 'ID', width: '10%' },
     { field: 'Nom_Responsable', header: 'Nombre', width: '70%' },
-    { field: 'estado', header: 'Estado', width: '20%' },
-    {
-      body: (rowData) => (
-        <ActionButtons 
-          onEdit={() => getResponsable(rowData)} // Pasar la fila completa
-          onDelete={() => deleteResponsable(rowData.Id_Responsable)} 
-        />
-      )
-    }
+    { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
   const getResponsable = (rowData) => {
@@ -91,28 +83,33 @@ const CrudResponsables = () => {
     setIsModalOpen(true);
   };
 
-  const deleteResponsable = async (id) => {
+  const deleteResponsable = async (rowData) => { // Cambiado el argumento a rowData
     const confirmDelete = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: "¡No podrás revertir esto!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminarlo!'
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminarlo!'
     });
     
     if (confirmDelete.isConfirmed) {
-      try {
-        await clienteAxios.delete(`/api/responsables/${id}`);
-        Swal.fire('Eliminado!', 'El responsable ha sido eliminado.', 'success');
-        getAllResponsables();
-      } catch (error) {
-        console.error("Error al eliminar el responsable:", error);
-        Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
-      }
+        try {
+            const response = await clienteAxios.delete(`/api/responsables/${rowData.Id_Responsable}`); // Asegúrate de usar el id correcto aquí
+            if (response.status === 204) {
+                Swal.fire('Eliminado!', 'El responsable ha sido eliminado.', 'success');
+                getAllResponsables(); // Llama para actualizar la lista de responsables
+            } else {
+                Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
+            }
+        } catch (error) {
+            console.error("Error al eliminar el responsable:", error);
+            Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
+        }
     }
-  };
+};
+
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>

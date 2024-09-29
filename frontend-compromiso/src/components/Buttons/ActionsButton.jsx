@@ -1,73 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RiEdit2Line, RiDeleteBinLine } from 'react-icons/ri';
 
-const styles = {
-  actionButtons: {
-    display: 'flex',
-    justifyContent: 'center',
-    gap: '10px',
-  },
-  button: {
-    padding: '10px',
-    fontSize: '1.5rem',
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: '50%',
-    transition: 'transform 0.3s ease, box-shadow 0.3s ease', // Animación de transformación y sombra
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)', // Sombra para darle efecto 3D
-  },
-  editButton: {
-    backgroundColor: '#ffa500', // Color para el botón de editar
-  },
-  deleteButton: {
-    backgroundColor: '#f44336', // Color para el botón de eliminar
-  },
-  buttonHover: {
-    transform: 'translateY(-5px) scale(1.1)', // Movimiento y escalado al hacer hover
-    boxShadow: '0px 8px 12px rgba(0, 0, 0, 0.2)', // Sombra más pronunciada al hacer hover
-  },
-  buttonClick: {
-    transform: 'scale(0.9)', // Efecto de "rebote" al hacer clic
-  },
-};
-
 const ActionButtons = ({ onEdit, onDelete }) => {
-  const handleMouseEnter = (e) => {
-    e.target.style.transform = styles.buttonHover.transform;
-    e.target.style.boxShadow = styles.buttonHover.boxShadow;
+  const [hoveredButton, setHoveredButton] = useState(null);
+  const [clickedButton, setClickedButton] = useState(null);
+
+  const handleMouseEnter = (button) => {
+    setHoveredButton(button);
   };
 
-  const handleMouseLeave = (e) => {
-    e.target.style.transform = '';
-    e.target.style.boxShadow = '';
+  const handleMouseLeave = () => {
+    setHoveredButton(null);
   };
 
-  const handleMouseDown = (e) => {
-    e.target.style.transform = styles.buttonClick.transform;
+  const handleMouseDown = (button) => {
+    setClickedButton(button);
   };
 
-  const handleMouseUp = (e) => {
-    e.target.style.transform = styles.buttonHover.transform;
+  const handleMouseUp = () => {
+    setClickedButton(null);
   };
+
+  const isEditingHovered = hoveredButton === 'edit';
+  const isDeletingHovered = hoveredButton === 'delete';
+  const isEditingClicked = clickedButton === 'edit';
+  const isDeletingClicked = clickedButton === 'delete';
 
   return (
-    <div style={styles.actionButtons}>
+    <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
       <button
-        style={{ ...styles.button, ...styles.editButton }}
+        style={{
+          padding: '10px',
+          fontSize: '1.5rem',
+          cursor: 'pointer',
+          border: 'none',
+          borderRadius: '50%',
+          backgroundColor: '#ffa500',
+          transform: isEditingHovered ? 'translateY(-5px) scale(1.1)' : isEditingClicked ? 'scale(0.9)' : 'none',
+          boxShadow: isEditingHovered ? '0px 8px 12px rgba(0, 0, 0, 0.2)' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        }}
         onClick={onEdit}
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={() => handleMouseEnter('edit')}
         onMouseLeave={handleMouseLeave}
-        onMouseDown={handleMouseDown}
+        onMouseDown={() => handleMouseDown('edit')}
         onMouseUp={handleMouseUp}
       >
         <RiEdit2Line />
       </button>
       <button
-        style={{ ...styles.button, ...styles.deleteButton }}
+        style={{
+          padding: '10px',
+          fontSize: '1.5rem',
+          cursor: 'pointer',
+          border: 'none',
+          borderRadius: '50%',
+          backgroundColor: '#f44336',
+          transform: isDeletingHovered ? 'translateY(-5px) scale(1.1)' : isDeletingClicked ? 'scale(0.9)' : 'none',
+          boxShadow: isDeletingHovered ? '0px 8px 12px rgba(0, 0, 0, 0.2)' : '0px 4px 6px rgba(0, 0, 0, 0.1)',
+          transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        }}
         onClick={onDelete}
-        onMouseEnter={handleMouseEnter}
+        onMouseEnter={() => handleMouseEnter('delete')}
         onMouseLeave={handleMouseLeave}
-        onMouseDown={handleMouseDown}
+        onMouseDown={() => handleMouseDown('delete')}
         onMouseUp={handleMouseUp}
       >
         <RiDeleteBinLine />

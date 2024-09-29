@@ -9,14 +9,23 @@ import Pagination from '../Pagination/pagination.jsx';
 import ActionButtons from '../Buttons/ActionsButton.jsx'; // Importa tus botones de acción
 import SearchBar from '../Search/SearchBar.jsx'; // Asegúrate de importar el componente SearchBar
 
-const CustomDataTable = ({ data, columns, onEdit, onDelete, rowsPerPageOptions = [5, 10, 15, { label: 'Todos', value: 'all' }], initialRows = 5, searchField, exportFields }) => {
+const CustomDataTable = ({
+    data,
+    columns,
+    onEdit,
+    onDelete,
+    rowsPerPageOptions = [5, 10, 15, { label: 'Todos', value: 'all' }],
+    initialRows = 5,
+    searchField,
+    exportFields
+}) => {
     const [rows, setRows] = useState(initialRows);
     const [paginaActual, setPaginaActual] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const totalRegistros = data.length;
 
     // Filtrar datos basados en el término de búsqueda
-    const filteredData = data.filter(item => 
+    const filteredData = data.filter(item =>
         item[searchField]?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -36,8 +45,8 @@ const CustomDataTable = ({ data, columns, onEdit, onDelete, rowsPerPageOptions =
                     header="Acciones"
                     body={(rowData) => (
                         <ActionButtons
-                            onEdit={() => onEdit(rowData)}
-                            onDelete={() => onDelete(rowData.Id_Responsable)}
+                            onEdit={() => onEdit(rowData)}  // Pasar el objeto completo de la fila
+                            onDelete={() => onDelete(rowData)}  // Pasar el objeto completo de la fila
                         />
                     )}
                     headerStyle={{ width: '20%', textAlign: 'center' }}

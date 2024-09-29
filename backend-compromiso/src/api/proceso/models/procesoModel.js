@@ -1,6 +1,6 @@
 // @ts-nocheck
 const { DataTypes } = require('sequelize');
-const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
+const sequelize = require('../../../../config/database.js');
 
 const Proceso = sequelize.define('procesos', {
   Id_Proceso: {

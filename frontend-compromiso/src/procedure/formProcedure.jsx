@@ -1,115 +1,117 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const FormProcedures = ({ procedure, setProcedure, handleSubmit, buttonForm, processes }) => {
+const FormProcedure = ({ procedimiento, handleSubmit, buttonForm, processes = [] }) => {
+  const [nomProcedimiento, setNomProcedimiento] = useState('');
+  const [idProceso, setIdProceso] = useState('');
+  const [estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
+  const [id, setId] = useState(null); // Para manejar el ID del procedimiento si es necesario
+
+  useEffect(() => {
+    if (procedimiento) {
+      setNomProcedimiento(procedimiento.Nom_Procedimiento || '');
+      setIdProceso(procedimiento.Id_Proceso || '');
+      setEstado(procedimiento.estado || 'Activo');
+      setId(procedimiento.Id_Procedimiento || null);
+    } else {
+      resetForm(); // Resetear si no hay procedimiento
+    }
+  }, [procedimiento]);
 
   const validateForm = () => {
     const newErrors = {};
-
-    // Validación del nombre del procedimiento
-    if (!procedure.Nom_Procedimiento) {
-      newErrors.Nom_Procedimiento = 'El nombre del procedimiento es obligatorio.';
+    if (!nomProcedimiento || nomProcedimiento.length < 3) {
+      newErrors.nomProcedimiento = 'El nombre del procedimiento es obligatorio y debe tener al menos 3 caracteres.';
     }
-
-    // Validación del proceso seleccionado
-    if (!procedure.Id_Proceso) {
-      newErrors.Id_Proceso = 'Debes seleccionar un proceso.';
+    if (!idProceso) {
+      newErrors.idProceso = 'Debes seleccionar un proceso.';
     }
-
-    // Validación del estado
-    if (!procedure.estado) {
-      newErrors.estado = 'El estado es obligatorio.';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Si no hay errores, el formulario es válido
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === 'nomProcedimiento' && !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value)) {
+      return; // No permite caracteres no permitidos
+    }
+
+    if (name === 'nomProcedimiento') {
+      setNomProcedimiento(value);
+    } else if (name === 'idProceso') {
+      setIdProceso(value);
+    } else {
+      setEstado(value);
+    }
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      handleSubmit(procedure); // Enviar procedimiento si es válido
+      handleSubmit(e, {
+        id, // Incluir el ID si es necesario
+        Nom_Procedimiento: nomProcedimiento,
+        Id_Proceso: idProceso,
+        estado,
+      });
       resetForm(); // Resetea el formulario después de enviar
     }
   };
 
   const resetForm = () => {
-    setProcedure({
-      Nom_Procedimiento: '',
-      Id_Proceso: '',
-      estado: 'Sí',
-    });
+    setNomProcedimiento('');
+    setIdProceso('');
+    setEstado('Activo');
+    setId(null); // Resetear ID
     setErrors({}); // Limpiar errores
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setProcedure((prevProcedure) => ({
-      ...prevProcedure,
-      [name]: value,
-    }));
-  };
-
   return (
-    <form onSubmit={onSubmit} className="form">
-      <div className="form-group">
-        <label htmlFor="Nom_Procedimiento">Nombre del Procedimiento</label>
-        <input
-          type="text"
-          id="Nom_Procedimiento"
-          name="Nom_Procedimiento"
-          value={procedure.Nom_Procedimiento}
-          onChange={handleChange}
-          className="search-input"
-          required
-        />
-        {errors.Nom_Procedimiento && <span className="error">{errors.Nom_Procedimiento}</span>}
-      </div>
-      <div className="form-group">
-        <label htmlFor="Id_Proceso">Proceso</label>
-        <select
-          id="Id_Proceso"
-          name="Id_Proceso"
-          value={procedure.Id_Proceso}
-          onChange={handleChange}
-          className="search-input"
-          required
-        >
-          <option value="">Seleccionar Proceso</option>
-          {processes.length > 0 ? (
-            processes.map((process) => (
+    <div className="form-container">
+      <form onSubmit={onSubmit}>
+        <div>
+          <label>Nombre del Procedimiento:</label>
+          <input
+            type="text"
+            name="nomProcedimiento"
+            value={nomProcedimiento}
+            onChange={handleChange}
+            required
+          />
+          {errors.nomProcedimiento && <span className="error">{errors.nomProcedimiento}</span>}
+        </div>
+
+        <div>
+          <label>Proceso:</label>
+          <select
+            name="idProceso"
+            value={idProceso}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un proceso</option>
+            {processes.map((process) => (
               <option key={process.Id_Proceso} value={process.Id_Proceso}>
                 {process.Nom_Proceso}
               </option>
-            ))
-          ) : (
-            <option value="" disabled>
-              Cargando procesos...
-            </option>
-          )}
-        </select>
-        {errors.Id_Proceso && <span className="error">{errors.Id_Proceso}</span>}
-      </div>
-      <div className="form-group">
-        <label htmlFor="estado">Estado</label>
-        <select
-          id="estado"
-          name="estado"
-          value={procedure.estado}
-          onChange={handleChange}
-          className="search-input"
-          required
-        >
-          <option value="Sí">Sí</option>
-          <option value="No">No</option>
-        </select>
-        {errors.estado && <span className="error">{errors.estado}</span>}
-      </div>
-      <button type="submit" className="submit-button">
-        {buttonForm}
-      </button>
-    </form>
+            ))}
+          </select>
+          {errors.idProceso && <span className="error">{errors.idProceso}</span>}
+        </div>
+
+        <div>
+          <label>Estado:</label>
+          <select name="estado" value={estado} onChange={handleChange}>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </div>
+
+        <button type="submit">{buttonForm}</button>
+      </form>
+    </div>
   );
 };
 
-export default FormProcedures;
+export default FormProcedure;

@@ -4,7 +4,7 @@ import Alerta from "../components/Alert/Alerta.jsx";
 import clienteAxios from "../config/axios.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavMenuPublic from "../components/Nav/NavMenuPublic.jsx";
-import logo from "../Public/images/logos/logo.png"; 
+import logo from "../../Public/images/logos/logo.png"; 
 
 // Estilos
 const containerStyles = {
