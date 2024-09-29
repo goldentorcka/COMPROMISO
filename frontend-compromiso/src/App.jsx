@@ -1,4 +1,5 @@
 // src/App.jsx
+import 'regenerator-runtime/runtime';
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/home/home.jsx';
@@ -9,15 +10,16 @@ import NavMenuSE from './components/Nav/NavQuerySena/NavMenuS_E.jsx';
 import ContendR_H from './components/home-init/Contend-R_H.jsx';
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
 import Layout from './components/Admin/layout/Layout.jsx';
+import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import AsistenteVirtual from './components/AsistenteVirtual/Asistente-virtual.jsx';
+
 
 // Carga asíncrona de componentes administrativos
 const CrudUsers = lazy(() => import('./users/crudUsers.jsx'));
 const CrudResponsables = lazy(() => import('./responsible/crudResponsibles.jsx'));
 const CrudProcedure = lazy(() => import('./procedure/crudProcedure.jsx'));
 const CrudProcesses = lazy(() => import('./process/crudProcess.jsx'));
-
+const CrudDocumentos = lazy(() => import('./document/crudDocument.jsx'));
 
 function App() {
   return (
@@ -38,12 +40,13 @@ function App() {
             <Route path="Responsables" element={<CrudResponsables />} />
             <Route path="Procedimientos" element={<CrudProcedure />} />
             <Route path="Procesos" element={<CrudProcesses />} />
+            <Route path="Documentos" element={<CrudDocumentos />} />
           </Route>
         </Routes>
       </Suspense>
 
-      {/* Asistente Virtual */}
-      {/* <AsistenteVirtual /> */}
+      {/* Asistente Virtual siempre presente */}
+      <AsistenteVirtual />
     </BrowserRouter>
   );
 }

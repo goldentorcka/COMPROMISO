@@ -1,4 +1,5 @@
 // src/index.js
+import 'regenerator-runtime/runtime';
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { ReactSession } from 'react-client-session';
@@ -9,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'primereact/resources/themes/saga-blue/theme.css'; // o cualquier otro tema
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
+
 
 
 ReactSession.setStoreType("localStorage");

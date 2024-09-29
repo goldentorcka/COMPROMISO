@@ -1,28 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormDocumentos from './FormDocumentos.jsx';
+import FormDocumentos from './formDocument.jsx';
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
-import ActionButtons from '../components/Buttons/ActionsButton.jsx';
 import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudDocumentos = () => {
   const [documentoList, setDocumentoList] = useState([]);
-  const [documento, setDocumento] = useState({
-    Cod_Documento: "",
-    Fec_Elaboracion_Documento: "",
-    Ver_Documento: "",
-    estado: "Activo",
-    Id_Responsable: "",
-    Nom_Documento: "",
-    Nom_Documento_Magnetico: "",
-    Id_Procedimiento: "",
-  });
+  const [documento, setDocumento] = useState(null);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDataTableVisible, setIsDataTableVisible] = useState(true);
-
   const [responsables, setResponsables] = useState([]);
   const [procedimientos, setProcedimientos] = useState([]);
 
@@ -38,6 +26,7 @@ const CrudDocumentos = () => {
       setDocumentoList(response.data);
     } catch (error) {
       console.error("Error al obtener los documentos:", error);
+      Swal.fire('Error', 'No se pudieron obtener los documentos', 'error');
     }
   };
 
@@ -47,26 +36,34 @@ const CrudDocumentos = () => {
       setResponsables(response.data);
     } catch (error) {
       console.error("Error al obtener los responsables:", error);
+      Swal.fire('Error', 'No se pudieron obtener los responsables', 'error');
     }
   };
 
   const getAllProcedimientos = async () => {
     try {
       const response = await clienteAxios.get('/api/procedimientos');
-      setProcedimientos(response.data);
+      setProcedimientos(response.data); // Guardar los procedimientos en el estado
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
+      Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
     }
   };
 
   const handleSubmit = async (e, documentoData) => {
     e.preventDefault();
+    const validationError = validateDocumento(documentoData);
+    if (validationError) {
+      Swal.fire('Error', validationError, 'error');
+      return;
+    }
+
     try {
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/documentos', documentoData);
         Swal.fire('Agregado!', 'El documento ha sido agregado.', 'success');
       } else {
-        await clienteAxios.put(`/api/documentos/${documentoData.Id_Documento}`, documentoData);
+        await clienteAxios.put(`/api/documentos/${documento.Id_Documento}`, documentoData);
         Swal.fire('Actualizado!', 'El documento ha sido actualizado.', 'success');
       }
       resetForm();
@@ -74,32 +71,39 @@ const CrudDocumentos = () => {
       getAllDocumentos();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+      Swal.fire('Error', 'No se pudo guardar el documento', 'error');
     }
   };
 
   const resetForm = () => {
-    setDocumento({
-      Cod_Documento: "",
-      Fec_Elaboracion_Documento: "",
-      Ver_Documento: "",
-      estado: "Activo",
-      Id_Responsable: "",
-      Nom_Documento: "",
-      Nom_Documento_Magnetico: "",
-      Id_Procedimiento: "",
-    });
+    setDocumento(null);
     setButtonForm("Enviar");
   };
 
-  const getDocumento = (id) => {
-    const selectedDocumento = documentoList.find(d => d.Id_Documento === id);
-    setDocumento(selectedDocumento);
-    setButtonForm("Actualizar");
-    setIsModalOpen(true);
-    setIsDataTableVisible(false);
+  const validateDocumento = (documento) => {
+    const { Cod_Documento, Nom_Documento, Id_Responsable, Id_Procedimiento } = documento;
+    if (!Cod_Documento) {
+      return 'El código del documento es obligatorio.';
+    }
+    if (!Nom_Documento) {
+      return 'El nombre del documento es obligatorio.';
+    }
+    if (!Id_Responsable) {
+      return 'El ID del responsable es obligatorio.';
+    }
+    if (!Id_Procedimiento) {
+      return 'El ID del procedimiento es obligatorio.';
+    }
+    return null;
   };
 
-  const deleteDocumento = async (id) => {
+  const getDocumento = (rowData) => {
+    setDocumento(rowData);
+    setButtonForm("Actualizar");
+    setIsModalOpen(true);
+  };
+
+  const deleteDocumento = async (rowData) => {
     const confirmDelete = await Swal.fire({
       title: '¿Estás seguro?',
       text: "¡No podrás revertir esto!",
@@ -112,34 +116,22 @@ const CrudDocumentos = () => {
 
     if (confirmDelete.isConfirmed) {
       try {
-        await clienteAxios.delete(`/api/documentos/${id}`);
+        await clienteAxios.delete(`/api/documentos/${rowData.Id_Documento}`);
         Swal.fire('Eliminado!', 'El documento ha sido eliminado.', 'success');
         getAllDocumentos();
       } catch (error) {
         console.error("Error al eliminar el documento:", error);
+        Swal.fire('Error', 'No se pudo eliminar el documento', 'error');
       }
     }
   };
 
   const columns = [
     { field: 'Id_Documento', header: 'ID', width: '5%' },
-    { field: 'Cod_Documento', header: 'Código', width: '10%' },
-    { field: 'Fec_Elaboracion_Documento', header: 'Fecha Elaboración', width: '15%' },
-    { field: 'Ver_Documento', header: 'Versión', width: '10%' },
-    { field: 'estado', header: 'Estado', width: '10%' },
-    { field: 'Nom_Documento', header: 'Nombre', width: '15%' },
-    { field: 'Nom_Documento_Magnetico', header: 'Nombre Magnético', width: '15%' },
-    { field: 'Id_Responsable', header: 'Responsable', width: '10%' },
-    { field: 'Id_Procedimiento', header: 'Procedimiento', width: '10%' },
-    {
-      body: (rowData) => (
-        <ActionButtons 
-          onEdit={() => getDocumento(rowData.Id_Documento)} 
-          onDelete={() => deleteDocumento(rowData.Id_Documento)} 
-        />
-      ),
-      width: '10%',
-    },
+    { field: 'Cod_Documento', header: 'Código', width: '20%' },
+    { field: 'Nom_Documento', header: 'Nombre', width: '40%' },
+    { field: 'estado', header: 'Estado', width: '15%' },
+    { field: 'Id_Procedimiento', header: 'ID Procedimiento', width: '20%' },
   ];
 
   return (
@@ -161,28 +153,50 @@ const CrudDocumentos = () => {
               border: 'none',
               borderRadius: '5px',
               cursor: 'pointer',
+              marginBottom: '20px',
             }}
-            onClick={() => { setIsModalOpen(true); setIsDataTableVisible(false); }}
+            onClick={() => {
+              resetForm();
+              setIsModalOpen(true);
+            }}
           >
-            Agregar Documento
+            Añadir
           </button>
-          
-          {isDataTableVisible && (
-            <CustomDataTable columns={columns} data={documentoList} />
-          )}
 
           {isModalOpen && (
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-              <FormDocumentos
-                documento={documento}
-                setDocumento={setDocumento}
-                handleSubmit={handleSubmit}
-                buttonForm={buttonForm}
-                responsables={responsables}
-                procedimientos={procedimientos}
-              />
-            </Modal>
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 999,
+            }} />
           )}
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title={buttonForm === "Enviar" ? "Agregar Documento" : "Actualizar Documento"}
+          >
+            <FormDocumentos
+              documento={documento}
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+              procedimientos={procedimientos} // Pasa los procedimientos al formulario
+              responsables={responsables} // Si es necesario, también pasa los responsables
+            />
+          </Modal>
+
+          <CustomDataTable
+            data={documentoList}
+            columns={columns}
+            onEdit={getDocumento}
+            onDelete={deleteDocumento}
+            searchField="Nom_Documento"
+            exportFields={['Id_Documento', 'Cod_Documento', 'Nom_Documento', 'estado', 'Id_Procedimiento']}
+          />
         </div>
       </div>
     </div>
