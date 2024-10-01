@@ -10,7 +10,6 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 import ActionButtons from '../components/Buttons/ActionsButton.jsx';
 import CustomDataTable from '../components/datatables/Datatable.jsx';
 
-
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
   const [user, setUser] = useState({
@@ -23,7 +22,7 @@ const CrudUsers = () => {
   });
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isDataTableVisible, setIsDataTableVisible] = useState(true); // Nuevo estado
+  const [isDataTableVisible, setIsDataTableVisible] = useState(true);
 
   useEffect(() => {
     getAllUsers();
@@ -32,9 +31,15 @@ const CrudUsers = () => {
   const getAllUsers = async () => {
     try {
       const response = await clienteAxios.get('/api/usuarios');
-      setUserList(response.data);
+      if (Array.isArray(response.data)) {
+        setUserList(response.data);
+      } else {
+        setUserList([]); // En caso de que no sea un array, vacío la lista
+        console.error('La respuesta de la API no es un array');
+      }
     } catch (error) {
       console.error("Error al obtener los usuarios:", error);
+      setUserList([]); // Vacío la lista en caso de error
     }
   };
 
@@ -44,7 +49,7 @@ const CrudUsers = () => {
       Swal.fire('Error', validationError, 'error');
       return;
     }
-  
+
     try {
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/usuarios', userData);
@@ -61,7 +66,6 @@ const CrudUsers = () => {
       console.error("Error al enviar el formulario:", error);
     }
   };
-  
 
   const resetForm = () => {
     setUser({
@@ -86,13 +90,33 @@ const CrudUsers = () => {
     if (!/^[A-Za-z0-9_]+$/.test(Usuario)) {
       return 'El usuario solo puede contener letras, números y guiones bajos.';
     }
-    if (!/^[\w-.]+..([\w-]+\.)+[\w-]{2,4}$/.test(Correo_Usuario)) {
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(Correo_Usuario)) {
       return 'El correo electrónico no es válido.';
     }
     if (Contraseña_Usuario.length < 6) {
       return 'La contraseña debe tener al menos 6 caracteres.';
     }
     return null;
+  };
+
+  const getUser = (id) => {
+    const selectedUser = userList.find((user) => user.id === id);
+    if (selectedUser) {
+      setUser(selectedUser);
+      setButtonForm("Actualizar");
+      setIsModalOpen(true);
+      setIsDataTableVisible(false);
+    }
+  };
+
+  const deleteUser = async (id) => {
+    try {
+      await clienteAxios.delete(`/api/usuarios/${id}`);
+      Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
+      getAllUsers();
+    } catch (error) {
+      console.error("Error al eliminar el usuario:", error);
+    }
   };
 
   const columns = [
@@ -140,7 +164,7 @@ const CrudUsers = () => {
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-          
+
           <Modal isOpen={isModalOpen} onClose={() => {
             setIsModalOpen(false);
             setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario

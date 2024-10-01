@@ -54,8 +54,9 @@ const NavMenuSE = () => {
         },
         visionSection: {
             display: 'flex',
-            flexDirection: 'row-reverse',
+            flexDirection: 'row',
             alignItems: 'center',
+            marginBottom: '3rem',
             padding: '1rem',
             backgroundColor: '#ffffff',
             borderRadius: '15px',
@@ -88,7 +89,7 @@ const NavMenuSE = () => {
         visionImage: {
             width: '300px',
             height: 'auto',
-            marginLeft: '1.5rem',
+            marginRight: '1.5rem', // Ajusta el margen derecho
             transition: 'transform 0.6s ease, box-shadow 0.6s ease',
             cursor: 'pointer',
             boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
@@ -118,8 +119,6 @@ const NavMenuSE = () => {
         <>
             <NavMenuPublic />
             <div className="container my-5" style={styles.container}>
-                {/* <h1 style={styles.title}>Misión y Visión</h1> */}
-
                 {/* Misión */}
                 <div style={styles.missionSection}>
                     <img
@@ -162,7 +161,7 @@ const NavMenuSE = () => {
                     </div>
                     <img
                         src={images[1]}
-                        alt="Visión 1"
+                        alt="Visión"
                         style={{
                             ...styles.visionImage,
                             ...(hoveredImage?.index === 1 && hoveredImage?.direction === 'left' && styles.imageHoveredRight),
@@ -171,20 +170,6 @@ const NavMenuSE = () => {
                         onMouseEnter={(e) => {
                             const direction = e.nativeEvent.offsetX < e.target.clientWidth / 2 ? 'left' : 'right';
                             handleMouseEnter(1, direction);
-                        }}
-                        onMouseLeave={handleMouseLeave}
-                    />
-                    <img
-                        src={images[2]}
-                        alt="Visión 2"
-                        style={{
-                            ...styles.visionImage,
-                            ...(hoveredImage?.index === 2 && hoveredImage?.direction === 'left' && styles.imageHoveredRight),
-                            ...(hoveredImage?.index === 2 && hoveredImage?.direction === 'right' && styles.imageHoveredLeft),
-                        }}
-                        onMouseEnter={(e) => {
-                            const direction = e.nativeEvent.offsetX < e.target.clientWidth / 2 ? 'left' : 'right';
-                            handleMouseEnter(2, direction);
                         }}
                         onMouseLeave={handleMouseLeave}
                     />
