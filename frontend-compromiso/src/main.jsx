@@ -1,4 +1,3 @@
-// src/index.js
 import 'regenerator-runtime/runtime';
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -7,6 +6,7 @@ import App from "./App.jsx";
 import ErrorBoundary from './components/captureError/ErrorBoundary.jsx'; // Asegúrate de importar el componente ErrorBoundary
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// Importa los estilos de PrimeReact
 import 'primereact/resources/themes/saga-blue/theme.css'; // o cualquier otro tema
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';

@@ -32,16 +32,16 @@ const NavMenuReseña = () => {
                     {/* Contenido adicional */}
 
                     <div className="social-icons">
-                        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                        <a href="https://www.instagram.com/senaempresalagranja/" target="_blank" rel="noopener noreferrer" className="social-icon">
                             <FaInstagram />
                         </a>
-                        <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                        <a href="https://www.facebook.com/senaempresa?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer" className="social-icon">
                             <FaFacebook />
                         </a>
                         <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" className="social-icon">
                             <FaTiktok />
                         </a>
-                        <a href="https://www.sena.edu.co/es-co/blog/Paginas/default.aspx" target="_blank" rel="noopener noreferrer" className="social-icon">
+                        <a href="https://senaempresalagranja.blogspot.com/" target="_blank" rel="noopener noreferrer" className="social-icon">
                             <FaBloggerB />
                         </a>
                     </div>

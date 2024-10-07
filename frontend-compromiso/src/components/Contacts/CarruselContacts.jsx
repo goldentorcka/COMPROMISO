@@ -28,26 +28,6 @@ const ContactUs = () => {
   // Datos de los miembros
   const members = [
     {
-      name: 'Julian Felipe Montaña Ruiz',
-      description: 'ANALISTA Y DESARROLLADOR',
-      carouselItems: [
-        {
-          img: imgJulian,
-          caption: 'Nacio en Purificación-Tolima, tiene 19 años ',
-        },
-        {
-          img: imgJulian1,
-          caption: 'Tiene un gran sentido del humor',
-        },
-        {
-          img: imgJulian2,
-          caption: ' Es apasionado al futbol',
-        },
-      ],
-      facebook: 'https://www.facebook.com/share/jq5Ny1Y7GnczcEwM/?mibextid=qi2Omg',
-      instagram: 'https://www.instagram.com/julian_mr18?igsh=MWQ1dXVlOWViM2oxZg==',
-    },
-    {
       name: 'Marlon Javier Cumbe Loaiza',
       description: 'GERENTE',
       carouselItems: [
@@ -66,26 +46,6 @@ const ContactUs = () => {
       ],
       facebook: 'https://www.facebook.com/profile.php?id=61561011352009&mibextid=ZbWKwL',
       instagram: 'https://www.instagram.com/marlxon69?igsh=MXI4bHo2bjdlZHAxag==',
-    },
-    {
-      name: 'Aqnoe Sofía Solano Solaque',
-      description: 'ANALISTA Y DESARROLLADORA',
-      carouselItems: [
-        {
-          img: imgSofia1,
-          caption: 'Nacio en lerida-Tolima, tiene 17 años',
-        },
-        {
-          img: imgSofia2,
-          caption: ' Le gusta mucho el patinaje',
-        },
-        {
-          img: imgSofia3,
-          caption: ' Le gusta ayudar a las personas ',
-        },
-      ],
-      facebook: 'https://www.facebook.com/profile.php?id=61551864178712&mibextid=ZbWKwL',
-      instagram: 'https://www.instagram.com/sofia_ass23?igsh=MTBqYTgxejdiOW44YQ==',
     }
   ];
 

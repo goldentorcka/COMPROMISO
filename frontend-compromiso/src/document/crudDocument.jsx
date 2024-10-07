@@ -23,7 +23,17 @@ const CrudDocumentos = () => {
   const getAllDocumentos = async () => {
     try {
       const response = await clienteAxios.get('/api/documentos');
-      setDocumentoList(response.data);
+      // Aquí hacemos un mapeo para obtener el nombre de los responsables y procedimientos
+      const documentosConNombres = response.data.map(doc => {
+        const procedimiento = procedimientos.find(proc => proc.Id_Procedimiento === doc.Id_Procedimiento);
+        const responsable = responsables.find(res => res.Id_Responsable === doc.Id_Responsable);
+        return {
+          ...doc,
+          Nom_Procedimiento: procedimiento ? procedimiento.Nom_Procedimiento : 'No definido',
+          Nom_Responsable: responsable ? responsable.Nom_Responsable : 'No definido',
+        };
+      });
+      setDocumentoList(documentosConNombres);
     } catch (error) {
       console.error("Error al obtener los documentos:", error);
       Swal.fire('Error', 'No se pudieron obtener los documentos', 'error');
@@ -34,6 +44,8 @@ const CrudDocumentos = () => {
     try {
       const response = await clienteAxios.get('/api/responsables');
       setResponsables(response.data);
+      // Llama nuevamente a getAllDocumentos para asegurarte de que se tienen los nombres actualizados
+      await getAllDocumentos();
     } catch (error) {
       console.error("Error al obtener los responsables:", error);
       Swal.fire('Error', 'No se pudieron obtener los responsables', 'error');
@@ -43,7 +55,9 @@ const CrudDocumentos = () => {
   const getAllProcedimientos = async () => {
     try {
       const response = await clienteAxios.get('/api/procedimientos');
-      setProcedimientos(response.data); // Guardar los procedimientos en el estado
+      setProcedimientos(response.data);
+      // Llama nuevamente a getAllDocumentos para asegurarte de que se tienen los nombres actualizados
+      await getAllDocumentos();
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
       Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
@@ -128,10 +142,11 @@ const CrudDocumentos = () => {
 
   const columns = [
     { field: 'Id_Documento', header: 'ID', width: '5%' },
-    { field: 'Cod_Documento', header: 'Código', width: '20%' },
-    { field: 'Nom_Documento', header: 'Nombre', width: '40%' },
-    { field: 'estado', header: 'Estado', width: '15%' },
-    { field: 'Id_Procedimiento', header: 'ID Procedimiento', width: '20%' },
+    { field: 'Cod_Documento', header: 'Código', width: '15%' },
+    { field: 'Nom_Documento', header: 'Nombre', width: '25%' },
+    { field: 'estado', header: 'Estado', width: '10%' },
+    { field: 'Nom_Procedimiento', header: 'Nombre Procedimiento', width: '20%' },
+    { field: 'Nom_Responsable', header: 'Nombre Responsable', width: '20%' }
   ];
 
   return (
@@ -195,7 +210,7 @@ const CrudDocumentos = () => {
             onEdit={getDocumento}
             onDelete={deleteDocumento}
             searchField="Nom_Documento"
-            exportFields={['Id_Documento', 'Cod_Documento', 'Nom_Documento', 'estado', 'Id_Procedimiento']}
+            exportFields={['Id_Documento', 'Cod_Documento', 'Nom_Documento', 'estado', 'Nom_Procedimiento', 'Nom_Responsable']}
           />
         </div>
       </div>

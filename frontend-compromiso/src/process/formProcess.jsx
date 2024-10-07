@@ -28,6 +28,7 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
     }
   }, [proceso]);
 
+  // Validación del formulario
   const validateForm = () => {
     const newErrors = {};
     if (!nomProceso || nomProceso.length < 3) {
@@ -37,9 +38,10 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
       newErrors.tipProceso = 'El tipo de proceso es obligatorio.';
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return Object.keys(newErrors).length === 0; // El formulario es válido si no hay errores
   };
 
+  // Manejador de cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -58,25 +60,27 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
     }
   };
 
+  // Manejador del envío del formulario
   const onSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
       handleSubmit(e, {
-        id,
+        id, // Incluir el ID si es necesario
         Nom_Proceso: nomProceso,
         Tip_Proceso: tipProceso,
         estado,
       });
-      resetForm();
+      resetForm(); // Resetea el formulario después de enviar
     }
   };
 
+  // Resetear el formulario
   const resetForm = () => {
     setNomProceso('');
     setTipProceso('');
     setEstado('Activo');
     setId(null); // Resetear ID
-    setErrors({});
+    setErrors({}); // Limpiar errores
   };
 
   return (

@@ -26,8 +26,7 @@ const InitUserView = () => {
                 <li>Gestionar los <strong>procesos</strong> y procedimientos relacionados a cada área.</li>
                 <li>Registrar y mantener actualizados los <strong>formatos</strong> necesarios en las unidades.</li>
                 <li>Asignar <strong>responsables</strong> a cada procedimiento o formato.</li>
-                <li>Organizar las áreas y unidades del centro para una mejor visualización y manejo.</li>
-                <li>Consultar y descargar <strong>formatos</strong> de manera sencilla.</li>
+                <li>Consultar y descargar <strong>documentos</strong> de manera sencilla.</li>
               </ul>
               <p>
                 Este panel de administración te ofrece las herramientas necesarias para gestionar los 

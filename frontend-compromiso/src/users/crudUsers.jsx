@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormUser from './formUsers.jsx'; // Componente del formulario para usuarios
+import FormUser from './formUsers.jsx';  // Usamos el nuevo formulario de usuario
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,14 +11,7 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudUsers = () => {
   const [userList, setUserList] = useState([]);
-  const [user, setUser] = useState({
-    Nom_Usuario: "",
-    Usuario: "",
-    Correo_Usuario: "",
-    Contraseña_Usuario: "",
-    estado: "Activo",
-    rol: "Administrador",
-  });
+  const [user, setUser] = useState(null); // Inicializado como null para manejar el ID
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataTableVisible, setIsDataTableVisible] = useState(true);
@@ -30,21 +23,15 @@ const CrudUsers = () => {
   const getAllUsers = async () => {
     try {
       const response = await clienteAxios.get('/api/usuarios');
-      if (Array.isArray(response.data)) {
-        setUserList(response.data);
-      } else if (Array.isArray(response.data.usuarios)) {
-        setUserList(response.data.usuarios);
-      } else {
-        setUserList([]);
-        console.error('La respuesta de la API no es un array');
-      }
+      setUserList(response.data);
     } catch (error) {
       console.error("Error al obtener los usuarios:", error);
       Swal.fire('Error', 'No se pudieron obtener los usuarios', 'error');
     }
   };
 
-  const handleSubmit = async (userData) => {
+  const handleSubmit = async (e, userData) => {
+    e.preventDefault();
     const validationError = validateUser(userData);
     if (validationError) {
       Swal.fire('Error', validationError, 'error');
@@ -55,7 +42,7 @@ const CrudUsers = () => {
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/usuarios', userData);
         Swal.fire('Agregado!', 'El usuario ha sido agregado.', 'success');
-      } else {
+      } else if (buttonForm === "Actualizar" && user) {
         await clienteAxios.put(`/api/usuarios/${user.Id_Usuario}`, userData);
         Swal.fire('Actualizado!', 'El usuario ha sido actualizado.', 'success');
       }
@@ -69,42 +56,43 @@ const CrudUsers = () => {
   };
 
   const resetForm = () => {
-    setUser({
-      Nom_Usuario: "",
-      Usuario: "",
-      Correo_Usuario: "",
-      Contraseña_Usuario: "",
-      estado: "Activo",
-      rol: "Administrador",
-    });
+    setUser(null); // Resetear usuario a null
     setButtonForm("Enviar");
   };
 
   const validateUser = (user) => {
-    const { Nom_Usuario, Usuario, Correo_Usuario, Contraseña_Usuario } = user;
-    if (!Nom_Usuario || !Usuario || !Correo_Usuario || !Contraseña_Usuario) {
-      return 'Todos los campos son obligatorios.';
+    const { Nom_Usuario, Correo_Usuario, Usuario, Contraseña_Usuario } = user;
+    if (!Nom_Usuario) {
+      return 'El nombre es obligatorio.';
     }
     if (!/^[A-Za-z\s]+$/.test(Nom_Usuario)) {
       return 'El nombre solo puede contener letras.';
     }
-    if (!/^[A-Za-z0-9_]+$/.test(Usuario)) {
-      return 'El usuario solo puede contener letras, números y guiones bajos.';
-    }
-    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(Correo_Usuario)) {
+    if (!Correo_Usuario || !/\S+@\S+\.\S+/.test(Correo_Usuario)) {
       return 'El correo electrónico no es válido.';
     }
-    if (Contraseña_Usuario.length < 6) {
+    if (!Usuario) {
+      return 'El nombre de usuario es obligatorio.';
+    }
+    if (!Contraseña_Usuario || Contraseña_Usuario.length < 6) {
       return 'La contraseña debe tener al menos 6 caracteres.';
     }
     return null;
   };
 
+  const columns = [
+    { field: 'Id_Usuario', header: 'ID', width: '10%' },
+    { field: 'Nom_Usuario', header: 'Nombre', width: '30%' },
+    { field: 'Usuario', header: 'Usuario', width: '20%' },
+    { field: 'Correo_Usuario', header: 'Correo', width: '20%' },
+    { field: 'estado', header: 'Estado', width: '10%' },
+    { field: 'Rol_Usuario', header: 'Rol', width: '10%' }
+  ];
+
   const getUser = (rowData) => {
-    setUser(rowData); // Aquí se pasa el usuario completo
+    setUser(rowData); // Asignar el usuario completo
     setButtonForm("Actualizar");
     setIsModalOpen(true);
-    setIsDataTableVisible(false); // Ocultar la tabla cuando se está en el formulario
   };
 
   const deleteUser = async (rowData) => {
@@ -120,10 +108,10 @@ const CrudUsers = () => {
     
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await clienteAxios.delete(`/api/usuarios/${rowData.id}`);
+        const response = await clienteAxios.delete(`/api/usuarios/${rowData.Id_Usuario}`);
         if (response.status === 204) {
           Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
-          getAllUsers();
+          getAllUsers(); // Llama para actualizar la lista de usuarios
         } else {
           Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
         }
@@ -133,23 +121,6 @@ const CrudUsers = () => {
       }
     }
   };
-
-  const columns = [
-    { field: 'id', header: 'ID', width: '10%' },
-    { field: 'Nom_Usuario', header: 'Nombre', width: '20%' },
-    { field: 'Usuario', header: 'Usuario', width: '20%' },
-    { field: 'Correo_Usuario', header: 'Correo', width: '30%' },
-    {
-      body: (rowData) => (
-        <ActionButtons 
-          onEdit={() => getUser(rowData)} 
-          onDelete={() => deleteUser(rowData)} 
-        />
-      ),
-      header: 'Acciones', // Agregado el header de las acciones
-      width: '20%'
-    }
-  ];
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>
@@ -180,7 +151,7 @@ const CrudUsers = () => {
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
-
+          
           {isModalOpen && (
             <div style={{
               position: 'fixed',
@@ -197,7 +168,7 @@ const CrudUsers = () => {
             isOpen={isModalOpen} 
             onClose={() => {
               setIsModalOpen(false);
-              setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el modal
+              setIsDataTableVisible(true);
             }}
             title={buttonForm === "Enviar" ? "Agregar Usuario" : "Actualizar Usuario"}
           >
@@ -212,8 +183,10 @@ const CrudUsers = () => {
             <CustomDataTable
               data={userList} // Cambiado a userList
               columns={columns} // Cambiado a columns
-              searchField="Nom_Usuario" // Búsqueda por nombre
-              exportFields={['id', 'Nom_Usuario', 'Usuario', 'Correo_Usuario', 'estado']} // Especifica los campos a exportar
+              onEdit={getUser} // Editar usuario
+              onDelete={deleteUser} // Eliminar usuario
+              searchField="Nom_Usuario" // Búsqueda por nombre de usuario
+              exportFields={['Id_Usuario', 'Nom_Usuario', 'Usuario', 'Correo_Usuario', 'estado', 'Rol_Usuario']} // Especifica los campos a exportar
             />
           }
         </div>

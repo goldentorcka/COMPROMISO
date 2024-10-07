@@ -10,7 +10,7 @@ import NavMenuSE from './components/Nav/NavQuerySena/NavMenuS_E.jsx';
 import ContendR_H from './components/home-init/Contend-R_H.jsx';
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
 import Layout from './components/Admin/layout/Layout.jsx';
-import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
+// import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
 import Component from './components/query/Init-Query.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -47,7 +47,7 @@ function App() {
       </Suspense>
 
       {/* Asistente Virtual siempre presente */}
-      <AsistenteVirtual />
+      {/* <AsistenteVirtual /> */}
     </BrowserRouter>
   );
 }
