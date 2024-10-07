@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import Pagination from '../components/Pagination/pagination';
-import FormUser from './formUsers.jsx';
+import FormUser from './formUsers.jsx'; // Componente del formulario para usuarios
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -33,13 +32,15 @@ const CrudUsers = () => {
       const response = await clienteAxios.get('/api/usuarios');
       if (Array.isArray(response.data)) {
         setUserList(response.data);
+      } else if (Array.isArray(response.data.usuarios)) {
+        setUserList(response.data.usuarios);
       } else {
-        setUserList([]); // En caso de que no sea un array, vacío la lista
+        setUserList([]);
         console.error('La respuesta de la API no es un array');
       }
     } catch (error) {
       console.error("Error al obtener los usuarios:", error);
-      setUserList([]); // Vacío la lista en caso de error
+      Swal.fire('Error', 'No se pudieron obtener los usuarios', 'error');
     }
   };
 
@@ -60,10 +61,10 @@ const CrudUsers = () => {
       }
       resetForm();
       setIsModalOpen(false);
-      setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario
       getAllUsers();
     } catch (error) {
       console.error("Error al enviar el formulario:", error);
+      Swal.fire('Error', 'No se pudo guardar el usuario', 'error');
     }
   };
 
@@ -99,23 +100,37 @@ const CrudUsers = () => {
     return null;
   };
 
-  const getUser = (id) => {
-    const selectedUser = userList.find((user) => user.id === id);
-    if (selectedUser) {
-      setUser(selectedUser);
-      setButtonForm("Actualizar");
-      setIsModalOpen(true);
-      setIsDataTableVisible(false);
-    }
+  const getUser = (rowData) => {
+    setUser(rowData); // Aquí se pasa el usuario completo
+    setButtonForm("Actualizar");
+    setIsModalOpen(true);
+    setIsDataTableVisible(false); // Ocultar la tabla cuando se está en el formulario
   };
 
-  const deleteUser = async (id) => {
-    try {
-      await clienteAxios.delete(`/api/usuarios/${id}`);
-      Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
-      getAllUsers();
-    } catch (error) {
-      console.error("Error al eliminar el usuario:", error);
+  const deleteUser = async (rowData) => {
+    const confirmDelete = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminarlo!'
+    });
+    
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await clienteAxios.delete(`/api/usuarios/${rowData.id}`);
+        if (response.status === 204) {
+          Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
+          getAllUsers();
+        } else {
+          Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+        }
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+        Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+      }
     }
   };
 
@@ -127,10 +142,12 @@ const CrudUsers = () => {
     {
       body: (rowData) => (
         <ActionButtons 
-          onEdit={() => getUser(rowData.id)} 
-          onDelete={() => deleteUser(rowData.id)} 
+          onEdit={() => getUser(rowData)} 
+          onDelete={() => deleteUser(rowData)} 
         />
-      )
+      ),
+      header: 'Acciones', // Agregado el header de las acciones
+      width: '20%'
     }
   ];
 
@@ -158,27 +175,47 @@ const CrudUsers = () => {
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
-              setIsDataTableVisible(false); // Ocultar el DataTable al abrir el formulario
             }}
           >
             <FontAwesomeIcon icon={faUser} style={{ marginRight: '8px' }} />
             Añadir
           </button>
 
-          <Modal isOpen={isModalOpen} onClose={() => {
-            setIsModalOpen(false);
-            setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el formulario
-          }}>
+          {isModalOpen && (
+            <div style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              zIndex: 999,
+            }} />
+          )}
+
+          <Modal 
+            isOpen={isModalOpen} 
+            onClose={() => {
+              setIsModalOpen(false);
+              setIsDataTableVisible(true); // Mostrar el DataTable al cerrar el modal
+            }}
+            title={buttonForm === "Enviar" ? "Agregar Usuario" : "Actualizar Usuario"}
+          >
             <FormUser
-              user={user}
-              setUser={setUser}
+              user={user} // Aquí se pasa el usuario seleccionado
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              resetForm={resetForm}
             />
           </Modal>
 
-          {isDataTableVisible && <CustomDataTable data={userList} columns={columns} />}
+          {isDataTableVisible && 
+            <CustomDataTable
+              data={userList} // Cambiado a userList
+              columns={columns} // Cambiado a columns
+              searchField="Nom_Usuario" // Búsqueda por nombre
+              exportFields={['id', 'Nom_Usuario', 'Usuario', 'Correo_Usuario', 'estado']} // Especifica los campos a exportar
+            />
+          }
         </div>
       </div>
     </div>

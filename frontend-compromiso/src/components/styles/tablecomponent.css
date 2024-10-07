@@ -1,0 +1,82 @@
+:root {
+    --font-family: 'Arial', sans-serif; /* Ajusta la fuente a tu preferencia */
+    --surface-ground: #f4f4f4; /* Color de fondo del body */
+    --surface-card: #ffffff; /* Color de fondo de las tarjetas */
+    --text-color: #333333; /* Color del texto principal */
+    --border-color: #e0e0e0; /* Color de los bordes */
+    --primary-color: #007bff; /* Color primario para botones y enlaces */
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    font-family: var(--font-family);
+    font-weight: normal;
+    background: var(--surface-ground);
+    color: var(--text-color);
+    padding: 1rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.title {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.datatable-filter {
+    max-width: 1200px; /* Max ancho para centrar la tabla */
+    margin: 0 auto; /* Centrar horizontalmente */
+}
+
+.p-datatable {
+    border: 1px solid var(--border-color); /* Borde de la tabla */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.p-column-header {
+    background: var(--surface-card); /* Color de fondo de encabezados */
+    color: var(--text-color); /* Color de texto en encabezados */
+    border-bottom: 2px solid var(--border-color); /* Línea de separación */
+}
+
+.p-inputtext, .p-multiselect, .p-calendar {
+    width: 100%; /* Ancho completo para inputs */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.p-button {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border: none;
+}
+
+.p-button:hover {
+    background-color: darken(var(--primary-color), 10%);
+}
+
+.p-tag {
+    border-radius: 12px; /* Bordes redondeados para tags */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 1rem; /* Espaciado interno de encabezados */
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.75rem; /* Espaciado interno de celdas */
+}
+
+a {
+    color: var(--primary-color); /* Color de enlaces */
+    text-decoration: none; /* Sin subrayado */
+}
+
+a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}

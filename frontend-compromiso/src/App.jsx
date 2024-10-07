@@ -11,6 +11,7 @@ import ContendR_H from './components/home-init/Contend-R_H.jsx';
 import ContendContacts from './components/home-init/Contend-Contacts.jsx';
 import Layout from './components/Admin/layout/Layout.jsx';
 import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
+import Component from './components/query/Init-Query.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -32,8 +33,8 @@ function App() {
           <Route path="/manuals" element={<Contend_Manuals />} />
           <Route path="/mision-vision" element={<NavMenuSE />} />
           <Route path="/resena-historica" element={<ContendR_H />} />
-          <Route path="/contacts" element={<ContendContacts />} />
-
+          <Route path="/contacts" element={<ContendContacts />} /> 
+          <Route path="/modulo-consulta" element={<Component />} />
           {/* Agrupación de rutas administrativas bajo un Layout */}
           <Route path="/administrator" element={<Layout />}>
             <Route path="Usuarios" element={<CrudUsers />} />
