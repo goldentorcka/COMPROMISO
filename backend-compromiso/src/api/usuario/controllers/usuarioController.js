@@ -1,11 +1,15 @@
 // @ts-nocheck
 const Usuario = require('../models/usuarioModel.js');
-const logger = require('../../../../config/logger.js');
+const { logger } = require('../../../../config/logger.js');
 
 // Middleware para verificar si el usuario es Super Administrador
 const isSuperAdmin = (req, res, next) => {
-  const { Rol_Usuario } = req.user; // Suponiendo que req.user contiene los datos del usuario logueado
-  if (Rol_Usuario !== 'Super Administrador') {
+  if (!req.user) {
+    return res.status(401).json({ message: 'Usuario no autenticado' });
+  }
+
+  const { rol } = req.user; // Cambiado de Rol_Usuario a rol
+  if (rol !== 'Super Administrador') {
     return res.status(403).json({ message: 'Acceso denegado. Solo los Super Administradores pueden realizar esta acción.' });
   }
   next();
@@ -14,7 +18,11 @@ const isSuperAdmin = (req, res, next) => {
 // Middleware para verificar permisos específicos
 const checkPermissions = (action) => {
   return (req, res, next) => {
-    const { permisos } = req.user; // Suponiendo que req.user contiene los permisos del usuario logueado
+    if (!req.user) {
+      return res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+
+    const { permisos } = req.user;
     if (!permisos || !permisos[action]) {
       return res.status(403).json({ message: 'No tienes permisos para realizar esta acción.' });
     }
@@ -22,15 +30,14 @@ const checkPermissions = (action) => {
   };
 };
 
-// Validación básica de datos del usuario
+// Validación de datos de Usuario
 const validateUsuario = (data) => {
   const errors = [];
-  if (!data.Nom_Usuario || !data.Usuario || !data.Correo_Usuario || !data.Contraseña_Usuario) {
+  if (!data.nombre_usuario || !data.usuario || !data.contrasena || !data.email) {
     errors.push('Todos los campos son obligatorios.');
   }
-  // Validar formato de correo
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (data.Correo_Usuario && !emailRegex.test(data.Correo_Usuario)) {
+  if (data.email && !emailRegex.test(data.email)) {
     errors.push('El formato del correo es inválido.');
   }
   return errors;
@@ -40,9 +47,12 @@ const validateUsuario = (data) => {
 const getUsuarios = async (req, res) => {
   try {
     const usuarios = await Usuario.findAll();
-    res.json({ success: true, usuarios });
+    if (usuarios.length === 0) {
+      return res.status(404).json({ success: false, message: 'No se encontraron usuarios' });
+    }
+    res.status(200).json({ success: true, usuarios });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
+    logger.error('Error al obtener usuarios', { message: error.message, stack: error.stack });
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
@@ -57,45 +67,35 @@ const getUsuarioById = async (req, res) => {
     if (!usuario) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
-    res.json({ success: true, usuario });
+    res.status(200).json({ success: true, usuario });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
+    logger.error(`Error al obtener usuario con ID ${id}`, { message: error.message, stack: error.stack });
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
 
 // Crear un nuevo usuario (Solo Super Administrador)
 const crearUsuario = async (req, res) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ success: false, message: 'No se proporcionaron datos para crear el usuario' });
+  }
+
+  const errors = validateUsuario(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ success: false, message: 'Errores de validación', errors });
+  }
+
   try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ success: false, message: 'No se proporcionaron datos' });
-    }
-
-    // Verificar que solo el Super Administrador pueda registrar usuarios
-    if (req.user.Rol_Usuario !== 'Super Administrador') {
-      return res.status(403).json({ success: false, message: 'Solo los Super Administradores pueden registrar usuarios.' });
-    }
-
-    const errors = validateUsuario(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ success: false, message: 'Errores de validación', errors });
-    }
-
-    const usuarioExistente = await Usuario.findOne({ where: { Usuario: req.body.Usuario } });
+    const usuarioExistente = await Usuario.findOne({ where: { usuario: req.body.usuario } }); // Cambiado de Usuario a usuario
     if (usuarioExistente) {
       return res.status(409).json({ success: false, message: 'El nombre de usuario ya está en uso' });
     }
 
-    // Permite asignar permisos a los usuarios durante su registro
-    const usuario = await Usuario.create({
-      ...req.body,
-      permisos: req.body.permisos ? JSON.stringify(req.body.permisos) : null // Convierte a JSON si hay permisos
-    });
-
+    const usuario = await Usuario.create(req.body);
     res.status(201).json({ success: true, usuario });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    logger.error('Error al crear usuario', { message: error.message, stack: error.stack });
+    res.status(500).json({ success: false, error: 'Error interno del servidor al crear el usuario' });
   }
 };
 
@@ -104,33 +104,26 @@ const actualizarUsuario = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
 
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ success: false, message: 'No se proporcionaron datos para actualizar el usuario' });
+  }
+
+  const errors = validateUsuario(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ success: false, message: 'Errores de validación', errors });
+  }
+
   try {
-    if (req.user.Rol_Usuario !== 'Super Administrador') {
-      return res.status(403).json({ success: false, message: 'Solo los Super Administradores pueden actualizar usuarios.' });
-    }
-
-    const errors = validateUsuario(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ success: false, message: 'Errores de validación', errors });
-    }
-
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    // Actualiza los permisos si se proporciona
-    const updatedData = {
-      ...req.body,
-      permisos: req.body.permisos ? JSON.stringify(req.body.permisos) : usuario.permisos // Mantiene los permisos existentes si no se proporcionan nuevos
-    };
-
-    await Usuario.update(updatedData, { where: { Id_Usuario: id } });
-    const usuarioActualizado = await Usuario.findByPk(id);
-    res.json({ success: true, usuario: usuarioActualizado });
+    await usuario.update(req.body);
+    res.status(200).json({ success: true, usuario });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    logger.error(`Error al actualizar usuario con ID ${id}`, { message: error.message, stack: error.stack });
+    res.status(500).json({ success: false, error: 'Error interno del servidor al actualizar el usuario' });
   }
 };
 
@@ -140,42 +133,38 @@ const eliminarUsuario = async (req, res) => {
   if (isNaN(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
 
   try {
-    if (req.user.Rol_Usuario !== 'Super Administrador') {
-      return res.status(403).json({ success: false, message: 'Solo los Super Administradores pueden eliminar usuarios.' });
-    }
-
     const usuario = await Usuario.findByPk(id);
     if (!usuario) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    await Usuario.destroy({ where: { Id_Usuario: id } });
-    res.status(204).json({ success: true, message: 'Usuario eliminado correctamente' });
+    await usuario.destroy();
+    res.status(204).end();
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    logger.error(`Error al eliminar usuario con ID ${id}`, { message: error.message, stack: error.stack });
+    res.status(500).json({ success: false, error: 'Error interno del servidor al eliminar el usuario' });
   }
 };
 
 // Solicitar restablecimiento de contraseña
 const resetPasswordRequest = async (req, res) => {
   try {
-    const { Correo_Usuario } = req.body;
-    const usuario = await Usuario.findOne({ where: { Correo_Usuario } });
+    const { email } = req.body; // Cambiado de Correo_Usuario a email
+    const usuario = await Usuario.findOne({ where: { email } });
 
     if (!usuario) {
       return res.status(404).json({ success: false, message: 'Correo no encontrado' });
     }
 
-    // Aquí se podría implementar la lógica de envío de correo para restablecer la contraseña
-
+    // Implementar lógica de restablecimiento de contraseña aquí
     res.status(200).json({ success: true, message: 'Correo enviado para restablecer la contraseña' });
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
+    logger.error('Error al solicitar restablecimiento de contraseña', { message: error.message, stack: error.stack });
     res.status(500).json({ success: false, error: 'Error interno del servidor' });
   }
 };
 
+// Exportar funciones
 module.exports = {
   getUsuarios,
   getUsuarioById,
@@ -183,6 +172,6 @@ module.exports = {
   actualizarUsuario,
   eliminarUsuario,
   resetPasswordRequest,
-  isSuperAdmin, // Asegúrate de exportar este middleware si lo usas en las rutas
-  checkPermissions // Asegúrate de exportar este middleware si lo usas en las rutas
+  isSuperAdmin,
+  checkPermissions,
 };

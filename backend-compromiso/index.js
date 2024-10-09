@@ -4,10 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const fs = require('fs');
-const https = require('https');
 const sequelize = require('./config/database.js');
-const logger = require('./config/logger.js');
+const { logger } = require('./config/logger.js');
+// const checkAuth = require('./middlewares/authMiddleware.js');
 const { body, validationResult } = require('express-validator'); // Importa express-validator
 
 // Importa los routers
@@ -19,28 +18,8 @@ const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 const asistenteRouter = require('./src/api/asistente/routes/asistenteRoutes.js');
 const permisosRouter = require('./src/api/permiso/routes/permisoRoutes'); // Importa las rutas de permisos
 
-// Importa Swagger
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsdoc = require('swagger-jsdoc');
-
 const app = express();
 const port = process.env.PORT || 3001;  // Usa el puerto del archivo .env
-
-// Configuración de Swagger
-const swaggerOptions = {
-  definition: {
-    openapi: '3.0.0',
-    info: {
-      title: 'API de Compromiso',
-      version: '1.0.0',
-      description: 'Documentación de la API de Compromiso con funcionalidades de gestión de usuarios, procesos, procedimientos, áreas, unidades, documentos y responsables.',
-    },
-    servers: [{ url: `https://localhost:${port}`, description: 'Servidor local' }],
-  },
-  apis: ['./src/api/**/*.js'],
-};
-
-const swaggerSpecs = swaggerJsdoc(swaggerOptions);
 
 // Configura Rate Limiting
 const apiLimiter = rateLimit({
@@ -51,7 +30,7 @@ const apiLimiter = rateLimit({
 app.use('/api/', apiLimiter);
 
 // Configura CORS
-const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000', 'https://tu-dominio-de-produccion.com'];
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
 app.use(cors({
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {
@@ -76,8 +55,8 @@ app.get('/', (req, res) => {
   res.send('Bienvenido al API de Compromiso!');
 });
 
-// Documentación de la API con Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+// Aplica el middleware de autenticación
+// app.use(checkAuth);
 
 // Rutas de la API
 app.use('/api/responsables', responsablesRouter);
@@ -88,17 +67,17 @@ app.use('/api/usuarios', usuariosRouter);
 app.use('/api/asistente', asistenteRouter);
 app.use('/api/permisos', permisosRouter); // Usa las rutas de permisos
 
-// Middleware de validación para la creación de usuarios
-app.post('/api/usuarios', [
-  body('email').isEmail().withMessage('Debes proporcionar un correo electrónico válido.'),
-  body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres.'),
-], (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-  // Procesar la creación del usuario
-});
+// // Middleware de validación para la creación de usuarios
+// app.post('/api/usuarios', [
+//   body('email').isEmail().withMessage('Debes proporcionar un correo electrónico válido.'),
+//   body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres.'),
+// ], (req, res) => {
+//   const errors = validationResult(req);
+//   if (!errors.isEmpty()) {
+//     return res.status(400).json({ errors: errors.array() });
+//   }
+//   // Procesar la creación del usuario
+// });
 
 // Manejo de errores 404
 app.use((req, res) => {
@@ -111,24 +90,12 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
-// Lee los certificados SSL solo si estamos en producción
-let server;
-if (process.env.NODE_ENV === 'production') {
-  const privateKey = fs.readFileSync('localhost-key.pem', 'utf8');
-  const certificate = fs.readFileSync('localhost.pem', 'utf8');
-  const credentials = { key: privateKey, cert: certificate };
-
-  server = https.createServer(credentials, app);
-} else {
-  server = app;
-}
-
 // Conexión a la base de datos y arranque del servidor
 sequelize.authenticate()
   .then(() => {
     console.log('Conexión exitosa a la base de datos');
-    server.listen(port, () => {
-      console.log(`Servidor corriendo en ${process.env.NODE_ENV === 'production' ? 'https' : 'http'}://localhost:${port}`);
+    app.listen(port, () => {
+      console.log(`Servidor corriendo en http://localhost:${port}`);
     });
   })
   .catch(err => {

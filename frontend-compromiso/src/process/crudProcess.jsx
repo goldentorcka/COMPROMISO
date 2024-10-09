@@ -132,7 +132,10 @@ const CrudProcesos = () => {
               borderRadius: '5px',
               cursor: 'pointer',
               marginBottom: '20px',
+              transition: 'background-color 0.3s, transform 0.2s',
             }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4caf50'}
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
@@ -160,6 +163,7 @@ const CrudProcesos = () => {
               setIsModalOpen(false);
             }}
             title={buttonForm === "Enviar" ? "Agregar Proceso" : "Actualizar Proceso"}
+            style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }} // Estilo del modal
           >
             <FormProcess
               proceso={proceso}

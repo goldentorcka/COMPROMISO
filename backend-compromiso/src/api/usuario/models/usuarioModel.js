@@ -1,37 +1,33 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
-const Usuario = sequelize.define('Usuario', {
-  Id_Usuario: {
-    type: DataTypes.INTEGER,
+const Usuario = sequelize.define('usuarios', {
+  id_usuario: {
+    type: DataTypes.BIGINT,
     primaryKey: true,
     autoIncrement: true,
   },
-  Rol_Usuario: {
-    type: DataTypes.ENUM('Administrador', 'Super Administrador'),
+  rol: {
+    type: DataTypes.STRING(15),
     allowNull: false,
   },
-  Nom_Usuario: {
-    type: DataTypes.STRING(255),
+  nombre_usuario: {
+    type: DataTypes.STRING(200),
     allowNull: false,
   },
-  Usuario: {
+  usuario: {
+    type: DataTypes.STRING(30),
+    allowNull: false,
+    unique: true,
+  },
+  contrasena: {
     type: DataTypes.STRING(100),
     allowNull: false,
-    unique: true,
   },
-  Correo_Usuario: {
-    type: DataTypes.STRING(255),
+  email: {
+    type: DataTypes.STRING(200),
     allowNull: false,
     unique: true,
-  },
-  Contraseña_Usuario: {
-    type: DataTypes.STRING(255),
-    allowNull: false,
-  },
-  permisos: {
-    type: DataTypes.JSON,  // Almacena los permisos en formato JSON
-    allowNull: true,
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
@@ -48,15 +44,19 @@ const Usuario = sequelize.define('Usuario', {
     allowNull: false,
     defaultValue: DataTypes.NOW,
   },
+}, {
+  // Opción para definir los hooks si se necesitan
+  hooks: {
+    beforeUpdate: (usuario) => {
+      usuario.updatedAt = new Date();
+    },
+    beforeCreate: (usuario) => {
+      usuario.createdAt = new Date();
+    },
+  },
 });
 
-// Opción para definir los hooks si se necesitan
-Usuario.beforeUpdate((usuario) => {
-  usuario.updatedAt = new Date();
-});
-
-Usuario.beforeCreate((usuario) => {
-  usuario.createdAt = new Date();
-});
+// Sincronizar el modelo con la base de datos (opcional, solo si es necesario)
+Usuario.sync();
 
 module.exports = Usuario;

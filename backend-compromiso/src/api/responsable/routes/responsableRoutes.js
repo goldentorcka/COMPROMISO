@@ -7,7 +7,7 @@ const {
   updateResponsable,
   deleteResponsable,
 } = require('../controllers/responsableController.js');
-const logger = require('../../../../config/logger.js');
+const { logger } = require('../../../../config/logger.js');
 const router = express.Router();
 
 // Obtiene todos los responsables

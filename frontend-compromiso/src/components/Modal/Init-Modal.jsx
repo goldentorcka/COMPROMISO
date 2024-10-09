@@ -15,18 +15,20 @@ const Modal = ({ isOpen, onClose, children, title }) => {
       aria-hidden={!isOpen}
       style={{ display: isOpen ? 'block' : 'none' }}
     >
-      <div className={`modal-content ${isOpen ? 'animate__animated animate__flipInX' : ''}`} style={{ borderRadius: '10px', width: '50%', margin: 'auto', top: '50%', transform: 'translateY(-50%)' }}>
-        <div className="modal-header">
-          <h5 className="modal-title" id="staticBackdropLabel">{title}</h5>
-          <button
-            type="button"
-            className="btn-close"
-            aria-label="Close"
-            onClick={onClose}
-          ></button>
-        </div>
-        <div className="modal-body">
-          {children}
+      <div className={`modal-dialog`}>
+        <div className={`modal-content ${isOpen ? 'animate__animated animate__fadeIn' : ''}`}>
+          <div className="modal-header">
+            <h5 className="modal-title" id="staticBackdropLabel">{title}</h5>
+            <button
+              type="button"
+              className="btn-close"
+              aria-label="Close"
+              onClick={onClose}
+            ></button>
+          </div>
+          <div className="modal-body">
+            {children}
+          </div>
         </div>
       </div>
     </div>

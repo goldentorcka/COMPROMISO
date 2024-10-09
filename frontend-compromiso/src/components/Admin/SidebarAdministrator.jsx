@@ -84,7 +84,7 @@ const SidebarAdministrator = () => {
                 to="/login-admin"
               >
                 <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
-                Sign out
+                Cerrar Sesion
               </NavLink>
             </li>
           </ul>

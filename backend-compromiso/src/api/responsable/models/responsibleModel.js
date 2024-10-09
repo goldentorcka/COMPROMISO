@@ -2,23 +2,23 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
-const Responsable = sequelize.define('responsables', {
-  Id_Responsable: {
-    type: DataTypes.INTEGER,
+const Responsable = sequelize.define('responsable', {
+  id_responsable: {
+    type: DataTypes.BIGINT(20),
     primaryKey: true,
     autoIncrement: true,
-    field: 'Id_Responsable' // Nombre de la columna en la base de datos
+    field: 'id_responsable' // Nombre de la columna en la base de datos
   },
-  Nom_Responsable: {
-    type: DataTypes.STRING(255),
+  nombre_responsable: {
+    type: DataTypes.STRING(500),
     allowNull: false,
-    field: 'Nom_Responsable' // Nombre de la columna en la base de datos
+    field: 'nombre_responsable' // Nombre de la columna en la base de datos
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
     field: 'estado' // Nombre de la columna en la base de datos
-  }, 
+  },
   createdAt: {
     type: DataTypes.DATE,
     allowNull: false,
@@ -30,8 +30,8 @@ const Responsable = sequelize.define('responsables', {
     field: 'updatedAt' // Nombre de la columna en la base de datos
   }
 }, {
-  tableName: 'responsables', // Nombre de la tabla en minúsculas
-  timestamps: true // Sequelize manejará los campos createdAt y updatedAt automáticamente
+  tableName: 'responsable', // Nombre de la tabla en singular y en minúsculas
+  timestamps: true // Sequelize manejará automáticamente createdAt y updatedAt
 });
 
 module.exports = Responsable;

@@ -3,12 +3,12 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
 const Proceso = sequelize.define('procesos', {
-  Id_Proceso: {
-    type: DataTypes.INTEGER,
+  id_proceso: {
+    type: DataTypes.BIGINT, // Cambiado a BIGINT para coincidir con la base de datos
     autoIncrement: true,
     primaryKey: true,
   },
-  Nom_Proceso: {
+  nombre_proceso: {
     type: DataTypes.STRING(300),
     allowNull: false,
     validate: {
@@ -22,9 +22,9 @@ const Proceso = sequelize.define('procesos', {
       },
     },
   },
-  Tip_Proceso: {
-    type: DataTypes.ENUM('Proceso de Innovacion', 'Proceso de Valor', 'Proceso de Apoyo'),
-    allowNull: false,
+  nombre_directorio_proceso: {
+    type: DataTypes.STRING(300),
+    allowNull: true, // Se puede permitir que sea nulo si no se especifica
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),

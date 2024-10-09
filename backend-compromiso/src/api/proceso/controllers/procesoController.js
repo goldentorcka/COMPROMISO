@@ -4,19 +4,20 @@ const { logger } = require('../../../../config/logger.js'); // Ruta del logger
 
 // Validar campos obligatorios
 const validateProceso = (proceso) => {
-  const { Nom_Proceso, estado, Tip_Proceso } = proceso;
+  const { nombre_proceso, estado, nombre_directorio_proceso } = proceso; // Cambiado a los nombres correctos
   let errors = [];
 
-  if (!Nom_Proceso) {
-    errors.push("El campo 'Nom_Proceso' es obligatorio.");
+  if (!nombre_proceso) {
+    errors.push("El campo 'nombre_proceso' es obligatorio.");
   }
 
   if (!['Activo', 'Inactivo'].includes(estado)) {
     errors.push("El estado debe ser 'Activo' o 'Inactivo'.");
   }
 
-  if (!['Proceso de Innovación', 'Proceso de Valor', 'Proceso de Apoyo'].includes(Tip_Proceso)) {
-    errors.push("El tipo de proceso no es válido.");
+  // Validación de nombre_directorio_proceso si es necesario
+  if (nombre_directorio_proceso && typeof nombre_directorio_proceso !== 'string') {
+    errors.push("El campo 'nombre_directorio_proceso' debe ser una cadena de texto.");
   }
 
   return errors;
@@ -26,7 +27,10 @@ const validateProceso = (proceso) => {
 const getProcesos = async (req, res) => {
   try {
     const procesos = await Proceso.findAll();
-    res.status(procesos.length === 0 ? 404 : 200).json(procesos.length === 0 ? { message: 'No se encontraron procesos' } : procesos);
+    if (procesos.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron procesos' });
+    }
+    res.json(procesos);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -40,7 +44,9 @@ const getProcesoById = async (req, res) => {
 
   try {
     const proceso = await Proceso.findByPk(id);
-    if (!proceso) return res.status(404).json({ message: 'Proceso no encontrado' });
+    if (!proceso) {
+      return res.status(404).json({ message: 'Proceso no encontrado' });
+    }
     res.json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
@@ -50,21 +56,21 @@ const getProcesoById = async (req, res) => {
 
 // Crear un nuevo proceso
 const createProceso = async (req, res) => {
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: 'No se proporcionaron datos para crear el proceso' });
+  }
+
+  const errors = validateProceso(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Errores de validación', errors });
+  }
+
   try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: 'No se proporcionaron datos' });
-    }
-
-    const errors = validateProceso(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ message: 'Errores de validación', errors });
-    }
-
     const nuevoProceso = await Proceso.create(req.body);
     res.status(201).json(nuevoProceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al crear el proceso' });
   }
 };
 
@@ -73,16 +79,16 @@ const updateProceso = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
 
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el proceso' });
+  }
+
+  const errors = validateProceso(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Errores de validación', errors });
+  }
+
   try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: 'No se proporcionaron datos para actualizar' });
-    }
-
-    const errors = validateProceso(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ message: 'Errores de validación', errors });
-    }
-
     const proceso = await Proceso.findByPk(id);
     if (!proceso) {
       return res.status(404).json({ message: 'Proceso no encontrado' });
@@ -92,7 +98,7 @@ const updateProceso = async (req, res) => {
     res.json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al actualizar el proceso' });
   }
 };
 
@@ -111,7 +117,7 @@ const deleteProceso = async (req, res) => {
     res.status(204).end();
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al eliminar el proceso' });
   }
 };
 

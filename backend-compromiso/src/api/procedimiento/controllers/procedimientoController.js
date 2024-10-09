@@ -3,11 +3,11 @@ const { logger } = require('../../../../config/logger.js');
 
 // Validar campos obligatorios
 const validateProcedimiento = (procedimiento) => {
-  const { Nom_Procedimiento, Id_Proceso, estado } = procedimiento;
+  const { nombre_procedimiento, id_proceso, estado } = procedimiento;
   let errors = [];
 
-  if (!Nom_Procedimiento) errors.push("El campo 'Nom_Procedimiento' es obligatorio.");
-  if (!Id_Proceso) errors.push("El campo 'Id_Proceso' es obligatorio.");
+  if (!nombre_procedimiento) errors.push("El campo 'nombre_procedimiento' es obligatorio.");
+  if (!id_proceso) errors.push("El campo 'id_proceso' es obligatorio.");
   if (!estado) errors.push("El campo 'estado' es obligatorio.");
 
   return errors;

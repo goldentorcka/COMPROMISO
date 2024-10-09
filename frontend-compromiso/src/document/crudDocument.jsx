@@ -23,7 +23,6 @@ const CrudDocumentos = () => {
   const getAllDocumentos = async () => {
     try {
       const response = await clienteAxios.get('/api/documentos');
-      // Aquí hacemos un mapeo para obtener el nombre de los responsables y procedimientos
       const documentosConNombres = response.data.map(doc => {
         const procedimiento = procedimientos.find(proc => proc.Id_Procedimiento === doc.Id_Procedimiento);
         const responsable = responsables.find(res => res.Id_Responsable === doc.Id_Responsable);
@@ -44,7 +43,6 @@ const CrudDocumentos = () => {
     try {
       const response = await clienteAxios.get('/api/responsables');
       setResponsables(response.data);
-      // Llama nuevamente a getAllDocumentos para asegurarte de que se tienen los nombres actualizados
       await getAllDocumentos();
     } catch (error) {
       console.error("Error al obtener los responsables:", error);
@@ -56,7 +54,6 @@ const CrudDocumentos = () => {
     try {
       const response = await clienteAxios.get('/api/procedimientos');
       setProcedimientos(response.data);
-      // Llama nuevamente a getAllDocumentos para asegurarte de que se tienen los nombres actualizados
       await getAllDocumentos();
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
@@ -96,18 +93,10 @@ const CrudDocumentos = () => {
 
   const validateDocumento = (documento) => {
     const { Cod_Documento, Nom_Documento, Id_Responsable, Id_Procedimiento } = documento;
-    if (!Cod_Documento) {
-      return 'El código del documento es obligatorio.';
-    }
-    if (!Nom_Documento) {
-      return 'El nombre del documento es obligatorio.';
-    }
-    if (!Id_Responsable) {
-      return 'El ID del responsable es obligatorio.';
-    }
-    if (!Id_Procedimiento) {
-      return 'El ID del procedimiento es obligatorio.';
-    }
+    if (!Cod_Documento) return 'El código del documento es obligatorio.';
+    if (!Nom_Documento) return 'El nombre del documento es obligatorio.';
+    if (!Id_Responsable) return 'El ID del responsable es obligatorio.';
+    if (!Id_Procedimiento) return 'El ID del procedimiento es obligatorio.';
     return null;
   };
 
@@ -199,8 +188,8 @@ const CrudDocumentos = () => {
               documento={documento}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              procedimientos={procedimientos} // Pasa los procedimientos al formulario
-              responsables={responsables} // Si es necesario, también pasa los responsables
+              procedimientos={procedimientos}
+              responsables={responsables}
             />
           </Modal>
 

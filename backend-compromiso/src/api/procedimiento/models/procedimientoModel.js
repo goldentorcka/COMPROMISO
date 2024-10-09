@@ -1,41 +1,53 @@
 // @ts-nocheck
 const { DataTypes } = require('sequelize');
-const sequelize = require('C:/COMPROMISO/backend-compromiso/config/database.js');
-const Proceso = require('../../proceso/models/procesoModel');
+const sequelize = require('../../../../config/database.js');
 
-const Procedimiento = sequelize.define('procedimientos', {
-  Id_Procedimiento: {
-    type: DataTypes.INTEGER,
+const Procedimiento = sequelize.define('procedimiento', {
+  id_procedimiento: {
+    type: DataTypes.BIGINT,
     autoIncrement: true,
     primaryKey: true,
   },
-  Nom_Procedimiento: {
-    type: DataTypes.STRING,
+  nombre_procedimiento: {
+    type: DataTypes.STRING(300),
     allowNull: false,
     validate: {
-      is: /^[A-Za-zñÑáéíóúÁÉÍÓÚ\s]+$/i, // Solo letras y espacios
+      notEmpty: { msg: "El nombre del procedimiento no puede estar vacío." },
+      isAlpha: { msg: "El nombre del procedimiento solo puede contener letras." },
+      noSpecialChars(value) {
+        const regex = /^[a-zA-Z\s]*$/;
+        if (!regex.test(value)) {
+          throw new Error("El nombre del procedimiento no puede contener números, puntos, comas o caracteres especiales.");
+        }
+      },
     },
   },
-  Id_Proceso: {
+  id_proceso: {
     type: DataTypes.INTEGER,
-    references: {
-      model: Proceso,
-      key: 'Id_Proceso',
-    },
     allowNull: false,
+  },
+  nombre_directorio_procedimiento: {
+    type: DataTypes.STRING(300),
+    allowNull: true, // Puedes cambiar a false si es obligatorio
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    allowNull: false,
+    defaultValue: DataTypes.NOW,
   },
 }, {
   timestamps: true,
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
 });
-
-// Definición de las relaciones
-Proceso.hasMany(Procedimiento, { foreignKey: 'Id_Proceso' });
-Procedimiento.belongsTo(Proceso, { foreignKey: 'Id_Proceso' });
 
 module.exports = Procedimiento;

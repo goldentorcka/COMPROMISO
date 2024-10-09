@@ -1,15 +1,18 @@
 // @ts-nocheck
-const Responsable = require('../models/responsibleModel.js');
+const Responsable = require('../models/responsibleModel.js'); // Asegúrate de que la ruta sea correcta
 const { logger } = require('../../../../config/logger.js'); // Ruta del logger
 
 // Validar campos obligatorios
 const validateResponsable = (responsable) => {
-  const { Nom_Responsable, estado } = responsable;
+  const { nombre_responsable, estado } = responsable; // Actualizado a 'nombre_responsable'
   let errors = [];
 
-  if (!Nom_Responsable) errors.push("El campo 'Nom_Responsable' es obligatorio.");
-  if (!estado) errors.push("El campo 'estado' es obligatorio.");
-
+  if (!nombre_responsable || nombre_responsable.trim() === "") 
+    errors.push("El campo 'nombre_responsable' es obligatorio y no debe estar vacío.");
+  
+  if (!estado || estado.trim() === "") 
+    errors.push("El campo 'estado' es obligatorio y no debe estar vacío.");
+  
   return errors;
 };
 
@@ -17,7 +20,10 @@ const validateResponsable = (responsable) => {
 const getResponsables = async (req, res) => {
   try {
     const responsables = await Responsable.findAll();
-    res.status(responsables.length === 0 ? 404 : 200).json(responsables.length === 0 ? { message: 'No se encontraron responsables' } : responsables);
+    if (responsables.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron responsables' });
+    }
+    res.status(200).json(responsables);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -31,8 +37,10 @@ const getResponsableById = async (req, res) => {
 
   try {
     const responsable = await Responsable.findByPk(id);
-    if (!responsable) return res.status(404).json({ message: 'Responsable no encontrado' });
-    res.json(responsable);
+    if (!responsable) {
+      return res.status(404).json({ message: 'Responsable no encontrado' });
+    }
+    res.status(200).json(responsable);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -41,21 +49,21 @@ const getResponsableById = async (req, res) => {
 
 // Crear un nuevo responsable
 const createResponsable = async (req, res) => {
-  try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: 'No se proporcionaron datos' });
-    }
-    
-    const errors = validateResponsable(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ message: 'Errores de validación', errors });
-    }
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: 'No se proporcionaron datos para crear el responsable' });
+  }
 
+  const errors = validateResponsable(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Errores de validación', errors });
+  }
+
+  try {
     const responsable = await Responsable.create(req.body);
     res.status(201).json(responsable);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al crear el responsable' });
   }
 };
 
@@ -64,26 +72,26 @@ const updateResponsable = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
 
+  if (!req.body || Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el responsable' });
+  }
+
+  const errors = validateResponsable(req.body);
+  if (errors.length > 0) {
+    return res.status(400).json({ message: 'Errores de validación', errors });
+  }
+
   try {
-    if (!req.body || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ message: 'No se proporcionaron datos para actualizar' });
-    }
-
-    const errors = validateResponsable(req.body);
-    if (errors.length > 0) {
-      return res.status(400).json({ message: 'Errores de validación', errors });
-    }
-
     const responsable = await Responsable.findByPk(id);
     if (!responsable) {
       return res.status(404).json({ message: 'Responsable no encontrado' });
     }
 
     await responsable.update(req.body);
-    res.json(responsable);
+    res.status(200).json(responsable);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al actualizar el responsable' });
   }
 };
 
@@ -99,10 +107,10 @@ const deleteResponsable = async (req, res) => {
     }
 
     await responsable.destroy();
-    res.status(204).end();
+    res.status(204).end(); // Sin contenido
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: 'Error interno del servidor al eliminar el responsable' });
   }
 };
 

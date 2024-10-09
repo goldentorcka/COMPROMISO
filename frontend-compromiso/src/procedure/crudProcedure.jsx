@@ -11,13 +11,13 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 const CrudProcedimientos = () => {
   const [procedimientoList, setProcedimientoList] = useState([]);
   const [procedimiento, setProcedimiento] = useState(null);
-  const [processes, setProcesses] = useState([]); // Estado para guardar los procesos
+  const [processes, setProcesses] = useState([]);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     getAllProcedimientos();
-    getAllProcesses(); // Cargar los procesos al montar el componente
+    getAllProcesses();
   }, []);
 
   const getAllProcedimientos = async () => {
@@ -32,8 +32,8 @@ const CrudProcedimientos = () => {
 
   const getAllProcesses = async () => {
     try {
-      const response = await clienteAxios.get('/api/procesos'); // Ajusta la URL según tu API
-      setProcesses(response.data); // Guardar los procesos en el estado
+      const response = await clienteAxios.get('/api/procesos');
+      setProcesses(response.data);
     } catch (error) {
       console.error("Error al obtener los procesos:", error);
       Swal.fire('Error', 'No se pudieron obtener los procesos', 'error');
@@ -141,7 +141,10 @@ const CrudProcedimientos = () => {
               borderRadius: '5px',
               cursor: 'pointer',
               marginBottom: '20px',
+              transition: 'background-color 0.3s, transform 0.2s',
             }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4caf50'}
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
@@ -169,12 +172,13 @@ const CrudProcedimientos = () => {
               setIsModalOpen(false);
             }}
             title={buttonForm === "Enviar" ? "Agregar Procedimiento" : "Actualizar Procedimiento"}
+            style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }} // Estilo del modal
           >
             <FormProcedure
               procedimiento={procedimiento}
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              processes={processes} // Pasar los procesos al formulario
+              processes={processes}
             />
           </Modal>
 
