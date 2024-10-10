@@ -10,7 +10,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'primereact/resources/themes/saga-blue/theme.css'; // o cualquier otro tema
 import 'primereact/resources/primereact.min.css';
 import 'primeicons/primeicons.css';
-import 'primeflex/primeflex.css';                                  // Si usas PrimeFlex para layout
+import 'primeflex/primeflex.css';      
+import { PrimeReactProvider } from 'primereact/api';
+import 'primereact/resources/primereact.css';
+import 'primereact/resources/themes/lara-light-indigo/theme.css';// Si usas PrimeFlex para layout
 
 
 

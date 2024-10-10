@@ -37,7 +37,13 @@ const CustomDataTable = ({
         <div className="custom-datatable card">
             <SearchBar data={data} onSearch={setSearchTerm} searchField={searchField} />
 
-            <DataTable value={currentRecords} className="p-datatable-responsive-scroll custom-table">
+            <DataTable
+                value={currentRecords}
+                className="p-datatable-responsive-scroll custom-table"
+                scrollable   // Habilita el scroll
+                scrollDirection="horizontal" // Permite el desplazamiento horizontal
+                style={{ minWidth: '1000px' }} // Ajusta el ancho mínimo de la tabla
+            >
                 {columns.map((col, index) => (
                     <Column key={index} field={col.field} header={col.header} />
                 ))}

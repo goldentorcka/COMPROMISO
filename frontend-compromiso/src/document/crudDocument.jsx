@@ -64,7 +64,7 @@ const CrudDocumentos = () => {
         await clienteAxios.post('/api/documentos', documentoData);
         Swal.fire('Agregado!', 'El documento ha sido agregado.', 'success');
       } else if (buttonForm === "Actualizar" && documento) {
-        await clienteAxios.put(`/api/documentos/${documento.Id_Documento}`, documentoData);
+        await clienteAxios.put(`/api/documentos/${documento.id_documento}`, documentoData);
         Swal.fire('Actualizado!', 'El documento ha sido actualizado.', 'success');
       }
       resetForm();
@@ -82,34 +82,35 @@ const CrudDocumentos = () => {
   };
 
   const validateDocumento = (documento) => {
-    const { Cod_Documento, Nom_Documento, Id_Responsable, Id_Procedimiento } = documento;
-  
-    if (!Cod_Documento || Cod_Documento.trim() === "") {
+    const { codigo, nombre_documento, id_responsable, id_procedimiento } = documento;
+
+    if (!codigo || codigo.trim() === "") {
       return 'El código del documento es obligatorio.';
     }
-  
-    if (!Nom_Documento || Nom_Documento.trim() === "") {
+
+    if (!nombre_documento || nombre_documento.trim() === "") {
       return 'El nombre del documento es obligatorio.';
     }
-  
-    if (!Id_Responsable) {
+
+    if (!id_responsable) {
       return 'El ID del responsable es obligatorio.';
     }
-  
-    if (!Id_Procedimiento) {
+
+    if (!id_procedimiento) {
       return 'El ID del procedimiento es obligatorio.';
     }
-  
+
     return null;
   };
 
   const columns = [
-    { field: 'Id_Documento', header: 'ID', width: '5%' },
-    { field: 'Cod_Documento', header: 'Código', width: '30%' },
-    { field: 'Nom_Documento', header: 'Nombre', width: '30%' },
-    { field: 'Nom_Responsable', header: 'Responsable', width: '20%' },
-    { field: 'Nom_Procedimiento', header: 'Procedimiento', width: '15%' },
-    { field: 'estado', header: 'Estado', width: '20%' }
+    { field: 'id_documento', header: 'ID', width: '5%' },
+    { field: 'codigo', header: 'Código', width: '10%' },
+    { field: 'nombre_documento', header: 'Nombre', width: '15%' },
+    { field: 'nombre_documento_magnetico', header: 'Nombre Magnético', width: '15%' },
+    { field: 'id_responsable', header: 'ID Responsable', width: '10%' },
+    { field: 'id_procedimiento', header: 'ID Procedimiento', width: '10%' },
+    { field: 'estado', header: 'Estado', width: '5%' }
   ];
 
   const getDocumento = (rowData) => {
@@ -128,10 +129,10 @@ const CrudDocumentos = () => {
       cancelButtonColor: '#3085d6',
       confirmButtonText: 'Sí, eliminarlo!'
     });
-  
+
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await clienteAxios.delete(`/api/documentos/${rowData.Id_Documento}`);
+        const response = await clienteAxios.delete(`/api/documentos/${rowData.id_documento}`);
         if (response.status === 204) {
           Swal.fire('Eliminado!', 'El documento ha sido eliminado.', 'success');
           getAllDocumentos();
@@ -171,7 +172,7 @@ const CrudDocumentos = () => {
               setIsModalOpen(true);
             }}
           >
-            Añadir Documento
+            Añadir
           </button>
 
           {isModalOpen && (
@@ -198,8 +199,8 @@ const CrudDocumentos = () => {
               documento={documento} 
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              responsables={responsables} // Asegúrate de pasar la lista de responsables al formulario
-              procedimientos={procedimientos} // Asegúrate de pasar la lista de procedimientos al formulario
+              responsables={responsables}
+              procedimientos={procedimientos}
             />
           </Modal>
 
@@ -209,8 +210,8 @@ const CrudDocumentos = () => {
               columns={columns}
               onEdit={getDocumento}
               onDelete={deleteDocumento}
-              searchField="Nom_Documento" 
-              exportFields={['Id_Documento', 'Cod_Documento', 'Nom_Documento', 'Nom_Responsable', 'Nom_Procedimiento']}
+              searchField="nombre_documento" 
+              exportFields={['id_documento', 'codigo', 'nombre_documento', 'nombre_documento_magnetico', 'nombre_documento_visualizacion', 'tipo_documento', 'version', 'fecha_elaboracion', 'id_responsable', 'id_procedimiento', 'estado']}
             />
           }
         </div>

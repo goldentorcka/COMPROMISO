@@ -1,160 +1,250 @@
 import React, { useState, useEffect } from 'react';
-import clienteAxios from '../../api.js';
-import Swal from 'sweetalert2';
+import { classNames } from 'primereact/utils';
+import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
+import { Dropdown } from 'primereact/dropdown';
+import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
-import { FaDownload, FaEye } from 'react-icons/fa'; // Importamos los íconos
-import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
-import '../styles/tablecomponentes.css'; // Importar el CSS para el estilo
-import 'primeicons/primeicons.css'; // Asegúrate de que los estilos de PrimeIcons están importados
+import clienteAxios from '../../api.js'; // Asegúrate de que esta ruta sea correcta
+import NavMenuSE from "../../components/Nav/NavQuerySena/NavMenuS_E.jsx"; // Asegúrate de que esta ruta sea correcta
 
-const TableComponent = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState(null);
-  const [globalFilterValue, setGlobalFilterValue] = useState('');
+export default function AdvancedFilterDemo() {
+    const [documentoList, setDocumentoList] = useState([]);
+    const [filters, setFilters] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [globalFilterValue, setGlobalFilterValue] = useState('');
+    const [statuses] = useState(['Activo', 'Inactivo']);
+    const [processes, setProcesses] = useState([]);
+    const [procedures, setProcedures] = useState([]);
+    const [responsibles, setResponsibles] = useState([]);
+    const [documentTypes, setDocumentTypes] = useState(['Formato', 'Instructivo']); // Reemplaza con tus tipos de documento
 
-  useEffect(() => {
-    fetchData();
-    initFilters();
-  }, []);
+    const getSeverity = (status) => {
+        switch (status) {
+            case 'Inactivo':
+                return 'danger';
+            case 'Activo':
+                return 'success';
+            default:
+                return null;
+        }
+    };
 
-  const fetchData = async () => {
-    try {
-      const response = await clienteAxios.get('/api/documentos');
-      const documentosConNombres = response.data.map(doc => {
-        const proceso = doc.Nom_Proceso || 'No definido';
-        const procedimiento = doc.Nom_Procedimiento || 'No definido';
-        const responsable = doc.Nom_Responsable || 'No definido';
-        return {
-          ...doc,
-          Nom_Proceso: proceso,
-          Nom_Procedimiento: procedimiento,
-          Nom_Responsable: responsable,
-        };
-      });
-      setData(documentosConNombres);
-    } catch (error) {
-      console.error("Error al obtener los documentos:", error);
-      Swal.fire('Error', 'No se pudieron obtener los documentos', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
+    useEffect(() => {
+        setLoading(true);
+        // Carga los datos de tu CRUD
+        clienteAxios.get('api/documentos') // Cambia la ruta según tu API
+            .then(response => {
+                setDocumentoList(response.data);
+                setLoading(false);
+            })
+            .catch(error => {
+                console.error("Error al cargar los documentos:", error);
+                setLoading(false);
+            });
 
-  const initFilters = () => {
-    setFilters({
-      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-      Cod_Documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      Nom_Documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      Nom_Proceso: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      Nom_Procedimiento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      Nom_Responsable: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-      estado: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    });
-    setGlobalFilterValue('');
-  };
+        // Cargar procesos, procedimientos y responsables
+        cargarDatosAuxiliares();
+        initFilters();
+    }, []);
 
-  const clearFilter = () => {
-    initFilters();
-  };
+    const cargarDatosAuxiliares = async () => {
+        try {
+            const procesosResponse = await clienteAxios.get('api/procesos'); // Ajusta la ruta
+            const procedimientosResponse = await clienteAxios.get('api/procedimientos'); // Ajusta la ruta
+            const responsablesResponse = await clienteAxios.get('api/responsables'); // Ajusta la ruta
 
-  const onGlobalFilterChange = (e) => {
-    const value = e.target.value;
-    let _filters = { ...filters };
-    _filters['global'].value = value;
-    setFilters(_filters);
-    setGlobalFilterValue(value);
-  };
+            setProcesses(procesosResponse.data);
+            setProcedures(procedimientosResponse.data);
+            setResponsibles(responsablesResponse.data);
+        } catch (error) {
+            console.error("Error al cargar datos auxiliares:", error);
+        }
+    };
 
-  const renderHeader = () => {
+    const initFilters = () => {
+        setFilters({
+            global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+            codigo: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            nombre_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            nombre_documento_magnetico: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            nombre_documento_visualizacion: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            version: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            tipo_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            fecha_elaboracion: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            nombre_proceso: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            nombre_procedimiento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            nombre_responsable: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+            status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+        });
+        setGlobalFilterValue('');
+    };
+
+    const clearFilter = () => {
+        initFilters();
+    };
+
+    const onGlobalFilterChange = (e) => {
+        const value = e.target.value;
+        let _filters = { ...filters };
+        _filters['global'].value = value;
+
+        setFilters(_filters);
+        setGlobalFilterValue(value);
+    };
+
+    const renderHeader = () => {
+        return (
+            <div className="flex justify-content-between">
+                <Button type="button" icon="pi pi-filter-slash" label="Clear" outlined onClick={clearFilter} />
+                <InputText
+                    value={globalFilterValue}
+                    onChange={onGlobalFilterChange}
+                    placeholder="Keyword Search"
+                />
+            </div>
+        );
+    };
+
+    const nombreDocumentoBodyTemplate = (rowData) => {
+        return rowData.nombre_documento;
+    };
+
+    const nombreDocumentoMagneticoBodyTemplate = (rowData) => {
+        return rowData.nombre_documento_magnetico;
+    };
+
+    const nombreDocumentoVisualizacionBodyTemplate = (rowData) => {
+        return rowData.nombre_documento_visualizacion;
+    };
+
+    const versionBodyTemplate = (rowData) => {
+        return rowData.version;
+    };
+
+    const tipoDocumentoBodyTemplate = (rowData) => {
+        return rowData.tipo_documento;
+    };
+
+    const fechaElaboracionBodyTemplate = (rowData) => {
+        return rowData.fecha_elaboracion;
+    };
+
+    const nombreProcesoBodyTemplate = (rowData) => {
+        return rowData.nombre_proceso; // Reemplazar por el nombre real del proceso
+    };
+
+    const nombreProcedimientoBodyTemplate = (rowData) => {
+        return rowData.nombre_procedimiento; // Reemplazar por el nombre real del procedimiento
+    };
+
+    const nombreResponsableBodyTemplate = (rowData) => {
+        return rowData.nombre_responsable; // Reemplazar por el nombre real del responsable
+    };
+
+    const statusBodyTemplate = (rowData) => {
+        return <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
+    };
+
+    const codigoBodyTemplate = (rowData) => {
+        return rowData.codigo;
+    };
+
+    const statusFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={statuses}
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                placeholder="Select One"
+                className="p-column-filter"
+                showClear
+            />
+        );
+    };
+
+    const procesoFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={processes.map(p => ({ label: p.nombre_proceso, value: p.id }))} // Ajusta según tus datos
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                placeholder="Select Proceso"
+                className="p-column-filter"
+                showClear
+            />
+        );
+    };
+
+    const procedimientoFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={procedures.map(p => ({ label: p.nombre_procedimiento, value: p.id }))} // Ajusta según tus datos
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                placeholder="Select Procedimiento"
+                className="p-column-filter"
+                showClear
+            />
+        );
+    };
+
+    const responsableFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={responsibles.map(r => ({ label: r.nombre_responsable, value: r.id }))} // Ajusta según tus datos
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                placeholder="Select Responsable"
+                className="p-column-filter"
+                showClear
+            />
+        );
+    };
+
+    const tipoDocumentoFilterTemplate = (options) => {
+        return (
+            <Dropdown
+                value={options.value}
+                options={documentTypes.map(dt => ({ label: dt, value: dt }))} // Ajusta según tus tipos de documento
+                onChange={(e) => options.filterCallback(e.value, options.index)}
+                placeholder="Select Tipo Documento"
+                className="p-column-filter"
+                showClear
+            />
+        );
+    };
+
     return (
-      <div className="flex justify-content-between">
-        <div className="flex align-items-center">
-          <i className="pi pi-search search-icon" />
-          <InputText
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Buscar Registro..."
-            className="search-input"
-          />
-          <Button type="button" icon="pi pi-filter-slash" label="Limpiar Filtros" onClick={clearFilter} />
+        <div>
+            {/* Agregando la barra de navegación aquí */}
+            {/*<NavMenuSE />*/}
+            <div className="card">
+                <DataTable 
+                    value={documentoList} 
+                    paginator 
+                    rows={10} 
+                    loading={loading} 
+                    globalFilter={globalFilterValue} 
+                    header={renderHeader()} 
+                    filters={filters} 
+                    removableSort
+                >
+                    <Column field="codigo" header="Código" filter filterElement={codigoBodyTemplate} sortable />
+                    <Column field="nombre_documento" header="Nombre Documento" body={nombreDocumentoBodyTemplate} sortable />
+                    <Column field="nombre_documento_magnetico" header="Nombre Documento Magnético" body={nombreDocumentoMagneticoBodyTemplate} sortable />
+                    <Column field="nombre_documento_visualizacion" header="Nombre Documento Visualización" body={nombreDocumentoVisualizacionBodyTemplate} sortable />
+                    <Column field="version" header="Versión" body={versionBodyTemplate} sortable />
+                    <Column field="tipo_documento" header="Tipo Documento" body={tipoDocumentoBodyTemplate} filter filterElement={tipoDocumentoFilterTemplate} sortable />
+                    <Column field="fecha_elaboracion" header="Fecha de Elaboración" body={fechaElaboracionBodyTemplate} sortable />
+                    <Column field="nombre_proceso" header="Nombre Proceso" body={nombreProcesoBodyTemplate} filter filterElement={procesoFilterTemplate} sortable />
+                    <Column field="nombre_procedimiento" header="Nombre Procedimiento" body={nombreProcedimientoBodyTemplate} filter filterElement={procedimientoFilterTemplate} sortable />
+                    <Column field="nombre_responsable" header="Nombre Responsable" body={nombreResponsableBodyTemplate} filter filterElement={responsableFilterTemplate} sortable />
+                    <Column field="status" header="Estado" body={statusBodyTemplate} filter filterElement={statusFilterTemplate} sortable />
+                </DataTable>
+            </div>
         </div>
-      </div>
     );
-  };
-
-  // Función que genera los botones de descarga y visualización para cada fila
-  const actionBodyTemplate = (rowData) => {
-    const handleDownload = () => {
-      const link = document.createElement('a');
-      link.href = rowData.url; // Suponiendo que `url` contiene el enlace del documento
-      link.download = rowData.Nom_Documento; // Nombre del archivo a descargar
-      link.click();
-    };
-
-    const handleView = () => {
-      window.open(rowData.url, '_blank'); // Abre el documento en una nueva ventana
-    };
-
-    return (
-      <div style={{ display: 'flex', gap: '10px' }}>
-        <button onClick={handleDownload} style={buttonStyle}>
-          <FaDownload style={iconStyle} /> Descargar
-        </button>
-        <button onClick={handleView} style={buttonStyle}>
-          <FaEye style={iconStyle} /> Ver
-        </button>
-      </div>
-    );
-  };
-
-  // Estilos para los botones e íconos
-  const buttonStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#4CAF50',
-    color: 'white',
-    border: 'none',
-    padding: '10px',
-    borderRadius: '5px',
-    cursor: 'pointer',
-  };
-
-  const iconStyle = {
-    marginRight: '5px',
-  };
-
-  return (
-    <>
-      <NavMenuPublic />
-      <div className="datatable-filter">
-        <h1 className="title">CompromisoSE - Gestión de Documentos</h1>
-        <DataTable
-          value={data}
-          paginator
-          loading={loading}
-          filters={filters}
-          globalFilterFields={['Cod_Documento', 'Nom_Documento', 'Nom_Proceso', 'Nom_Procedimiento', 'Nom_Responsable', 'estado']}
-          header={renderHeader()}
-          rows={10}
-          dataKey="Id_Documento"
-          emptyMessage="No se encontraron documentos."
-        >
-          <Column header="Acciones" body={actionBodyTemplate} className="acciones-column" /> {/* Columna de acciones */}
-          <Column field="Cod_Documento" header="Código" filter filterPlaceholder="Buscar por código" className="codigo-column" />
-          <Column field="Nom_Documento" header="Nombre" filter filterPlaceholder="Buscar por nombre" className="nombre-column" />
-          <Column field="Nom_Proceso" header="Proceso" filter filterPlaceholder="Buscar por proceso" className="proceso-column" />
-          <Column field="Nom_Procedimiento" header="Procedimiento" filter filterPlaceholder="Buscar por procedimiento" className="procedimiento-column" />
-          <Column field="Nom_Responsable" header="Responsable" filter filterPlaceholder="Buscar por responsable" className="responsable-column" />
-          <Column field="estado" header="Estado" filter filterPlaceholder="Buscar por estado" className="estado-column" />
-        </DataTable>
-      </div>
-    </>
-  );
-};
-
-export default TableComponent;
+}
