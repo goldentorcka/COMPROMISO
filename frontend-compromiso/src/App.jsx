@@ -13,6 +13,7 @@ import Layout from './components/Admin/layout/Layout.jsx';
 // import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
 import Component from './components/query/Init-Query.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
+// import Footer from './components/Footer/footer-init'
 
 
 // Carga asíncrona de componentes administrativos
@@ -44,6 +45,7 @@ function App() {
             <Route path="Documentos" element={<CrudDocumentos />} />
           </Route>
         </Routes>
+        {/* <Footer /> */}
       </Suspense>
 
       {/* Asistente Virtual siempre presente */}

@@ -8,18 +8,17 @@ import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import clienteAxios from '../../api.js'; // Asegúrate de que esta ruta sea correcta
-// import NavMenuSE from "../../components/Nav/NavQuerySena/NavMenuS_E.jsx"; // Asegúrate de que esta ruta sea correcta
+import { FaEye, FaDownload } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
 
 export default function AdvancedFilterDemo() {
     const [documentoList, setDocumentoList] = useState([]);
     const [filters, setFilters] = useState(null);
-    const [loading, setLoading] = useState(false);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
     const [statuses] = useState(['Activo', 'Inactivo']);
     const [processes, setProcesses] = useState([]);
     const [procedures, setProcedures] = useState([]);
     const [responsibles, setResponsibles] = useState([]);
-    const [documentTypes, setDocumentTypes] = useState(['Formato', 'Instructivo']); // Reemplaza con tus tipos de documento
+    const [documentTypes] = useState(['Formato', 'Instructivo']); // Reemplaza con tus tipos de documento
 
     const getSeverity = (status) => {
         switch (status) {
@@ -33,15 +32,13 @@ export default function AdvancedFilterDemo() {
     };
 
     useEffect(() => {
-        setLoading(true);
         // Carga los datos de tu CRUD
         clienteAxios.get('api/documentos') // Cambia la ruta según tu API
             .then(response => {
                 const documentosConNombres = response.data.map(doc => {
-                    // Busca los nombres en las listas de procesos, procedimientos y responsables
-                    const proceso = processes.find(p => p.id === doc.procesoId); // Ajusta según el campo en tu documento
-                    const procedimiento = procedures.find(proc => proc.id === doc.procedimientoId); // Ajusta según el campo en tu documento
-                    const responsable = responsibles.find(r => r.id === doc.responsableId); // Ajusta según el campo en tu documento
+                    const proceso = processes.find(p => p.id === doc.procesoId);
+                    const procedimiento = procedures.find(proc => proc.id === doc.procedimientoId);
+                    const responsable = responsibles.find(r => r.id === doc.responsableId);
 
                     return {
                         ...doc,
@@ -51,14 +48,11 @@ export default function AdvancedFilterDemo() {
                     };
                 });
                 setDocumentoList(documentosConNombres);
-                setLoading(false);
             })
             .catch(error => {
                 console.error("Error al cargar los documentos:", error);
-                setLoading(false);
             });
 
-        // Cargar procesos, procedimientos y responsables
         cargarDatosAuxiliares();
         initFilters();
     }, [processes, procedures, responsibles]);
@@ -82,8 +76,6 @@ export default function AdvancedFilterDemo() {
             global: { value: null, matchMode: FilterMatchMode.CONTAINS },
             codigo: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             nombre_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            nombre_documento_magnetico: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
-            nombre_documento_visualizacion: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             version: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             tipo_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
             fecha_elaboracion: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
@@ -125,14 +117,6 @@ export default function AdvancedFilterDemo() {
         return rowData.nombre_documento;
     };
 
-    const nombreDocumentoMagneticoBodyTemplate = (rowData) => {
-        return rowData.nombre_documento_magnetico;
-    };
-
-    const nombreDocumentoVisualizacionBodyTemplate = (rowData) => {
-        return rowData.nombre_documento_visualizacion;
-    };
-
     const versionBodyTemplate = (rowData) => {
         return rowData.version;
     };
@@ -146,15 +130,15 @@ export default function AdvancedFilterDemo() {
     };
 
     const nombreProcesoBodyTemplate = (rowData) => {
-        return rowData.nombre_proceso; // Ahora debería mostrar el nombre correcto del proceso
+        return rowData.nombre_proceso;
     };
 
     const nombreProcedimientoBodyTemplate = (rowData) => {
-        return rowData.nombre_procedimiento; // Ahora debería mostrar el nombre correcto del procedimiento
+        return rowData.nombre_procedimiento;
     };
 
     const nombreResponsableBodyTemplate = (rowData) => {
-        return rowData.nombre_responsable; // Ahora debería mostrar el nombre correcto del responsable
+        return rowData.nombre_responsable;
     };
 
     const statusBodyTemplate = (rowData) => {
@@ -163,6 +147,38 @@ export default function AdvancedFilterDemo() {
 
     const codigoBodyTemplate = (rowData) => {
         return rowData.codigo;
+    };
+
+    // Nueva función para el renderizado de la columna de acciones
+    const actionBodyTemplate = (rowData) => {
+        const handleView = () => {
+            // Lógica para manejar la visualización del documento
+            console.log("Visualizando:", rowData);
+        };
+
+        const handleDownload = () => {
+            // Lógica para manejar la descarga del documento
+            console.log("Descargando:", rowData);
+            // Aquí podrías implementar la animación 3D en CSS o usar una librería
+        };
+
+        return (
+            <div className="flex gap-2">
+                <Button 
+                    icon={<FaEye />} 
+                    className="p-button-rounded" 
+                    onClick={handleView} 
+                    title="Ver Documento" 
+                />
+                <Button 
+                    icon={<FaDownload />} 
+                    className="p-button-rounded" 
+                    onClick={handleDownload} 
+                    title="Descargar Documento" 
+                    style={{ animation: 'zoom 0.3s' }} // Aplicar una animación
+                />
+            </div>
+        );
     };
 
     const statusFilterTemplate = (options) => {
@@ -182,7 +198,7 @@ export default function AdvancedFilterDemo() {
         return (
             <Dropdown
                 value={options.value}
-                options={processes.map(p => ({ label: p.nombre_proceso, value: p.id }))} // Ajusta según tus datos
+                options={processes.map(p => ({ label: p.nombre_proceso, value: p.id }))} 
                 onChange={(e) => options.filterCallback(e.value, options.index)}
                 placeholder="Select Proceso"
                 className="p-column-filter"
@@ -195,7 +211,7 @@ export default function AdvancedFilterDemo() {
         return (
             <Dropdown
                 value={options.value}
-                options={procedures.map(p => ({ label: p.nombre_procedimiento, value: p.id }))} // Ajusta según tus datos
+                options={procedures.map(p => ({ label: p.nombre_procedimiento, value: p.id }))}
                 onChange={(e) => options.filterCallback(e.value, options.index)}
                 placeholder="Select Procedimiento"
                 className="p-column-filter"
@@ -208,7 +224,7 @@ export default function AdvancedFilterDemo() {
         return (
             <Dropdown
                 value={options.value}
-                options={responsibles.map(r => ({ label: r.nombre_responsable, value: r.id }))} // Ajusta según tus datos
+                options={responsibles.map(r => ({ label: r.nombre_responsable, value: r.id }))}
                 onChange={(e) => options.filterCallback(e.value, options.index)}
                 placeholder="Select Responsable"
                 className="p-column-filter"
@@ -218,32 +234,39 @@ export default function AdvancedFilterDemo() {
     };
 
     return (
-        <>
-            
-            <div className="card">
-                <DataTable
-                    value={documentoList}
-                    paginator
-                    rows={10}
-                    loading={loading}
-                    header={renderHeader()}
-                    filters={filters}
-                    globalFilterFields={['codigo', 'nombre_documento', 'nombre_documento_magnetico', 'nombre_documento_visualizacion', 'version', 'tipo_documento', 'fecha_elaboracion', 'nombre_proceso', 'nombre_procedimiento', 'nombre_responsable', 'status']}
-                    responsiveLayout="scroll"
-                >
-                    <Column field="codigo" header="Código" body={codigoBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="nombre_documento" header="Nombre Documento" body={nombreDocumentoBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="nombre_documento_magnetico" header="Nombre Documento Magnético" body={nombreDocumentoMagneticoBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="nombre_documento_visualizacion" header="Nombre Documento Visualización" body={nombreDocumentoVisualizacionBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="version" header="Versión" body={versionBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="tipo_documento" header="Tipo Documento" body={tipoDocumentoBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="fecha_elaboracion" header="Fecha Elaboración" body={fechaElaboracionBodyTemplate} filter filterPlaceholder="Buscar" />
-                    <Column field="nombre_proceso" header="Nombre Proceso" body={nombreProcesoBodyTemplate} filter filterPlaceholder="Buscar" filterElement={procesoFilterTemplate} />
-                    <Column field="nombre_procedimiento" header="Nombre Procedimiento" body={nombreProcedimientoBodyTemplate} filter filterPlaceholder="Buscar" filterElement={procedimientoFilterTemplate} />
-                    <Column field="nombre_responsable" header="Nombre Responsable" body={nombreResponsableBodyTemplate} filter filterPlaceholder="Buscar" filterElement={responsableFilterTemplate} />
-                    <Column field="status" header="Estado" body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                </DataTable>
-            </div>
-        </>
+        <div className="p-5 text-center bg-body-tertiary rounded-3">
+            <h1 style={{ fontSize: '1.5em', marginBottom: '20px' }}>Gestión de Documentos</h1>
+            <DataTable
+                value={documentoList}
+                paginator
+                rows={10}
+                header={renderHeader()}
+                globalFilterFields={['codigo', 'nombre_documento', 'version', 'tipo_documento', 'fecha_elaboracion', 'nombre_proceso', 'nombre_procedimiento', 'nombre_responsable', 'status']}
+                filters={filters}
+                onFilter={(e) => setFilters(e.filters)}
+                style={{ width: '100%' }}
+                stripedRows
+                rowsPerPageOptions={[5, 10, 25, 50, 75, 100]}
+            >   
+                <Column body={actionBodyTemplate} header="Acciones" style={{ minWidth: '8rem' }} />
+                
+                <Column field="codigo" header="Código" style={{ minWidth: '10rem' }} body={codigoBodyTemplate} filter filterPlaceholder="Buscar código" filterMenuStyle={{ width: '14rem' }} />
+                
+                <Column field="nombre_documento" header="Nombre del Documento" style={{ minWidth: '12rem' }} body={nombreDocumentoBodyTemplate} filter filterPlaceholder="Buscar documento" filterMenuStyle={{ width: '14rem' }} />
+                
+                <Column field="version" header="Versión" style={{ minWidth: '8rem' }} body={versionBodyTemplate} filter filterPlaceholder="Buscar versión" filterMenuStyle={{ width: '14rem' }} />
+                
+                <Column field="tipo_documento" header="Tipo de Documento" style={{ minWidth: '12rem' }} body={tipoDocumentoBodyTemplate} filter filterPlaceholder="Buscar tipo" filterMenuStyle={{ width: '14rem' }} />
+                
+                <Column field="fecha_elaboracion" header="Fecha de Elaboración" style={{ minWidth: '12rem' }} body={fechaElaboracionBodyTemplate} filter filterPlaceholder="Buscar fecha" filterMenuStyle={{ width: '14rem' }} />
+                
+                
+                <Column field="nombre_procedimiento" header="Procedimiento" style={{ minWidth: '12rem' }} body={nombreProcedimientoBodyTemplate} filter filterPlaceholder="Buscar procedimiento" filterMenuStyle={{ width: '14rem' }} filterElement={procedimientoFilterTemplate} />
+                
+                <Column field="nombre_responsable" header="Responsable" style={{ minWidth: '12rem' }} body={nombreResponsableBodyTemplate} filter filterPlaceholder="Buscar responsable" filterMenuStyle={{ width: '14rem' }} filterElement={responsableFilterTemplate} />
+                
+                <Column field="status" header="Estado" style={{ minWidth: '8rem' }} body={statusBodyTemplate} filter filterPlaceholder="Buscar estado" filterMenuStyle={{ width: '14rem' }} filterElement={statusFilterTemplate} />
+            </DataTable>
+        </div>
     );
 }

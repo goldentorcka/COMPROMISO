@@ -1,0 +1,13 @@
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .text-body-secondary {
+    color: #6c757d; /* Ajusta el color según tus preferencias */
+  }
+  
+  .border-top {
+    border-top: 1px solid #dee2e6; /* Ajusta el color de la línea superior */
+  }
+  

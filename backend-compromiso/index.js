@@ -23,9 +23,9 @@ const port = process.env.PORT || 3001;  // Usa el puerto del archivo .env
 
 // Configura Rate Limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,  // 15 minutos
-  max: 100,
-  message: 'Demasiadas solicitudes de esta IP, por favor intente de nuevo después de 15 minutos.',
+  windowMs: 3 * 60 * 1000,  // 3 minutos
+  max: 1000,
+  message: 'Demasiadas solicitudes de esta IP, por favor intente de nuevo después de 3 minutos.',
 });
 app.use('/api/', apiLimiter);
 
