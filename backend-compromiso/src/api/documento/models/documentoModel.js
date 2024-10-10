@@ -27,12 +27,14 @@ const Documento = sequelize.define('documentos', {
   nombre_documento_magnetico: {
     type: DataTypes.STRING(300),
     allowNull: false,
-    field: 'nombre_documento_magnetico' // Nombre de la columna en la base de datos
+    field: 'nombre_documento_magnetico', // Nombre de la columna en la base de datos
+    comment: 'Ruta del archivo Excel' // Se usa para almacenar la ruta del archivo Excel subido
   },
   nombre_documento_visualizacion: {
     type: DataTypes.STRING(300),
     allowNull: false,
-    field: 'nombre_documento_visualizacion' // Nombre de la columna en la base de datos
+    field: 'nombre_documento_visualizacion', // Nombre de la columna en la base de datos
+    comment: 'Nombre del archivo PDF generado' // Se usa para almacenar el nombre del archivo PDF generado
   },
   tipo_documento: {
     type: DataTypes.STRING(20),

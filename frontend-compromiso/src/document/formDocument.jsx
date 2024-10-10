@@ -9,8 +9,8 @@ const FormDocumentos = ({
 }) => {
   const [id_documento, setIdDocumento] = useState(null);
   const [nombre_documento, setNombreDocumento] = useState('');
-  const [nombre_documento_magnetico, setNombreDocumentoMagnetico] = useState('');
-  const [nombre_documento_visualizacion, setNombreDocumentoVisualizacion] = useState('');
+  const [nombre_documento_magnetico, setNombreDocumentoMagnetico] = useState(''); // Para almacenar el archivo Excel
+  const [nombre_documento_visualizacion, setNombreDocumentoVisualizacion] = useState(''); // Para almacenar el nombre del PDF generado
   const [tipo_documento, setTipoDocumento] = useState('Formato');
   const [codigo, setCodigo] = useState('');
   const [version, setVersion] = useState(1);
@@ -54,8 +54,24 @@ const FormDocumentos = ({
     if (!id_responsable) {
       newErrors.id_responsable = 'Debes seleccionar un responsable.';
     }
+    if (!nombre_documento_magnetico) {
+      newErrors.nombre_documento_magnetico = 'Debes subir un archivo Excel.';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // Formulario válido si no hay errores
+  };
+
+  // Manejo de subida de archivo Excel
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileName = file.name;
+      const fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.'); // Remueve la extensión del archivo
+
+      // Guarda el nombre del archivo Excel y genera el nombre del PDF automáticamente
+      setNombreDocumentoMagnetico(fileName);
+      setNombreDocumentoVisualizacion(`${fileNameWithoutExtension}.pdf`);
+    }
   };
 
   const handleChange = (e) => {
@@ -66,12 +82,6 @@ const FormDocumentos = ({
         break;
       case 'nombre_documento':
         setNombreDocumento(value);
-        break;
-      case 'nombre_documento_magnetico':
-        setNombreDocumentoMagnetico(value);
-        break;
-      case 'nombre_documento_visualizacion':
-        setNombreDocumentoVisualizacion(value);
         break;
       case 'tipo_documento':
         setTipoDocumento(value);
@@ -102,8 +112,8 @@ const FormDocumentos = ({
       handleSubmit(e, {
         id_documento,
         nombre_documento,
-        nombre_documento_magnetico,
-        nombre_documento_visualizacion,
+        nombre_documento_magnetico, // Nombre del archivo Excel
+        nombre_documento_visualizacion, // Nombre del archivo PDF generado
         tipo_documento,
         codigo,
         version,
@@ -162,25 +172,27 @@ const FormDocumentos = ({
           {errors.nombre_documento && <span className="error">{errors.nombre_documento}</span>}
         </div>
 
-        {/* Nombre Magnético del Documento */}
+        {/* Subida del Archivo Excel */}
         <div className="form-group">
-          <label>Nombre Magnético del Documento:</label>
+          <label>Archivo Excel:</label>
           <input
-            type="text"
+            type="file"
             name="nombre_documento_magnetico"
-            value={nombre_documento_magnetico}
-            onChange={handleChange}
+            accept=".xls,.xlsx"
+            onChange={handleFileChange}
+            required
           />
+          {errors.nombre_documento_magnetico && <span className="error">{errors.nombre_documento_magnetico}</span>}
         </div>
 
-        {/* Nombre de Visualización del Documento */}
+        {/* Visualización del nombre del archivo PDF generado */}
         <div className="form-group">
-          <label>Nombre de Visualización del Documento:</label>
+          <label>Nombre del Archivo PDF:</label>
           <input
             type="text"
             name="nombre_documento_visualizacion"
             value={nombre_documento_visualizacion}
-            onChange={handleChange}
+            readOnly
           />
         </div>
 
@@ -259,20 +271,15 @@ const FormDocumentos = ({
             name="estado"
             value={estado}
             onChange={handleChange}
+            required
           >
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
           </select>
         </div>
 
-        {/* ID del Documento (oculto) */}
-        {id_documento && (
-          <input type="hidden" name="id_documento" value={id_documento} />
-        )}
-
-        <button type="submit" className="btn-submit">
-          {buttonForm}
-        </button>
+        {/* Botón de Envío */}
+        <button type="submit">{buttonForm}</button>
       </form>
     </div>
   );

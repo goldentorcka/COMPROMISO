@@ -4,7 +4,7 @@ const { logger } = require('../../../../config/logger.js'); // Ruta del logger
 
 // Validar campos obligatorios
 const validateDocumento = (documento) => {
-  const { codigo, fecha_elaboracion, version, estado, nombre_documento, nombre_documento_magnetico, id_procedimiento, id_responsable } = documento;
+  const { codigo, fecha_elaboracion, version, estado, nombre_documento, nombre_documento_magnetico, nombre_documento_visualizacion, id_procedimiento, id_responsable } = documento;
   let errors = [];
 
   if (!codigo || codigo.trim() === "") 
@@ -24,6 +24,9 @@ const validateDocumento = (documento) => {
   
   if (!nombre_documento_magnetico || nombre_documento_magnetico.trim() === "") 
     errors.push("El campo 'nombre_documento_magnetico' es obligatorio.");
+  
+  if (!nombre_documento_visualizacion || nombre_documento_visualizacion.trim() === "")
+    errors.push("El campo 'nombre_documento_visualizacion' es obligatorio.");
   
   if (!id_procedimiento) 
     errors.push("El campo 'id_procedimiento' es obligatorio.");

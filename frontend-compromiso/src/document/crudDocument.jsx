@@ -61,7 +61,11 @@ const CrudDocumentos = () => {
 
     try {
       if (buttonForm === "Enviar") {
-        await clienteAxios.post('/api/documentos', documentoData);
+        // Añadir lógica para generar automáticamente el nombre del archivo PDF
+        const nombreArchivoPDF = documentoData.nombre_documento.replace(/\s/g, '_') + ".pdf";
+        const updatedData = { ...documentoData, nombre_documento_magnetico: nombreArchivoPDF };
+
+        await clienteAxios.post('/api/documentos', updatedData);
         Swal.fire('Agregado!', 'El documento ha sido agregado.', 'success');
       } else if (buttonForm === "Actualizar" && documento) {
         await clienteAxios.put(`/api/documentos/${documento.id_documento}`, documentoData);

@@ -41,7 +41,6 @@ const CustomDataTable = ({
                 value={currentRecords}
                 className="p-datatable-responsive-scroll custom-table"
                 scrollable   // Habilita el scroll
-                scrollDirection="horizontal" // Permite el desplazamiento horizontal
                 style={{ minWidth: '1000px' }} // Ajusta el ancho mínimo de la tabla
             >
                 {columns.map((col, index) => (
