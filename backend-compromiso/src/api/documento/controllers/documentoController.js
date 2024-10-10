@@ -1,20 +1,35 @@
 // @ts-nocheck
-const Documento = require('../models/documentoModel.js');
-const { logger } = require('../../../../config/logger.js');
+const Documento = require('../models/documentoModel.js'); // Asegúrate de que la ruta sea correcta
+const { logger } = require('../../../../config/logger.js'); // Ruta del logger
 
 // Validar campos obligatorios
 const validateDocumento = (documento) => {
   const { codigo, fecha_elaboracion, version, estado, nombre_documento, nombre_documento_magnetico, id_procedimiento, id_responsable } = documento;
   let errors = [];
 
-  if (!codigo) errors.push("El campo 'codigo' es obligatorio.");
-  if (!fecha_elaboracion) errors.push("El campo 'fecha_elaboracion' es obligatorio.");
-  if (!version) errors.push("El campo 'version' es obligatorio.");
-  if (!estado) errors.push("El campo 'estado' es obligatorio.");
-  if (!nombre_documento) errors.push("El campo 'nombre_documento' es obligatorio.");
-  if (!nombre_documento_magnetico) errors.push("El campo 'nombre_documento_magnetico' es obligatorio.");
-  if (!id_procedimiento) errors.push("El campo 'id_procedimiento' es obligatorio.");
-  if (!id_responsable) errors.push("El campo 'id_responsable' es obligatorio.");
+  if (!codigo || codigo.trim() === "") 
+    errors.push("El campo 'codigo' es obligatorio.");
+  
+  if (!fecha_elaboracion || fecha_elaboracion.trim() === "") 
+    errors.push("El campo 'fecha_elaboracion' es obligatorio.");
+  
+  if (!version || version.trim() === "") 
+    errors.push("El campo 'version' es obligatorio.");
+  
+  if (!estado || estado.trim() === "") 
+    errors.push("El campo 'estado' es obligatorio.");
+  
+  if (!nombre_documento || nombre_documento.trim() === "") 
+    errors.push("El campo 'nombre_documento' es obligatorio.");
+  
+  if (!nombre_documento_magnetico || nombre_documento_magnetico.trim() === "") 
+    errors.push("El campo 'nombre_documento_magnetico' es obligatorio.");
+  
+  if (!id_procedimiento) 
+    errors.push("El campo 'id_procedimiento' es obligatorio.");
+  
+  if (!id_responsable) 
+    errors.push("El campo 'id_responsable' es obligatorio.");
 
   return errors;
 };
@@ -26,7 +41,7 @@ const getDocumentos = async (req, res) => {
     if (documentos.length === 0) {
       return res.status(404).json({ message: 'No se encontraron documentos' });
     }
-    res.json(documentos);
+    res.status(200).json(documentos);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -43,7 +58,7 @@ const getDocumentoById = async (req, res) => {
     if (!documento) {
       return res.status(404).json({ message: 'Documento no encontrado' });
     }
-    res.json(documento);
+    res.status(200).json(documento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -101,7 +116,7 @@ const updateDocumento = async (req, res) => {
     }
 
     await documento.update(req.body);
-    res.json(documento);
+    res.status(200).json(documento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor al actualizar el documento' });

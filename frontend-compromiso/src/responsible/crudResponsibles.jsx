@@ -11,7 +11,7 @@ import CustomDataTable from '../components/datatables/Datatable.jsx';
 
 const CrudResponsables = () => {
   const [responsableList, setResponsableList] = useState([]);
-  const [responsable, setResponsable] = useState(null); // Inicializado como null para manejar el ID
+  const [responsable, setResponsable] = useState(null);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDataTableVisible, setIsDataTableVisible] = useState(true);
@@ -43,7 +43,7 @@ const CrudResponsables = () => {
         await clienteAxios.post('/api/responsables', responsableData);
         Swal.fire('Agregado!', 'El responsable ha sido agregado.', 'success');
       } else if (buttonForm === "Actualizar" && responsable) {
-        await clienteAxios.put(`/api/responsables/${responsable.Id_Responsable}`, responsableData);
+        await clienteAxios.put(`/api/responsables/${responsable.id_responsable}`, responsableData);
         Swal.fire('Actualizado!', 'El responsable ha sido actualizado.', 'success');
       }
       resetForm();
@@ -56,60 +56,59 @@ const CrudResponsables = () => {
   };
 
   const resetForm = () => {
-    setResponsable(null); // Resetear responsable a null
+    setResponsable(null);
     setButtonForm("Enviar");
   };
 
   const validateResponsable = (responsable) => {
-    const { Nom_Responsable } = responsable;
-    if (!Nom_Responsable) {
+    const { nombre_responsable } = responsable;
+    if (!nombre_responsable) {
       return 'El nombre es obligatorio.';
     }
-    if (!/^[A-Za-z\s]+$/.test(Nom_Responsable)) {
+    if (!/^[A-Za-z\s]+$/.test(nombre_responsable)) {
       return 'El nombre solo puede contener letras.';
     }
     return null;
   };
 
   const columns = [
-    { field: 'Id_Responsable', header: 'ID', width: '10%' },
-    { field: 'Nom_Responsable', header: 'Nombre', width: '70%' },
+    { field: 'id_responsable', header: 'ID', width: '10%' },
+    { field: 'nombre_responsable', header: 'Nombre', width: '70%' },
     { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
   const getResponsable = (rowData) => {
-    setResponsable(rowData); // Asignar el responsable completo
+    setResponsable(rowData);
     setButtonForm("Actualizar");
     setIsModalOpen(true);
   };
 
-  const deleteResponsable = async (rowData) => { // Cambiado el argumento a rowData
+  const deleteResponsable = async (rowData) => {
     const confirmDelete = await Swal.fire({
-        title: '¿Estás seguro?',
-        text: "¡No podrás revertir esto!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Sí, eliminarlo!'
+      title: '¿Estás seguro?',
+      text: "¡No podrás revertir esto!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, eliminarlo!'
     });
-    
-    if (confirmDelete.isConfirmed) {
-        try {
-            const response = await clienteAxios.delete(`/api/responsables/${rowData.Id_Responsable}`); // Asegúrate de usar el id correcto aquí
-            if (response.status === 204) {
-                Swal.fire('Eliminado!', 'El responsable ha sido eliminado.', 'success');
-                getAllResponsables(); // Llama para actualizar la lista de responsables
-            } else {
-                Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
-            }
-        } catch (error) {
-            console.error("Error al eliminar el responsable:", error);
-            Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
-        }
-    }
-};
 
+    if (confirmDelete.isConfirmed) {
+      try {
+        const response = await clienteAxios.delete(`/api/responsables/${rowData.id_responsable}`);
+        if (response.status === 204) {
+          Swal.fire('Eliminado!', 'El responsable ha sido eliminado.', 'success');
+          getAllResponsables();
+        } else {
+          Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
+        }
+      } catch (error) {
+        console.error("Error al eliminar el responsable:", error);
+        Swal.fire('Error', 'No se pudo eliminar el responsable', 'error');
+      }
+    }
+  };
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#f4f4f4' }}>
@@ -154,28 +153,28 @@ const CrudResponsables = () => {
           )}
 
           <Modal 
-              isOpen={isModalOpen} 
-              onClose={() => {
-                setIsModalOpen(false);
-                setIsDataTableVisible(true);
-              }}
-              title={buttonForm === "Enviar" ? "Agregar Responsable" : "Actualizar Responsable"}
-            >
-              <FormResponsables
-                responsable={responsable} // Aquí se pasa el responsable seleccionado
-                handleSubmit={handleSubmit}
-                buttonForm={buttonForm}
-              />
-            </Modal>
+            isOpen={isModalOpen} 
+            onClose={() => {
+              setIsModalOpen(false);
+              setIsDataTableVisible(true);
+            }}
+            title={buttonForm === "Enviar" ? "Agregar Responsable" : "Actualizar Responsable"}
+          >
+            <FormResponsables
+              responsable={responsable} 
+              handleSubmit={handleSubmit}
+              buttonForm={buttonForm}
+            />
+          </Modal>
 
           {isDataTableVisible && 
             <CustomDataTable
-              data={responsableList} // Cambiado a responsableList
-              columns={columns} // Cambiado a columns
-              onEdit={getResponsable} // Editar responsable
-              onDelete={deleteResponsable} // Eliminar responsable
-              searchField="Nom_Responsable" // Búsqueda por nombre
-              exportFields={['Id_Responsable', 'Nom_Responsable', 'estado']} // Especifica los campos a exportar
+              data={responsableList}
+              columns={columns}
+              onEdit={getResponsable}
+              onDelete={deleteResponsable}
+              searchField="nombre_responsable" 
+              exportFields={['id_responsable', 'nombre_responsable', 'estado']}
             />
           }
         </div>

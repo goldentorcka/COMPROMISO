@@ -2,27 +2,19 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
-  const [nomProceso, setNomProceso] = useState('');
-  const [tipProceso, setTipProceso] = useState('');
+  const [nombreProceso, setNombreProceso] = useState('');
+  const [nombreDirectorioProceso, setNombreDirectorioProceso] = useState('');
   const [estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
   const [id, setId] = useState(null);
 
-  // Opciones para el tipo de proceso
-  const tiposProceso = [
-    { value: '', label: 'Seleccione un tipo de proceso' },
-    { value: 'Proceso de Innovacion', label: 'Proceso de Innovación' },
-    { value: 'Proceso de Valor', label: 'Proceso de Valor' },
-    { value: 'Proceso de Apoyo', label: 'Proceso de Apoyo' },
-  ];
-
   // Efecto para cargar los datos del proceso cuando se recibe uno nuevo
   useEffect(() => {
     if (proceso) {
-      setNomProceso(proceso.Nom_Proceso || '');
-      setTipProceso(proceso.Tip_Proceso || '');
+      setNombreProceso(proceso.nombre_proceso || '');
+      setNombreDirectorioProceso(proceso.nombre_directorio_proceso || '');
       setEstado(proceso.estado || 'Activo');
-      setId(proceso.Id_Proceso || null);
+      setId(proceso.id_proceso || null);
     } else {
       resetForm(); // Resetear si no hay proceso
     }
@@ -31,11 +23,8 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
   // Validación del formulario
   const validateForm = () => {
     const newErrors = {};
-    if (!nomProceso || nomProceso.length < 3) {
-      newErrors.nomProceso = 'El nombre del proceso es obligatorio y debe tener al menos 3 caracteres.';
-    }
-    if (!tipProceso) {
-      newErrors.tipProceso = 'El tipo de proceso es obligatorio.';
+    if (!nombreProceso || nombreProceso.length < 3) {
+      newErrors.nombreProceso = 'El nombre del proceso es obligatorio y debe tener al menos 3 caracteres.';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // El formulario es válido si no hay errores
@@ -45,16 +34,16 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Validar que solo contenga letras para Nom_Proceso
-    if (name === 'nomProceso' && !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value)) {
+    // Validar que solo contenga letras para nombre_proceso
+    if (name === 'nombreProceso' && !/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/.test(value)) {
       return; // No permite caracteres no permitidos
     }
 
     // Actualizar el estado correspondiente
-    if (name === 'nomProceso') {
-      setNomProceso(value);
-    } else if (name === 'tipProceso') {
-      setTipProceso(value);
+    if (name === 'nombreProceso') {
+      setNombreProceso(value);
+    } else if (name === 'nombreDirectorioProceso') {
+      setNombreDirectorioProceso(value);
     } else {
       setEstado(value);
     }
@@ -66,8 +55,8 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
     if (validateForm()) {
       handleSubmit(e, {
         id, // Incluir el ID si es necesario
-        Nom_Proceso: nomProceso,
-        Tip_Proceso: tipProceso,
+        nombre_proceso: nombreProceso,
+        nombre_directorio_proceso: nombreDirectorioProceso,
         estado,
       });
       resetForm(); // Resetea el formulario después de enviar
@@ -76,8 +65,8 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
 
   // Resetear el formulario
   const resetForm = () => {
-    setNomProceso('');
-    setTipProceso('');
+    setNombreProceso('');
+    setNombreDirectorioProceso('');
     setEstado('Activo');
     setId(null); // Resetear ID
     setErrors({}); // Limpiar errores
@@ -88,34 +77,27 @@ const FormProcess = ({ proceso, handleSubmit, buttonForm }) => {
       <form onSubmit={onSubmit}>
         {/* Nombre del Proceso */}
         <div className="form-group">
-          <label htmlFor="nomProceso">Nombre del Proceso:</label>
+          <label htmlFor="nombreProceso">Nombre del Proceso:</label>
           <input
             type="text"
-            name="nomProceso"
-            value={nomProceso}
+            name="nombreProceso"
+            value={nombreProceso}
             onChange={handleChange}
             required
-            aria-describedby="nomProcesoError"
+            aria-describedby="nombreProcesoError"
           />
-          {errors.nomProceso && <span id="nomProcesoError" className="error">{errors.nomProceso}</span>}
+          {errors.nombreProceso && <span id="nombreProcesoError" className="error">{errors.nombreProceso}</span>}
         </div>
 
-        {/* Tipo de Proceso */}
+        {/* Nombre del Directorio del Proceso */}
         <div className="form-group">
-          <label htmlFor="tipProceso">Tipo de Proceso:</label>
-          <select
-            name="tipProceso"
-            value={tipProceso}
+          <label htmlFor="nombreDirectorioProceso">Nombre del Directorio del Proceso:</label>
+          <input
+            type="text"
+            name="nombreDirectorioProceso"
+            value={nombreDirectorioProceso}
             onChange={handleChange}
-            required
-          >
-            {tiposProceso.map((tipo) => (
-              <option key={tipo.value} value={tipo.value}>
-                {tipo.label}
-              </option>
-            ))}
-          </select>
-          {errors.tipProceso && <span className="error">{errors.tipProceso}</span>}
+          />
         </div>
 
         {/* Estado */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import clienteAxios from '../api.js';
 import Swal from 'sweetalert2';
-import FormProcedure from './formProcedure.jsx';
+import FormProcedure from './formProcedure.jsx'; 
 import SidebarAdministrator from '../components/Admin/SidebarAdministrator.jsx';
 import Modal from '../components/Modal/Init-Modal.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -14,6 +14,7 @@ const CrudProcedimientos = () => {
   const [processes, setProcesses] = useState([]);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDataTableVisible, setIsDataTableVisible] = useState(true);
 
   useEffect(() => {
     getAllProcedimientos();
@@ -53,7 +54,7 @@ const CrudProcedimientos = () => {
         await clienteAxios.post('/api/procedimientos', procedimientoData);
         Swal.fire('Agregado!', 'El procedimiento ha sido agregado.', 'success');
       } else if (buttonForm === "Actualizar" && procedimiento) {
-        await clienteAxios.put(`/api/procedimientos/${procedimiento.Id_Procedimiento}`, procedimientoData);
+        await clienteAxios.put(`/api/procedimientos/${procedimiento.id_procedimiento}`, procedimientoData);
         Swal.fire('Actualizado!', 'El procedimiento ha sido actualizado.', 'success');
       }
       resetForm();
@@ -66,30 +67,30 @@ const CrudProcedimientos = () => {
   };
 
   const resetForm = () => {
-    setProcedimiento(null); 
+    setProcedimiento(null);
     setButtonForm("Enviar");
   };
 
   const validateProcedimiento = (procedimiento) => {
-    const { Nom_Procedimiento, Id_Proceso } = procedimiento;
-    if (!Nom_Procedimiento || Nom_Procedimiento.trim() === "") {
+    const { nombre_procedimiento, id_proceso } = procedimiento;
+    if (!nombre_procedimiento || nombre_procedimiento.trim() === "") {
       return 'El nombre del procedimiento es obligatorio.';
     }
-    if (!Id_Proceso) {
+    if (!id_proceso) {
       return 'El ID del proceso es obligatorio.';
     }
     return null;
   };
 
   const columns = [
-    { field: 'Id_Procedimiento', header: 'ID', width: '10%' },
-    { field: 'Nom_Procedimiento', header: 'Nombre', width: '50%' },
-    { field: 'Id_Proceso', header: 'ID Proceso', width: '20%' },
+    { field: 'id_procedimiento', header: 'ID', width: '10%' },
+    { field: 'nombre_procedimiento', header: 'Nombre', width: '50%' },
+    { field: 'id_proceso', header: 'ID Proceso', width: '20%' },
     { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
   const getProcedimiento = (rowData) => {
-    setProcedimiento(rowData); 
+    setProcedimiento(rowData);
     setButtonForm("Actualizar");
     setIsModalOpen(true);
   };
@@ -107,7 +108,7 @@ const CrudProcedimientos = () => {
 
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await clienteAxios.delete(`/api/procedimientos/${rowData.Id_Procedimiento}`);
+        const response = await clienteAxios.delete(`/api/procedimientos/${rowData.id_procedimiento}`);
         if (response.status === 204) {
           Swal.fire('Eliminado!', 'El procedimiento ha sido eliminado.', 'success');
           getAllProcedimientos();
@@ -141,10 +142,7 @@ const CrudProcedimientos = () => {
               borderRadius: '5px',
               cursor: 'pointer',
               marginBottom: '20px',
-              transition: 'background-color 0.3s, transform 0.2s',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4caf50'}
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
@@ -166,30 +164,32 @@ const CrudProcedimientos = () => {
             }} />
           )}
 
-          <Modal
-            isOpen={isModalOpen}
+          <Modal 
+            isOpen={isModalOpen} 
             onClose={() => {
               setIsModalOpen(false);
+              setIsDataTableVisible(true);
             }}
             title={buttonForm === "Enviar" ? "Agregar Procedimiento" : "Actualizar Procedimiento"}
-            style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }} // Estilo del modal
           >
             <FormProcedure
-              procedimiento={procedimiento}
+              procedimiento={procedimiento} 
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              processes={processes}
+              processes={processes} // Asegúrate de pasar la lista de procesos al formulario
             />
           </Modal>
 
-          <CustomDataTable
-            data={procedimientoList}
-            columns={columns}
-            onEdit={getProcedimiento}
-            onDelete={deleteProcedimiento}
-            searchField="Nom_Procedimiento"
-            exportFields={['Id_Procedimiento', 'Nom_Procedimiento', 'Id_Proceso', 'estado']}
-          />
+          {isDataTableVisible && 
+            <CustomDataTable
+              data={procedimientoList}
+              columns={columns}
+              onEdit={getProcedimiento}
+              onDelete={deleteProcedimiento}
+              searchField="nombre_procedimiento" 
+              exportFields={['id_procedimiento', 'nombre_procedimiento', 'id_proceso', 'estado']}
+            />
+          }
         </div>
       </div>
     </div>

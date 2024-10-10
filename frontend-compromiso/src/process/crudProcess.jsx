@@ -13,12 +13,12 @@ const CrudProcesos = () => {
   const [proceso, setProceso] = useState(null);
   const [buttonForm, setButtonForm] = useState("Enviar");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDataTableVisible, setIsDataTableVisible] = useState(true);
 
   useEffect(() => {
     getAllProcesos();
   }, []);
 
-  // Función para obtener todos los procesos
   const getAllProcesos = async () => {
     try {
       const response = await clienteAxios.get('/api/procesos');
@@ -29,21 +29,15 @@ const CrudProcesos = () => {
     }
   };
 
-  // Enviar el formulario
   const handleSubmit = async (e, procesoData) => {
     e.preventDefault();
-    const validationError = validateProceso(procesoData);
-    if (validationError) {
-      Swal.fire('Error', validationError, 'error');
-      return;
-    }
 
     try {
       if (buttonForm === "Enviar") {
         await clienteAxios.post('/api/procesos', procesoData);
         Swal.fire('Agregado!', 'El proceso ha sido agregado.', 'success');
       } else if (buttonForm === "Actualizar" && proceso) {
-        await clienteAxios.put(`/api/procesos/${proceso.Id_Proceso}`, procesoData);
+        await clienteAxios.put(`/api/procesos/${proceso.id_proceso}`, procesoData);
         Swal.fire('Actualizado!', 'El proceso ha sido actualizado.', 'success');
       }
       resetForm();
@@ -55,36 +49,23 @@ const CrudProcesos = () => {
     }
   };
 
-  // Resetear el formulario
   const resetForm = () => {
     setProceso(null);
     setButtonForm("Enviar");
   };
 
-  // Validar datos del proceso
-  const validateProceso = (proceso) => {
-    const { Nom_Proceso } = proceso;
-    if (!Nom_Proceso || Nom_Proceso.trim() === "") {
-      return 'El nombre es obligatorio.';
-    }
-    return null;
-  };
-
-  // Definir las columnas para la tabla
   const columns = [
-    { field: 'Id_Proceso', header: 'ID', width: '10%' },
-    { field: 'Nom_Proceso', header: 'Nombre', width: '60%' },
+    { field: 'id_proceso', header: 'ID', width: '10%' },
+    { field: 'nombre_proceso', header: 'Nombre', width: '60%' },
     { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
-  // Obtener un proceso para editar
   const getProceso = (rowData) => {
     setProceso(rowData);
     setButtonForm("Actualizar");
     setIsModalOpen(true);
   };
 
-  // Eliminar proceso
   const deleteProceso = async (rowData) => {
     const confirmDelete = await Swal.fire({
       title: '¿Estás seguro?',
@@ -98,7 +79,7 @@ const CrudProcesos = () => {
 
     if (confirmDelete.isConfirmed) {
       try {
-        const response = await clienteAxios.delete(`/api/procesos/${rowData.Id_Proceso}`);
+        const response = await clienteAxios.delete(`/api/procesos/${rowData.id_proceso}`);
         if (response.status === 204) {
           Swal.fire('Eliminado!', 'El proceso ha sido eliminado.', 'success');
           getAllProcesos();
@@ -132,10 +113,7 @@ const CrudProcesos = () => {
               borderRadius: '5px',
               cursor: 'pointer',
               marginBottom: '20px',
-              transition: 'background-color 0.3s, transform 0.2s',
             }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#45a049'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#4caf50'}
             onClick={() => {
               resetForm();
               setIsModalOpen(true);
@@ -157,29 +135,31 @@ const CrudProcesos = () => {
             }} />
           )}
 
-          <Modal
-            isOpen={isModalOpen}
+          <Modal 
+            isOpen={isModalOpen} 
             onClose={() => {
               setIsModalOpen(false);
+              setIsDataTableVisible(true);
             }}
             title={buttonForm === "Enviar" ? "Agregar Proceso" : "Actualizar Proceso"}
-            style={{ backgroundColor: '#fff', padding: '20px', borderRadius: '10px' }} // Estilo del modal
           >
             <FormProcess
-              proceso={proceso}
+              proceso={proceso} 
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
             />
           </Modal>
 
-          <CustomDataTable
-            data={procesoList}
-            columns={columns}
-            onEdit={getProceso}
-            onDelete={deleteProceso}
-            searchField="Nom_Proceso"
-            exportFields={['Id_Proceso', 'Nom_Proceso', 'estado']}
-          />
+          {isDataTableVisible && 
+            <CustomDataTable
+              data={procesoList}
+              columns={columns}
+              onEdit={getProceso}
+              onDelete={deleteProceso}
+              searchField="nombre_proceso"
+              exportFields={['id_proceso', 'nombre_proceso', 'estado']}
+            />
+          }
         </div>
       </div>
     </div>

@@ -6,9 +6,17 @@ const validateProcedimiento = (procedimiento) => {
   const { nombre_procedimiento, id_proceso, estado } = procedimiento;
   let errors = [];
 
-  if (!nombre_procedimiento) errors.push("El campo 'nombre_procedimiento' es obligatorio.");
-  if (!id_proceso) errors.push("El campo 'id_proceso' es obligatorio.");
-  if (!estado) errors.push("El campo 'estado' es obligatorio.");
+  if (!nombre_procedimiento || nombre_procedimiento.trim() === "") {
+    errors.push("El campo 'nombre_procedimiento' es obligatorio y no debe estar vacío.");
+  }
+  
+  if (!id_proceso || isNaN(id_proceso)) {
+    errors.push("El campo 'id_proceso' es obligatorio y debe ser un número válido.");
+  }
+
+  if (!estado || estado.trim() === "") {
+    errors.push("El campo 'estado' es obligatorio y no debe estar vacío.");
+  }
 
   return errors;
 };
@@ -20,7 +28,7 @@ const getProcedimientos = async (req, res) => {
     if (procedimientos.length === 0) {
       return res.status(404).json({ message: 'No se encontraron procedimientos' });
     }
-    res.json(procedimientos);
+    res.status(200).json(procedimientos);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -30,14 +38,16 @@ const getProcedimientos = async (req, res) => {
 // Obtener un procedimiento por ID
 const getProcedimientoById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
 
   try {
     const procedimiento = await Procedimiento.findByPk(id);
     if (!procedimiento) {
       return res.status(404).json({ message: 'Procedimiento no encontrado' });
     }
-    res.json(procedimiento);
+    res.status(200).json(procedimiento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -67,7 +77,9 @@ const createProcedimiento = async (req, res) => {
 // Actualizar un procedimiento existente
 const updateProcedimiento = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
 
   if (!req.body || Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el procedimiento' });
@@ -85,7 +97,7 @@ const updateProcedimiento = async (req, res) => {
     }
 
     await procedimiento.update(req.body);
-    res.json(procedimiento);
+    res.status(200).json(procedimiento);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor al actualizar el procedimiento' });
@@ -95,7 +107,9 @@ const updateProcedimiento = async (req, res) => {
 // Eliminar un procedimiento por ID
 const deleteProcedimiento = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
 
   try {
     const procedimiento = await Procedimiento.findByPk(id);
@@ -104,7 +118,7 @@ const deleteProcedimiento = async (req, res) => {
     }
 
     await procedimiento.destroy();
-    res.status(204).end();
+    res.status(204).end(); // Sin contenido
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor al eliminar el procedimiento' });

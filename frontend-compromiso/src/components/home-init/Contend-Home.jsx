@@ -98,10 +98,10 @@ const Home_init = () => {
     return (
         <>
             <div className="container my-5" style={styles.container}>
-                <h1 style={styles.title}>¡BIENVENIDOS A CALDOCS!</h1>
+                <h1 style={styles.title}>¡BIENVENIDOS A CALGDOCS!</h1>
                 <div style={styles.imageDescriptionWrapper}>
                     <p style={styles.description}>
-                        La revolución en la gestión de documentos. Organiza, colabora y automatiza tus archivos de manera inteligente. ¡Simplifica tu flujo de trabajo y maximiza tu productividad con CalDocs!.
+                        La revolución en la gestión de documentos. Organiza, colabora y automatiza tus archivos de manera inteligente. ¡Simplifica tu flujo de trabajo y maximiza tu productividad con CALGDOCS!.
                     </p>
                     <div style={styles.imageContainer}>
                         <img 

@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
-  const [nomResponsable, setNomResponsable] = useState('');
+  const [nombreResponsable, setNombreResponsable] = useState('');
   const [estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
   const [id, setId] = useState(null);
@@ -11,9 +11,9 @@ const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
   // Efecto para cargar los datos del responsable cuando se recibe uno nuevo
   useEffect(() => {
     if (responsable) {
-      setNomResponsable(responsable.Nom_Responsable || '');
+      setNombreResponsable(responsable.nombre_responsable || '');
       setEstado(responsable.estado || 'Activo');
-      setId(responsable.Id_Responsable || null);
+      setId(responsable.id_responsable || null);
     } else {
       resetForm(); // Resetear si no hay responsable
     }
@@ -21,8 +21,8 @@ const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!nomResponsable || nomResponsable.length < 3) {
-      newErrors.nomResponsable = 'El nombre es obligatorio y debe tener al menos 3 caracteres.';
+    if (!nombreResponsable || nombreResponsable.length < 3) {
+      newErrors.nombreResponsable = 'El nombre es obligatorio y debe tener al menos 3 caracteres.';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -33,7 +33,7 @@ const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
     if (validateForm()) {
       handleSubmit(e, {
         id, // Incluir el ID en el objeto de envío
-        Nom_Responsable: nomResponsable,
+        nombre_responsable: nombreResponsable, // Cambiado a nombre_responsable
         estado
       });
       resetForm();
@@ -41,7 +41,7 @@ const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
   };
 
   const resetForm = () => {
-    setNomResponsable('');
+    setNombreResponsable('');
     setEstado('Activo');
     setId(null); // Resetear ID
     setErrors({});
@@ -52,20 +52,20 @@ const FormResponsables = ({ responsable, handleSubmit, buttonForm }) => {
       <form onSubmit={onSubmit}>
         {/* Nombre del Responsable */}
         <div className="form-group">
-          <label htmlFor="nomResponsable">
+          <label htmlFor="nombreResponsable">
             <FontAwesomeIcon icon={faUser} /> Nombre del Responsable
           </label>
           <input
-            id="nomResponsable"
+            id="nombreResponsable"
             type="text"
-            value={nomResponsable}
-            onChange={(e) => setNomResponsable(e.target.value)}
+            value={nombreResponsable}
+            onChange={(e) => setNombreResponsable(e.target.value)}
             required
-            aria-describedby="nomResponsableError"
+            aria-describedby="nombreResponsableError"
           />
-          {errors.nomResponsable && (
-            <span id="nomResponsableError" className="error">
-              {errors.nomResponsable}
+          {errors.nombreResponsable && (
+            <span id="nombreResponsableError" className="error">
+              {errors.nombreResponsable}
             </span>
           )}
         </div>

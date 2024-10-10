@@ -30,14 +30,15 @@ const getProcesos = async (req, res) => {
     if (procesos.length === 0) {
       return res.status(404).json({ message: 'No se encontraron procesos' });
     }
-    res.json(procesos);
+    res.status(200).json(procesos);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
 
-// Obtener un proceso por ID
+
+// Obtener un Proceso por ID
 const getProcesoById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
@@ -54,10 +55,10 @@ const getProcesoById = async (req, res) => {
   }
 };
 
-// Crear un nuevo proceso
+// Crear un nuevo Proceso
 const createProceso = async (req, res) => {
   if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: 'No se proporcionaron datos para crear el proceso' });
+    return res.status(400).json({ message: 'No se proporcionaron datos para crear el Proceso' });
   }
 
   const errors = validateProceso(req.body);
@@ -66,21 +67,21 @@ const createProceso = async (req, res) => {
   }
 
   try {
-    const nuevoProceso = await Proceso.create(req.body);
-    res.status(201).json(nuevoProceso);
+    const proceso = await Proceso.create(req.body);
+    res.status(201).json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor al crear el proceso' });
+    res.status(500).json({ error: 'Error interno del servidor al crear el Proceso' });
   }
 };
 
-// Actualizar un proceso existente
+// Actualizar un Proceso existente
 const updateProceso = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
 
   if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el proceso' });
+    return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el Proceso' });
   }
 
   const errors = validateProceso(req.body);
@@ -95,14 +96,14 @@ const updateProceso = async (req, res) => {
     }
 
     await proceso.update(req.body);
-    res.json(proceso);
+    res.status(200).json(proceso);
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor al actualizar el proceso' });
+    res.status(500).json({ error: 'Error interno del servidor al actualizar el Proceso' });
   }
 };
 
-// Eliminar un proceso por ID
+// Eliminar un Proceso por ID
 const deleteProceso = async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
@@ -117,7 +118,7 @@ const deleteProceso = async (req, res) => {
     res.status(204).end();
   } catch (error) {
     logger.error(error.message, { stack: error.stack });
-    res.status(500).json({ error: 'Error interno del servidor al eliminar el proceso' });
+    res.status(500).json({ error: 'Error interno del servidor al eliminar el Proceso' });
   }
 };
 
