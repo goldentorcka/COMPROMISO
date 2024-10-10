@@ -8,7 +8,7 @@ import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import clienteAxios from '../../api.js'; // Asegúrate de que esta ruta sea correcta
-import NavMenuSE from "../../components/Nav/NavQuerySena/NavMenuS_E.jsx"; // Asegúrate de que esta ruta sea correcta
+// import NavMenuSE from "../../components/Nav/NavQuerySena/NavMenuS_E.jsx"; // Asegúrate de que esta ruta sea correcta
 
 export default function AdvancedFilterDemo() {
     const [documentoList, setDocumentoList] = useState([]);
@@ -37,7 +37,20 @@ export default function AdvancedFilterDemo() {
         // Carga los datos de tu CRUD
         clienteAxios.get('api/documentos') // Cambia la ruta según tu API
             .then(response => {
-                setDocumentoList(response.data);
+                const documentosConNombres = response.data.map(doc => {
+                    // Busca los nombres en las listas de procesos, procedimientos y responsables
+                    const proceso = processes.find(p => p.id === doc.procesoId); // Ajusta según el campo en tu documento
+                    const procedimiento = procedures.find(proc => proc.id === doc.procedimientoId); // Ajusta según el campo en tu documento
+                    const responsable = responsibles.find(r => r.id === doc.responsableId); // Ajusta según el campo en tu documento
+
+                    return {
+                        ...doc,
+                        nombre_proceso: proceso ? proceso.nombre_proceso : 'No disponible',
+                        nombre_procedimiento: procedimiento ? procedimiento.nombre_procedimiento : 'No disponible',
+                        nombre_responsable: responsable ? responsable.nombre_responsable : 'No disponible',
+                    };
+                });
+                setDocumentoList(documentosConNombres);
                 setLoading(false);
             })
             .catch(error => {
@@ -48,7 +61,7 @@ export default function AdvancedFilterDemo() {
         // Cargar procesos, procedimientos y responsables
         cargarDatosAuxiliares();
         initFilters();
-    }, []);
+    }, [processes, procedures, responsibles]);
 
     const cargarDatosAuxiliares = async () => {
         try {
@@ -133,15 +146,15 @@ export default function AdvancedFilterDemo() {
     };
 
     const nombreProcesoBodyTemplate = (rowData) => {
-        return rowData.nombre_proceso; // Reemplazar por el nombre real del proceso
+        return rowData.nombre_proceso; // Ahora debería mostrar el nombre correcto del proceso
     };
 
     const nombreProcedimientoBodyTemplate = (rowData) => {
-        return rowData.nombre_procedimiento; // Reemplazar por el nombre real del procedimiento
+        return rowData.nombre_procedimiento; // Ahora debería mostrar el nombre correcto del procedimiento
     };
 
     const nombreResponsableBodyTemplate = (rowData) => {
-        return rowData.nombre_responsable; // Reemplazar por el nombre real del responsable
+        return rowData.nombre_responsable; // Ahora debería mostrar el nombre correcto del responsable
     };
 
     const statusBodyTemplate = (rowData) => {
@@ -204,47 +217,33 @@ export default function AdvancedFilterDemo() {
         );
     };
 
-    const tipoDocumentoFilterTemplate = (options) => {
-        return (
-            <Dropdown
-                value={options.value}
-                options={documentTypes.map(dt => ({ label: dt, value: dt }))} // Ajusta según tus tipos de documento
-                onChange={(e) => options.filterCallback(e.value, options.index)}
-                placeholder="Select Tipo Documento"
-                className="p-column-filter"
-                showClear
-            />
-        );
-    };
-
     return (
-        <div>
-            {/* Agregando la barra de navegación aquí */}
-            {/*<NavMenuSE />*/}
+        <>
+            
             <div className="card">
-                <DataTable 
-                    value={documentoList} 
-                    paginator 
-                    rows={10} 
-                    loading={loading} 
-                    globalFilter={globalFilterValue} 
-                    header={renderHeader()} 
-                    filters={filters} 
-                    removableSort
+                <DataTable
+                    value={documentoList}
+                    paginator
+                    rows={10}
+                    loading={loading}
+                    header={renderHeader()}
+                    filters={filters}
+                    globalFilterFields={['codigo', 'nombre_documento', 'nombre_documento_magnetico', 'nombre_documento_visualizacion', 'version', 'tipo_documento', 'fecha_elaboracion', 'nombre_proceso', 'nombre_procedimiento', 'nombre_responsable', 'status']}
+                    responsiveLayout="scroll"
                 >
-                    <Column field="codigo" header="Código" filter filterElement={codigoBodyTemplate} sortable />
-                    <Column field="nombre_documento" header="Nombre Documento" body={nombreDocumentoBodyTemplate} sortable />
-                    <Column field="nombre_documento_magnetico" header="Nombre Documento Magnético" body={nombreDocumentoMagneticoBodyTemplate} sortable />
-                    <Column field="nombre_documento_visualizacion" header="Nombre Documento Visualización" body={nombreDocumentoVisualizacionBodyTemplate} sortable />
-                    <Column field="version" header="Versión" body={versionBodyTemplate} sortable />
-                    <Column field="tipo_documento" header="Tipo Documento" body={tipoDocumentoBodyTemplate} filter filterElement={tipoDocumentoFilterTemplate} sortable />
-                    <Column field="fecha_elaboracion" header="Fecha de Elaboración" body={fechaElaboracionBodyTemplate} sortable />
-                    <Column field="nombre_proceso" header="Nombre Proceso" body={nombreProcesoBodyTemplate} filter filterElement={procesoFilterTemplate} sortable />
-                    <Column field="nombre_procedimiento" header="Nombre Procedimiento" body={nombreProcedimientoBodyTemplate} filter filterElement={procedimientoFilterTemplate} sortable />
-                    <Column field="nombre_responsable" header="Nombre Responsable" body={nombreResponsableBodyTemplate} filter filterElement={responsableFilterTemplate} sortable />
-                    <Column field="status" header="Estado" body={statusBodyTemplate} filter filterElement={statusFilterTemplate} sortable />
+                    <Column field="codigo" header="Código" body={codigoBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="nombre_documento" header="Nombre Documento" body={nombreDocumentoBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="nombre_documento_magnetico" header="Nombre Documento Magnético" body={nombreDocumentoMagneticoBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="nombre_documento_visualizacion" header="Nombre Documento Visualización" body={nombreDocumentoVisualizacionBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="version" header="Versión" body={versionBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="tipo_documento" header="Tipo Documento" body={tipoDocumentoBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="fecha_elaboracion" header="Fecha Elaboración" body={fechaElaboracionBodyTemplate} filter filterPlaceholder="Buscar" />
+                    <Column field="nombre_proceso" header="Nombre Proceso" body={nombreProcesoBodyTemplate} filter filterPlaceholder="Buscar" filterElement={procesoFilterTemplate} />
+                    <Column field="nombre_procedimiento" header="Nombre Procedimiento" body={nombreProcedimientoBodyTemplate} filter filterPlaceholder="Buscar" filterElement={procedimientoFilterTemplate} />
+                    <Column field="nombre_responsable" header="Nombre Responsable" body={nombreResponsableBodyTemplate} filter filterPlaceholder="Buscar" filterElement={responsableFilterTemplate} />
+                    <Column field="status" header="Estado" body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
                 </DataTable>
             </div>
-        </div>
+        </>
     );
 }

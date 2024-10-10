@@ -6,10 +6,10 @@ import App from "./App.jsx";
 import ErrorBoundary from './components/captureError/ErrorBoundary.jsx'; // Asegúrate de importar el componente ErrorBoundary
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import 'primeicons/primeicons.css';
 // Importa los estilos de PrimeReact
 import 'primereact/resources/themes/saga-blue/theme.css'; // o cualquier otro tema
 import 'primereact/resources/primereact.min.css';
-import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';      
 import { PrimeReactProvider } from 'primereact/api';
 import 'primereact/resources/primereact.css';
