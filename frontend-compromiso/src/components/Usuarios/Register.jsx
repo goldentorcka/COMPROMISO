@@ -1,30 +1,29 @@
 import { useState } from 'react';
 import axios from 'axios';
-import { Link } from "react-router-dom";
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-
   const [formData, setFormData] = useState({
     username: '',
     email: '',
     password: ''
   });
 
+  const { username, email, password } = formData;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/usuarios/register`, {
-        username,
-        email,
-        password,
-      });
-      alert('Registro exitoso. Por favor, Ya Puedes iniciar sesion con otra cuenta');
-      resetForm()
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, formData);
+      alert('Registro exitoso. Por favor, ya puedes iniciar sesión con otra cuenta');
+      resetForm();
     } catch (error) {
       console.error('Error de registro:', error);
       alert('Error en el registro. Por favor, intenta de nuevo.');
@@ -49,8 +48,9 @@ const Register = () => {
             type="text"
             className="form-control"
             id="username"
+            name="username"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleChange}
             required
           />
         </div>
@@ -60,8 +60,9 @@ const Register = () => {
             type="email"
             className="form-control"
             id="email"
+            name="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
             required
           />
         </div>
@@ -71,16 +72,14 @@ const Register = () => {
             type="password"
             className="form-control"
             id="password"
+            name="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
             required
           />
         </div>
-
         <button type="submit" className="btn btn-primary">Registrarse</button>
       </form>
-
-
     </div>
   );
 };

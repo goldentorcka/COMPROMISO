@@ -190,7 +190,7 @@ const ContactUs = () => {
                   </a>
                 </div>
 
-                <p>
+                {/* <p>
                   <button
                     className="btn btn-secondary"
                     onClick={() => handleShow(member)}
@@ -209,7 +209,7 @@ const ContactUs = () => {
                   >
                     Ver detalles »
                   </button>
-                </p>
+                </p> */}
               </div>
             </div>
           ))}

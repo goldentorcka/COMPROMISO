@@ -9,8 +9,9 @@ import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import clienteAxios from '../../api.js'; // Asegúrate de que esta ruta sea correcta
 import { FaEye, FaDownload } from 'react-icons/fa'; // Asegúrate de tener react-icons instalado
+import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
 
-export default function AdvancedFilterDemo() {
+function AdvancedFilterDemo() {
     const [documentoList, setDocumentoList] = useState([]);
     const [filters, setFilters] = useState(null);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
@@ -241,29 +242,87 @@ export default function AdvancedFilterDemo() {
     };
 
     return (
+        <>
+        < NavMenuPublic />
         <div className="card">
-            <h5>Documentos</h5>
             <DataTable
                 value={documentoList}
-                filters={filters}
-                globalFilterFields={['codigo', 'nombre_documento', 'version', 'tipo_documento', 'fecha_elaboracion', 'nombre_proceso', 'nombre_procedimiento', 'nombre_responsable', 'status']}
-                header={renderHeader()}
                 paginator
                 rows={10}
-                rowsPerPageOptions={[5, 10, 25]}
-                emptyMessage="No se encontraron documentos."
+                dataKey="id"
+                filters={filters}
+                globalFilterFields={['codigo', 'nombre_documento', 'version', 'tipo_documento', 'nombre_proceso', 'nombre_procedimiento', 'nombre_responsable', 'status']}
+                header={renderHeader()}
+                responsiveLayout="scroll"
             >
-                <Column field="codigo" header="Código" body={codigoBodyTemplate} filter filterPlaceholder="Buscar código" />
-                <Column field="nombre_documento" header="Nombre del Documento" body={nombreDocumentoBodyTemplate} filter filterPlaceholder="Buscar nombre" />
-                <Column field="version" header="Versión" body={versionBodyTemplate} filter filterPlaceholder="Buscar versión" />
-                <Column field="tipo_documento" header="Tipo de Documento" body={tipoDocumentoBodyTemplate} filter filterPlaceholder="Buscar tipo" />
-                <Column field="fecha_elaboracion" header="Fecha de Elaboración" body={fechaElaboracionBodyTemplate} filter filterPlaceholder="Buscar fecha" />
-                <Column field="nombre_proceso" header="Nombre del Proceso" body={nombreProcesoBodyTemplate} filter filterElement={procesoFilterTemplate} />
-                <Column field="nombre_procedimiento" header="Nombre del Procedimiento" body={nombreProcedimientoBodyTemplate} filter filterElement={procedimientoFilterTemplate} />
-                <Column field="nombre_responsable" header="Nombre del Responsable" body={nombreResponsableBodyTemplate} filter filterElement={responsableFilterTemplate} />
-                <Column field="status" header="Estado" body={statusBodyTemplate} filter filterElement={statusFilterTemplate} />
-                <Column body={actionBodyTemplate} header="Acciones" />
+                <Column 
+                    field="codigo" 
+                    header="Código" 
+                    filter
+                    filterElement={codigoBodyTemplate} 
+                />
+                <Column 
+                    field="nombre_documento" 
+                    header="Nombre del Documento" 
+                    body={nombreDocumentoBodyTemplate} 
+                    filter 
+                />
+                <Column 
+                    field="version" 
+                    header="Versión" 
+                    body={versionBodyTemplate} 
+                    filter 
+                />
+                <Column 
+                    field="tipo_documento" 
+                    header="Tipo de Documento" 
+                    body={tipoDocumentoBodyTemplate} 
+                    filter 
+                />
+                <Column 
+                    field="fecha_elaboracion" 
+                    header="Fecha de Elaboración" 
+                    body={fechaElaboracionBodyTemplate} 
+                    filter 
+                />
+                <Column 
+                    field="nombre_proceso" 
+                    header="Nombre del Proceso" 
+                    body={nombreProcesoBodyTemplate} 
+                    filter 
+                    filterElement={procesoFilterTemplate}
+                />
+                <Column 
+                    field="nombre_procedimiento" 
+                    header="Nombre del Procedimiento" 
+                    body={nombreProcedimientoBodyTemplate} 
+                    filter 
+                    filterElement={procedimientoFilterTemplate}
+                />
+                <Column 
+                    field="nombre_responsable" 
+                    header="Nombre del Responsable" 
+                    body={nombreResponsableBodyTemplate} 
+                    filter 
+                    filterElement={responsableFilterTemplate}
+                />
+                <Column 
+                    field="status" 
+                    header="Estado" 
+                    body={statusBodyTemplate} 
+                    filter 
+                    filterElement={statusFilterTemplate}
+                />
+                <Column 
+                    header="Acciones" 
+                    body={actionBodyTemplate} 
+                    exportable={false} 
+                />
             </DataTable>
         </div>
+    </>    
     );
 }
+
+// Exportación predeterminada de la función
+export default AdvancedFilterDemo;

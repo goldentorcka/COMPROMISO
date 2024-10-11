@@ -26,12 +26,12 @@ const authenticateToken = (req, res, next) => {
 
 const isAdmin = async (req, res, next) => {
   try {
-    const [users] = await sequelize.query('SELECT role FROM users WHERE id = ?', {
+    const [usuarios] = await sequelize.query('SELECT role FROM usuarios WHERE id = ?', {
       replacements: [req.user.id],
       type: sequelize.QueryTypes.SELECT
     });
 
-    if (users.length > 0 && users[0].role === 'administrador') {
+    if (usuarios.length > 0 && usuarios[0].role === 'administrador') {
       next();
     } else {
       res.status(403).json({ message: 'Acceso denegado. Se requiere rol de administrador.' });

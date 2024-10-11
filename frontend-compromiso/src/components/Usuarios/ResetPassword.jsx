@@ -35,7 +35,7 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/usuarios/reset-password/${userId}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password/${userId}`,
         {
           password,
           token,

@@ -30,7 +30,7 @@ const SidebarAdministrator = () => {
           <li className="nav-item">
             <NavLink
               className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-              to="/administrator/Usuarios"
+              to="/administrator/Register"
             >
               <FontAwesomeIcon icon={faUsers} className="icon" />
               USUARIOS
@@ -81,7 +81,7 @@ const SidebarAdministrator = () => {
             <li className="nav-item">
               <NavLink
                 className={({ isActive }) => `nav-link d-flex align-items-center gap-2 ${isActive ? 'active' : ''}`}
-                to="/login-admin"
+                to="/login"
               >
                 <FontAwesomeIcon icon={faSignOutAlt} className="icon" />
                 Cerrar Sesion

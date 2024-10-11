@@ -59,7 +59,7 @@ app.get('/', (req, res) => {
 // app.use(checkAuth);
 
 // Rutas de la API
-app.use('/api/usuarios', usuariosRouter);
+app.use('/api/auth', usuariosRouter);
 app.use('/api/responsables', responsablesRouter);
 app.use('/api/procesos', procesosRouter);
 app.use('/api/procedimientos', procedimientosRouter);

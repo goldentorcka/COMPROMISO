@@ -128,12 +128,12 @@ const NavMenuPublic = () => {
         <button
           type="button"
           className="btn"
-          style={buttonStyle(activeLink === "/login-admin")}
-          onClick={() => handleLinkClick("/login-admin")}
-          onMouseEnter={() => handleMouseEnter("/login-admin")}
+          style={buttonStyle(activeLink === "/login")}
+          onClick={() => handleLinkClick("/login")}
+          onMouseEnter={() => handleMouseEnter("/login")}
           onMouseLeave={handleMouseLeave}
         >
-          <FaCog style={iconStyle(rotatingIcon === "/login-admin")} /> Módulo del Administrador
+          <FaCog style={iconStyle(rotatingIcon === "/login")} /> Módulo del Administrador
         </button>
         <button
           type="button"
