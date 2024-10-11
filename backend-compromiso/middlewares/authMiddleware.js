@@ -1,47 +1,83 @@
-const jwt = require("jsonwebtoken");
-const Usuario = require("../src/api/usuario/models/usuarioModel.js");
-const { logger } = require("../config/logger.js");
+// @ts-nocheck
+const jwt = require('jsonwebtoken');
+const sequelize = require('../config/database.js');
 
-const checkAuth = async (req, res, next) => {
-  let token;
+const authenticateToken = (req, res, next) => {
+  // Obtén el token del encabezado Authorization
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Separa 'Bearer' del token
 
-  // Verifica si hay un token en el encabezado Authorization
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    try {
-      // Extrae el token del encabezado
-      token = req.headers.authorization.split(" ")[1];
-
-      // Verifica y decodifica el token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      const decodedIdUser = Buffer.from(decoded.Id_User, "base64").toString("utf-8");
-
-      // Busca el usuario en la base de datos
-      const user = await Usuario.findByPk(decodedIdUser, {
-        attributes: { exclude: ["password", "Confirmado", "token"] },
-      });
-
-      // Verifica si el usuario existe y si el token coincide
-      if (!user) {
-        return res.status(404).json({ msg: "Usuario no encontrado" });
-      }
-
-      // Agrega el usuario a la solicitud
-      req.usuario = user;
-      return next();
-    } catch (error) {
-      // Maneja errores de token, como expiración o firma inválida
-      logger.error("Token no válido o expirado", { message: error.message, stack: error.stack });
-      return res.status(403).json({ msg: "Token no válido o expirado" });
-    }
+  // Si no hay token, devuelve un error 401 (No autorizado)
+  if (token == null) {
+    return res.status(401).json({ message: 'Token no proporcionado' });
   }
 
-  // Si no hay token, devuelve un error
-  if (!token) {
-    return res.status(403).json({ msg: "Token no válido o inexistente" });
+  // Verifica el token con la clave secreta
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Token inválido o expirado' });
+    }
+
+    // Si el token es válido, se añade el usuario a la request
+    req.user = user;
+    next(); // Procede a la siguiente función del middleware
+  });
+};
+
+const isAdmin = async (req, res, next) => {
+  try {
+    const [users] = await sequelize.query('SELECT role FROM users WHERE id = ?', {
+      replacements: [req.user.id],
+      type: sequelize.QueryTypes.SELECT
+    });
+
+    if (users.length > 0 && users[0].role === 'administrador') {
+      next();
+    } else {
+      res.status(403).json({ message: 'Acceso denegado. Se requiere rol de administrador.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error al verificar el rol de usuario' });
+  }
+};
+
+const rateLimiter = (req, res, next) => {
+  // Implementación básica de rate limiting
+  if (!req.ip) {
+    return next();
+  }
+
+  const now = Date.now();
+  const windowMs = 15 * 60 * 1000; // 15 minutos
+  const maxRequests = 1000; // máximo número de solicitudes por ventana
+
+  if (!global.rateLimit) {
+    global.rateLimit = {};
+  }
+
+  if (!global.rateLimit[req.ip]) {
+    global.rateLimit[req.ip] = {
+      requests: 1,
+      nextWindow: now + windowMs
+    };
+  } else if (now > global.rateLimit[req.ip].nextWindow) {
+    global.rateLimit[req.ip] = {
+      requests: 1,
+      nextWindow: now + windowMs
+    };
+  } else {
+    global.rateLimit[req.ip].requests++;
+    if (global.rateLimit[req.ip].requests > maxRequests) {
+      return res.status(429).json({ message: 'Demasiadas solicitudes, por favor intente más tarde.' });
+    }
   }
 
   next();
 };
 
-module.exports = checkAuth;
+// Exporta las funciones con module.exports
+module.exports = {
+  authenticateToken,
+  isAdmin,
+  rateLimiter
+};

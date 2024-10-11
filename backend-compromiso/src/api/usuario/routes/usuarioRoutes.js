@@ -1,24 +1,19 @@
 // @ts-nocheck
 const express = require('express');
-const router = express.Router();
 const usuarioController = require('../controllers/usuarioController.js'); // Importa el controlador
+const { rateLimiter } = require('../../../../middlewares/authMiddleware.js'); // Importa el middleware
+const router = express.Router();
 
-// Obtener todos los usuarios
-router.get('/', usuarioController.getUsuarios);
+// Ruta para registrar un nuevo usuario
+router.post('/register', rateLimiter, usuarioController.register);
 
-// Obtener un usuario por ID (con validación de ID)
-router.get('/:id', usuarioController.getUsuarioById);
+// Ruta para iniciar sesión (login)
+router.post('/login', rateLimiter, usuarioController.login);
 
-// Crear un nuevo usuario (Solo Super Administrador)
-router.post('/', usuarioController.isSuperAdmin, usuarioController.crearUsuario);
+// Ruta para solicitar restablecimiento de contraseña
+router.post('/forgot-password', rateLimiter, usuarioController.forgotPassword);
 
-// Actualizar un usuario existente (con validación de ID y solo Super Administrador)
-router.put('/:id', usuarioController.isSuperAdmin, usuarioController.actualizarUsuario);
-
-// Eliminar un usuario por ID (con validación de ID y solo Super Administrador)
-router.delete('/:id', usuarioController.isSuperAdmin, usuarioController.eliminarUsuario);
-
-// Solicitar restablecimiento de contraseña
-router.post('/reset-password', usuarioController.resetPasswordRequest);
+// Ruta para restablecer la contraseña
+router.post('/reset-password/:userId', rateLimiter, usuarioController.resetPassword);
 
 module.exports = router;

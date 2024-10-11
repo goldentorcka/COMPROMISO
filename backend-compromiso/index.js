@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const sequelize = require('./config/database.js');
 const { logger } = require('./config/logger.js');
+const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 // const checkAuth = require('./middlewares/authMiddleware.js');
 const { body, validationResult } = require('express-validator'); // Importa express-validator
 
@@ -14,7 +15,6 @@ const responsablesRouter = require('./src/api/responsable/routes/responsableRout
 const procesosRouter = require('./src/api/proceso/routes/Routesproceso.js');
 const procedimientosRouter = require('./src/api/procedimiento/routes/procedimientoRoutes.js');
 const documentosRouter = require('./src/api/documento/routes/documentoRoutes.js');
-const usuariosRouter = require('./src/api/usuario/routes/usuarioRoutes.js');
 const asistenteRouter = require('./src/api/asistente/routes/asistenteRoutes.js');
 const permisosRouter = require('./src/api/permiso/routes/permisoRoutes'); // Importa las rutas de permisos
 
@@ -59,25 +59,13 @@ app.get('/', (req, res) => {
 // app.use(checkAuth);
 
 // Rutas de la API
+app.use('/api/usuarios', usuariosRouter);
 app.use('/api/responsables', responsablesRouter);
 app.use('/api/procesos', procesosRouter);
 app.use('/api/procedimientos', procedimientosRouter);
 app.use('/api/documentos', documentosRouter);
-app.use('/api/usuarios', usuariosRouter);
 app.use('/api/asistente', asistenteRouter);
 app.use('/api/permisos', permisosRouter); // Usa las rutas de permisos
-
-// // Middleware de validación para la creación de usuarios
-// app.post('/api/usuarios', [
-//   body('email').isEmail().withMessage('Debes proporcionar un correo electrónico válido.'),
-//   body('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres.'),
-// ], (req, res) => {
-//   const errors = validationResult(req);
-//   if (!errors.isEmpty()) {
-//     return res.status(400).json({ errors: errors.array() });
-//   }
-//   // Procesar la creación del usuario
-// });
 
 // Manejo de errores 404
 app.use((req, res) => {

@@ -28,25 +28,65 @@ const ContactUs = () => {
   // Datos de los miembros
   const members = [
     {
+      name: 'Julian Montaña',
+      description: 'DESARROLLADOR',
+      carouselItems: [
+        {
+          img: imgJulian,
+          caption: 'Nació en Espinal-Tolima, tiene 19 años.',
+        },
+        {
+          img: imgJulian1,
+          caption: 'Le gusta la programación.',
+        },
+        {
+          img: imgJulian2,
+          caption: 'Es un gran jugador de ajedrez.',
+        },
+      ],
+      facebook: 'https://www.facebook.com/julian.montana',
+      instagram: 'https://www.instagram.com/julian.montana',
+    },
+    {
       name: 'Marlon Javier Cumbe Loaiza',
       description: 'GERENTE',
       carouselItems: [
         {
           img: imgMarlon,
-          caption: 'Nacio en Coyaima-Tolima, tiene 18 años ',
+          caption: 'Nació en Coyaima-Tolima, tiene 18 años.',
         },
         {
           img: imgMarlon2,
-          caption: 'Le gusta el futbol',
+          caption: 'Le gusta el fútbol.',
         },
         {
           img: imgMarlon3,
-          caption: ' Es una persona muy organizada y meticulosa',
+          caption: 'Es una persona muy organizada y meticulosa.',
         },
       ],
       facebook: 'https://www.facebook.com/profile.php?id=61561011352009&mibextid=ZbWKwL',
       instagram: 'https://www.instagram.com/marlxon69?igsh=MXI4bHo2bjdlZHAxag==',
-    }
+    },
+    {
+      name: 'Sofía López',
+      description: 'DISEÑADORA',
+      carouselItems: [
+        {
+          img: imgSofia1,
+          caption: 'Nació en Ibagué, le encanta el diseño gráfico.',
+        },
+        {
+          img: imgSofia2,
+          caption: 'Su hobby es la fotografía.',
+        },
+        {
+          img: imgSofia3,
+          caption: 'Siempre está buscando nuevas tendencias.',
+        },
+      ],
+      facebook: 'https://www.facebook.com/sofia.lopez',
+      instagram: 'https://www.instagram.com/sofia.lopez',
+    },
   ];
 
   return (
@@ -59,7 +99,7 @@ const ContactUs = () => {
             padding: '2rem',
             color: '#333',
             fontFamily: 'Cambria', // Cambiado a Cambria
-            fontSize: '3rem', //tamaño 
+            fontSize: '3rem', // tamaño 
             fontWeight: 'bold', // Título en negrita
             marginTop: '80px', // Ajustado para asegurar que no quede oculto
           }}
@@ -127,7 +167,7 @@ const ContactUs = () => {
                     style={{ display: 'inline-block', margin: '0 5px' }}
                   >
                     <img 
-                      src="src/Public/images/icons/facebook.png" 
+                      src="../Public/images/icons/facebook.png" 
                       width="30" 
                       height="30" 
                       style={{ borderRadius: '50%', objectFit: 'cover' }}
@@ -141,7 +181,7 @@ const ContactUs = () => {
                     style={{ display: 'inline-block', margin: '0 5px' }}
                   >
                     <img 
-                      src="src/Public/images/icons/instagram.png" 
+                      src="../Public/images/icons/instagram.png" 
                       width="30" 
                       height="30" 
                       style={{ borderRadius: '50%', objectFit: 'cover' }}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import NavMenuPublic from '../NavMenuPublic.jsx';
 
@@ -6,11 +6,16 @@ const NavMenuSE = () => {
     const imageBasePath = '../../../../Public/images/imagenM-V/';
     const images = [
         `${imageBasePath}ImagenM-VSE.jpg`,
-        `${imageBasePath}ImagenM-VSE2.jpg`,
-        `${imageBasePath}ImagenM-VSE3.jpg`
+        `${imageBasePath}ImagenM-VSE2.jpg`
     ];
 
     const [hoveredImage, setHoveredImage] = useState(null);
+    const [imageAnimation, setImageAnimation] = useState([false, false]);
+
+    useEffect(() => {
+        // Activar la animación de entrada para las imágenes
+        setImageAnimation([true, true]);
+    }, []);
 
     const handleMouseEnter = (index, direction) => {
         setHoveredImage({ index, direction });
@@ -85,15 +90,17 @@ const NavMenuSE = () => {
             cursor: 'pointer',
             boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
             borderRadius: '15px',
+            animation: imageAnimation[0] ? 'fadeIn 1s ease-in-out' : 'none',
         },
         visionImage: {
             width: '300px',
             height: 'auto',
-            marginRight: '1.5rem', // Ajusta el margen derecho
+            marginRight: '1.5rem',
             transition: 'transform 0.6s ease, box-shadow 0.6s ease',
             cursor: 'pointer',
             boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
             borderRadius: '15px',
+            animation: imageAnimation[1] ? 'fadeIn 1s ease-in-out' : 'none',
         },
         imageHoveredLeft: {
             transform: 'rotateY(20deg) rotateX(10deg) scale(1.2)',
@@ -112,7 +119,17 @@ const NavMenuSE = () => {
             backgroundColor: '#2c3e50',
             transform: 'translate(-50%, -50%)',
             zIndex: '-1',
-        }
+        },
+        '@keyframes fadeIn': {
+            from: {
+                opacity: 0,
+                transform: 'translateY(20px)',
+            },
+            to: {
+                opacity: 1,
+                transform: 'translateY(0)',
+            },
+        },
     };
 
     return (

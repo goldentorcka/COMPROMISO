@@ -3,7 +3,7 @@ import 'regenerator-runtime/runtime';
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/home/home.jsx';
-import LoginFormAdmin from './users/LoginUser.jsx';
+// import LoginFormAdmin from './users/LoginUser.jsx';
 import OlvidePassword from './users/OlvidePassword.jsx';
 import Contend_Manuals from './components/home-init/Contend-Manuals.jsx';
 import NavMenuSE from './components/Nav/NavQuerySena/NavMenuS_E.jsx';
@@ -13,8 +13,7 @@ import Layout from './components/Admin/layout/Layout.jsx';
 // import AsistenteVirtual from './components/AsistenteVirtual/AsistenteVirtual.jsx'; // Descomentar esta línea
 import Component from './components/query/Init-Query.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import Footer from './components/Footer/footer-init'
-
+import Login from "./components/Usuarios/Login.jsx";
 
 // Carga asíncrona de componentes administrativos
 const CrudUsers = lazy(() => import('./users/crudUsers.jsx'));
@@ -29,7 +28,7 @@ function App() {
       <Suspense fallback={<div>Cargando...</div>}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login-admin" element={<LoginFormAdmin />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/olvidePassword" element={<OlvidePassword />} />
           <Route path="/manuals" element={<Contend_Manuals />} />
           <Route path="/mision-vision" element={<NavMenuSE />} />

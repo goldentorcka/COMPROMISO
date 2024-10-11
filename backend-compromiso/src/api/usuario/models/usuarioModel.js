@@ -1,51 +1,43 @@
+// @ts-nocheck
 const { DataTypes } = require('sequelize');
 const sequelize = require('../../../../config/database.js');
 
 const Usuario = sequelize.define('usuarios', {
-  id_usuario: {
-    type: DataTypes.BIGINT,
-    primaryKey: true,
+  id: {
+    type: DataTypes.INTEGER,
     autoIncrement: true,
+    primaryKey: true,
   },
-  rol: {
-    type: DataTypes.STRING(15),
-    allowNull: false,
-  },
-  nombre_usuario: {
-    type: DataTypes.STRING(200),
-    allowNull: false,
-  },
-  usuario: {
-    type: DataTypes.STRING(30),
+  username: {
+    type: DataTypes.STRING(50),
     allowNull: false,
     unique: true,
-  },
-  contrasena: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
   },
   email: {
-    type: DataTypes.STRING(200),
+    type: DataTypes.STRING(100),
     allowNull: false,
     unique: true,
+  },
+  password: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+  },
+  reset_token: {
+    type: DataTypes.STRING(255),
+    allowNull: true,
+  },
+  reset_token_expiry: {
+    type: DataTypes.TIME, // Cambiado a TIME
+    allowNull: true,
   },
   estado: {
     type: DataTypes.ENUM('Activo', 'Inactivo'),
     allowNull: false,
     defaultValue: 'Activo',
   },
-  createdAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
-  updatedAt: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW,
-  },
 }, {
-  // Opción para definir los hooks si se necesitan
+  freezeTableName: true, // Evita que Sequelize pluralice el nombre de la tabla
+  timestamps: true, // Agrega automáticamente createdAt y updatedAt
   hooks: {
     beforeUpdate: (usuario) => {
       usuario.updatedAt = new Date();
@@ -57,6 +49,6 @@ const Usuario = sequelize.define('usuarios', {
 });
 
 // Sincronizar el modelo con la base de datos (opcional, solo si es necesario)
-Usuario.sync();
+// Usuario.sync();
 
 module.exports = Usuario;

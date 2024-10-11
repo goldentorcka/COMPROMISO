@@ -1,177 +1,144 @@
 // @ts-nocheck
-const Usuario = require('../models/usuarioModel.js');
-const { logger } = require('../../../../config/logger.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
+const sequelize = require('../../../../config/database.js'); // Cambié pool a sequelize
+const Usuario = require('../models/usuarioModel.js'); // Cambié el modelo a 'Usuario'
 
-// Middleware para verificar si el usuario es Super Administrador
-const isSuperAdmin = (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({ message: 'Usuario no autenticado' });
-  }
-
-  const { rol } = req.user; // Cambiado de Rol_Usuario a rol
-  if (rol !== 'Super Administrador') {
-    return res.status(403).json({ message: 'Acceso denegado. Solo los Super Administradores pueden realizar esta acción.' });
-  }
-  next();
-};
-
-// Middleware para verificar permisos específicos
-const checkPermissions = (action) => {
-  return (req, res, next) => {
-    if (!req.user) {
-      return res.status(401).json({ message: 'Usuario no autenticado' });
-    }
-
-    const { permisos } = req.user;
-    if (!permisos || !permisos[action]) {
-      return res.status(403).json({ message: 'No tienes permisos para realizar esta acción.' });
-    }
-    next();
-  };
-};
-
-// Validación de datos de Usuario
-const validateUsuario = (data) => {
-  const errors = [];
-  if (!data.nombre_usuario || !data.usuario || !data.contrasena || !data.email) {
-    errors.push('Todos los campos son obligatorios.');
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (data.email && !emailRegex.test(data.email)) {
-    errors.push('El formato del correo es inválido.');
-  }
-  return errors;
-};
-
-// Obtener todos los usuarios
-const getUsuarios = async (req, res) => {
+// Función para registrar un nuevo usuario
+const register = async (req, res) => {
+  const { username, email, password } = req.body;
   try {
-    const usuarios = await Usuario.findAll();
-    if (usuarios.length === 0) {
-      return res.status(404).json({ success: false, message: 'No se encontraron usuarios' });
-    }
-    res.status(200).json({ success: true, usuarios });
+    // Hashear la contraseña
+    const hashedPassword = await bcrypt.hash(password, 10);
+    
+    // Crear el nuevo usuario usando Sequelize
+    const newUser = await Usuario.create({
+      username,
+      email,
+      password: hashedPassword,
+      reset_Token: null, // Valor por defecto
+      reset_token_expiry: null // Valor por defecto
+    });
+
+    console.log("Usuario creado exitosamente con los datos ===", newUser);
+    res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
   } catch (error) {
-    logger.error('Error al obtener usuarios', { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    console.error('Error en el registro:', error);
+    res.status(500).json({ message: 'Error en el registro' });
   }
 };
 
-// Obtener un usuario por ID
-const getUsuarioById = async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
+// Configurar el servicio de correo para forgotPassword
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
+// Función para iniciar sesión
+const login = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const usuario = await Usuario.findByPk(id);
-    if (!usuario) {
-      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    // Busca al usuario usando Sequelize
+    const user = await Usuario.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciales inválidas' });
     }
-    res.status(200).json({ success: true, usuario });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales inválidas' });
+    }
+
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.json({ token, user: { id: user.id, username: user.username }, message: "Bienvenido al Sistema de Formatos De Sena Empresa" });
   } catch (error) {
-    logger.error(`Error al obtener usuario con ID ${id}`, { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
+    console.error('Error en el inicio de sesión:', error);
+    res.status(500).json({ message: 'Error en el inicio de sesión' });
   }
 };
 
-// Crear un nuevo usuario (Solo Super Administrador)
-const crearUsuario = async (req, res) => {
-  if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ success: false, message: 'No se proporcionaron datos para crear el usuario' });
-  }
-
-  const errors = validateUsuario(req.body);
-  if (errors.length > 0) {
-    return res.status(400).json({ success: false, message: 'Errores de validación', errors });
-  }
-
+// Función para restablecer la contraseña
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
   try {
-    const usuarioExistente = await Usuario.findOne({ where: { usuario: req.body.usuario } }); // Cambiado de Usuario a usuario
-    if (usuarioExistente) {
-      return res.status(409).json({ success: false, message: 'El nombre de usuario ya está en uso' });
+    const user = await Usuario.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    const usuario = await Usuario.create(req.body);
-    res.status(201).json({ success: true, usuario });
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Restablecer tu contraseña',
+      html: `
+        <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
+        <a href="${process.env.FRONTEND_URL}/reset-password/${user.id}?token=${token}">Restablecer contraseña</a>
+      `,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error al enviar el correo:', error);
+        return res.status(500).json({ message: 'Error al enviar el correo' });
+      }
+
+      console.log('Correo enviado:', info.response);
+      res.json({ message: 'Correo de restablecimiento enviado. Por favor revisa tu correo.', token });
+    });
   } catch (error) {
-    logger.error('Error al crear usuario', { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor al crear el usuario' });
+    console.error('Error en forgot password:', error);
+    res.status(500).json({ message: 'Error al procesar la solicitud' });
   }
 };
 
-// Actualizar un usuario (Solo Super Administrador)
-const actualizarUsuario = async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
+// Función para actualizar la contraseña
+const resetPassword = async (req, res) => {
+  const { userId } = req.params;
+  const { password, token } = req.body;
 
-  if (!req.body || Object.keys(req.body).length === 0) {
-    return res.status(400).json({ success: false, message: 'No se proporcionaron datos para actualizar el usuario' });
-  }
-
-  const errors = validateUsuario(req.body);
-  if (errors.length > 0) {
-    return res.status(400).json({ success: false, message: 'Errores de validación', errors });
+  if (!token) {
+    return res.status(400).json({ message: 'Token es necesario' });
   }
 
   try {
-    const usuario = await Usuario.findByPk(id);
-    if (!usuario) {
-      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.id !== parseInt(userId)) {
+      return res.status(403).json({ message: 'Token inválido o expirado' });
     }
 
-    await usuario.update(req.body);
-    res.status(200).json({ success: true, usuario });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userIdInt = parseInt(userId);
+
+    console.log('hashedPassword:', hashedPassword); // Depuración
+    console.log('userId:', userIdInt); // Depuración
+
+    const result = await Usuario.update(
+      { password: hashedPassword },
+      { where: { id: userIdInt } }
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' });
+    }
+
+    res.json({ message: 'Contraseña actualizada exitosamente' });
   } catch (error) {
-    logger.error(`Error al actualizar usuario con ID ${id}`, { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor al actualizar el usuario' });
+    console.error('Error al restablecer la contraseña:', error);
+    res.status(500).json({ message: 'Error al restablecer la contraseña' });
   }
 };
 
-// Eliminar un usuario (Solo Super Administrador)
-const eliminarUsuario = async (req, res) => {
-  const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ success: false, message: 'ID inválido' });
-
-  try {
-    const usuario = await Usuario.findByPk(id);
-    if (!usuario) {
-      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
-    }
-
-    await usuario.destroy();
-    res.status(204).end();
-  } catch (error) {
-    logger.error(`Error al eliminar usuario con ID ${id}`, { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor al eliminar el usuario' });
-  }
-};
-
-// Solicitar restablecimiento de contraseña
-const resetPasswordRequest = async (req, res) => {
-  try {
-    const { email } = req.body; // Cambiado de Correo_Usuario a email
-    const usuario = await Usuario.findOne({ where: { email } });
-
-    if (!usuario) {
-      return res.status(404).json({ success: false, message: 'Correo no encontrado' });
-    }
-
-    // Implementar lógica de restablecimiento de contraseña aquí
-    res.status(200).json({ success: true, message: 'Correo enviado para restablecer la contraseña' });
-  } catch (error) {
-    logger.error('Error al solicitar restablecimiento de contraseña', { message: error.message, stack: error.stack });
-    res.status(500).json({ success: false, error: 'Error interno del servidor' });
-  }
-};
-
-// Exportar funciones
+// Exportar las funciones usando module.exports
 module.exports = {
-  getUsuarios,
-  getUsuarioById,
-  crearUsuario,
-  actualizarUsuario,
-  eliminarUsuario,
-  resetPasswordRequest,
-  isSuperAdmin,
-  checkPermissions,
+  register,
+  login,
+  forgotPassword,
+  resetPassword
 };
