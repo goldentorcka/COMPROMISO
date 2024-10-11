@@ -107,15 +107,32 @@ const CrudDocumentos = () => {
     return null;
   };
 
+  // Function to get the responsible name by its ID
+  const getResponsableNameById = (id) => {
+    const responsable = responsables.find(res => res.id_responsable === id);
+    return responsable ? responsable.nombre_responsable : 'Desconocido';
+  };
+
+  // Function to get the procedure name by its ID
+  const getProcedimientoNameById = (id) => {
+    const procedimiento = procedimientos.find(proc => proc.id_procedimiento === id);
+    return procedimiento ? procedimiento.nombre_procedimiento : 'Desconocido';
+  };
+
   const columns = [
-    { field: 'id_documento', header: 'ID', width: '5%' },
     { field: 'codigo', header: 'Código', width: '10%' },
     { field: 'nombre_documento', header: 'Nombre', width: '15%' },
     { field: 'nombre_documento_magnetico', header: 'Nombre Magnético', width: '15%' },
-    { field: 'id_responsable', header: 'ID Responsable', width: '10%' },
-    { field: 'id_procedimiento', header: 'ID Procedimiento', width: '10%' },
+    { field: 'responsable', header: 'Responsable', width: '15%' },
+    { field: 'procedimiento', header: 'Procedimiento', width: '15%' },
     { field: 'estado', header: 'Estado', width: '5%' }
   ];
+
+  const modifiedDocumentoList = documentoList.map(doc => ({
+    ...doc,
+    responsable: getResponsableNameById(doc.id_responsable), // Replace ID with responsible name
+    procedimiento: getProcedimientoNameById(doc.id_procedimiento), // Replace ID with procedure name
+  }));
 
   const getDocumento = (rowData) => {
     setDocumento(rowData);
@@ -195,7 +212,7 @@ const CrudDocumentos = () => {
             isOpen={isModalOpen} 
             onClose={() => {
               setIsModalOpen(false);
-              resetForm(); // Reset form on close
+              setIsDataTableVisible(true);
             }}
             title={buttonForm === "Enviar" ? "Agregar Documento" : "Actualizar Documento"}
           >
@@ -203,19 +220,19 @@ const CrudDocumentos = () => {
               documento={documento} 
               handleSubmit={handleSubmit}
               buttonForm={buttonForm}
-              responsables={responsables}
-              procedimientos={procedimientos}
+              responsables={responsables} // Asegúrate de pasar la lista de responsables al formulario
+              procedimientos={procedimientos} // Asegúrate de pasar la lista de procedimientos al formulario
             />
           </Modal>
 
           {isDataTableVisible && 
             <CustomDataTable
-              data={documentoList}
+              data={modifiedDocumentoList} // Use modified list with responsible and procedure names
               columns={columns}
               onEdit={getDocumento}
               onDelete={deleteDocumento}
               searchField="nombre_documento" 
-              exportFields={['id_documento', 'codigo', 'nombre_documento', 'nombre_documento_magnetico', 'id_responsable', 'id_procedimiento', 'estado']}
+              exportFields={['codigo', 'nombre_documento', 'nombre_documento_magnetico', 'responsable', 'procedimiento', 'estado']}
             />
           }
         </div>

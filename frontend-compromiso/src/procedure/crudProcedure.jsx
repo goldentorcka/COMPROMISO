@@ -24,15 +24,7 @@ const CrudProcedimientos = () => {
   const getAllProcedimientos = async () => {
     try {
       const response = await clienteAxios.get('/api/procedimientos');
-      // Mapear procedimientos para incluir el nombre del proceso
-      const procedimientosConNombres = response.data.map(proc => {
-        const proceso = processes.find(p => p.id_proceso === proc.id_proceso);
-        return {
-          ...proc,
-          nombre_proceso: proceso ? proceso.nombre_proceso : 'Desconocido' // Asegúrate de que 'nombre_proceso' es el campo correcto
-        };
-      });
-      setProcedimientoList(procedimientosConNombres);
+      setProcedimientoList(response.data);
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
       Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
@@ -90,11 +82,23 @@ const CrudProcedimientos = () => {
     return null;
   };
 
+  // Function to get the name of the process by its ID
+  const getProcessNameById = (id) => {
+    const process = processes.find(proc => proc.id_proceso === id);
+    return process ? process.nombre_proceso : 'Desconocido';
+  };
+
   const columns = [
+    { field: 'id_procedimiento', header: 'ID', width: '10%' },
     { field: 'nombre_procedimiento', header: 'Nombre', width: '50%' },
-    { field: 'nombre_proceso', header: 'Nombre Proceso', width: '20%' }, // Nueva columna para mostrar el nombre del proceso
-    { field: 'estado', header: 'Estado', width: '20%' }
+    { field: 'id_proceso', header: 'ID Proceso', width: '20%' },
+    { field: 'estado', header: 'Estado', width: '20%' },
   ];
+
+  const modifiedProcedimientoList = procedimientoList.map(proc => ({
+    ...proc,
+    id_proceso: getProcessNameById(proc.id_proceso), // Replace ID with process name
+  }));
 
   const getProcedimiento = (rowData) => {
     setProcedimiento(rowData);
@@ -189,12 +193,12 @@ const CrudProcedimientos = () => {
 
           {isDataTableVisible && 
             <CustomDataTable
-              data={procedimientoList}
+              data={modifiedProcedimientoList} // Use modified list with process names
               columns={columns}
               onEdit={getProcedimiento}
               onDelete={deleteProcedimiento}
               searchField="nombre_procedimiento" 
-              exportFields={['nombre_procedimiento', 'nombre_proceso', 'estado']} // Actualiza los campos de exportación
+              exportFields={['id_procedimiento', 'nombre_procedimiento', 'id_proceso', 'estado']}
             />
           }
         </div>
