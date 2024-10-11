@@ -24,7 +24,15 @@ const CrudProcedimientos = () => {
   const getAllProcedimientos = async () => {
     try {
       const response = await clienteAxios.get('/api/procedimientos');
-      setProcedimientoList(response.data);
+      // Mapear procedimientos para incluir el nombre del proceso
+      const procedimientosConNombres = response.data.map(proc => {
+        const proceso = processes.find(p => p.id_proceso === proc.id_proceso);
+        return {
+          ...proc,
+          nombre_proceso: proceso ? proceso.nombre_proceso : 'Desconocido' // Asegúrate de que 'nombre_proceso' es el campo correcto
+        };
+      });
+      setProcedimientoList(procedimientosConNombres);
     } catch (error) {
       console.error("Error al obtener los procedimientos:", error);
       Swal.fire('Error', 'No se pudieron obtener los procedimientos', 'error');
@@ -83,9 +91,8 @@ const CrudProcedimientos = () => {
   };
 
   const columns = [
-    { field: 'id_procedimiento', header: 'ID', width: '10%' },
     { field: 'nombre_procedimiento', header: 'Nombre', width: '50%' },
-    { field: 'id_proceso', header: 'ID Proceso', width: '20%' },
+    { field: 'nombre_proceso', header: 'Nombre Proceso', width: '20%' }, // Nueva columna para mostrar el nombre del proceso
     { field: 'estado', header: 'Estado', width: '20%' }
   ];
 
@@ -187,7 +194,7 @@ const CrudProcedimientos = () => {
               onEdit={getProcedimiento}
               onDelete={deleteProcedimiento}
               searchField="nombre_procedimiento" 
-              exportFields={['id_procedimiento', 'nombre_procedimiento', 'id_proceso', 'estado']}
+              exportFields={['nombre_procedimiento', 'nombre_proceso', 'estado']} // Actualiza los campos de exportación
             />
           }
         </div>

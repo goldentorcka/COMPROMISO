@@ -54,7 +54,9 @@ const getDocumentos = async (req, res) => {
 // Obtener un documento por ID
 const getDocumentoById = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
 
   try {
     const documento = await Documento.findByPk(id);
@@ -79,11 +81,6 @@ const createDocumento = async (req, res) => {
     return res.status(400).json({ message: 'Errores de validación', errors });
   }
 
-  // Validar que el estado sea 'Activo' o 'Inactivo'
-  if (req.body.estado !== 'Activo' && req.body.estado !== 'Inactivo') {
-    return res.status(400).json({ error: 'Estado inválido' });
-  }
-
   try {
     const documento = await Documento.create(req.body);
     res.status(201).json(documento);
@@ -96,7 +93,9 @@ const createDocumento = async (req, res) => {
 // Actualizar un documento existente
 const updateDocumento = async (req, res) => {
   const id = parseInt(req.params.id, 10);
-  if (isNaN(id)) return res.status(400).json({ message: 'ID inválido' });
+  if (isNaN(id)) {
+    return res.status(400).json({ message: 'ID inválido' });
+  }
 
   if (!req.body || Object.keys(req.body).length === 0) {
     return res.status(400).json({ message: 'No se proporcionaron datos para actualizar el documento' });
@@ -105,11 +104,6 @@ const updateDocumento = async (req, res) => {
   const errors = validateDocumento(req.body);
   if (errors.length > 0) {
     return res.status(400).json({ message: 'Errores de validación', errors });
-  }
-
-  // Validar que el estado sea 'Activo' o 'Inactivo'
-  if (req.body.estado !== 'Activo' && req.body.estado !== 'Inactivo') {
-    return res.status(400).json({ error: 'Estado inválido' });
   }
 
   try {
@@ -125,6 +119,7 @@ const updateDocumento = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor al actualizar el documento' });
   }
 };
+
 
 // Eliminar un documento por ID
 const deleteDocumento = async (req, res) => {

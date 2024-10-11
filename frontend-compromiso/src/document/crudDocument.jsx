@@ -61,7 +61,6 @@ const CrudDocumentos = () => {
 
     try {
       if (buttonForm === "Enviar") {
-        // Añadir lógica para generar automáticamente el nombre del archivo PDF
         const nombreArchivoPDF = documentoData.nombre_documento.replace(/\s/g, '_') + ".pdf";
         const updatedData = { ...documentoData, nombre_documento_magnetico: nombreArchivoPDF };
 
@@ -83,6 +82,7 @@ const CrudDocumentos = () => {
   const resetForm = () => {
     setDocumento(null);
     setButtonForm("Enviar");
+    setIsDataTableVisible(true);
   };
 
   const validateDocumento = (documento) => {
@@ -195,7 +195,7 @@ const CrudDocumentos = () => {
             isOpen={isModalOpen} 
             onClose={() => {
               setIsModalOpen(false);
-              setIsDataTableVisible(true);
+              resetForm(); // Reset form on close
             }}
             title={buttonForm === "Enviar" ? "Agregar Documento" : "Actualizar Documento"}
           >
@@ -215,7 +215,7 @@ const CrudDocumentos = () => {
               onEdit={getDocumento}
               onDelete={deleteDocumento}
               searchField="nombre_documento" 
-              exportFields={['id_documento', 'codigo', 'nombre_documento', 'nombre_documento_magnetico', 'nombre_documento_visualizacion', 'tipo_documento', 'version', 'fecha_elaboracion', 'id_responsable', 'id_procedimiento', 'estado']}
+              exportFields={['id_documento', 'codigo', 'nombre_documento', 'nombre_documento_magnetico', 'id_responsable', 'id_procedimiento', 'estado']}
             />
           }
         </div>
