@@ -7,20 +7,20 @@ const FormDocumentos = ({
   responsables = [],
   procedimientos = []
 }) => {
-  const [id_documento, setIdDocumento] = useState(null);
-  const [nombre_documento, setNombreDocumento] = useState('');
-  const [nombre_documento_magnetico, setNombreDocumentoMagnetico] = useState(''); // Para almacenar el archivo Excel
-  const [nombre_documento_visualizacion, setNombreDocumentoVisualizacion] = useState(''); // Para almacenar el nombre del PDF generado
-  const [tipo_documento, setTipoDocumento] = useState('Formato');
+  const [idDocumento, setIdDocumento] = useState(null);
+  const [nombreDocumento, setNombreDocumento] = useState('');
+  const [nombreDocumentoMagnetico, setNombreDocumentoMagnetico] = useState('');
+  const [nombreDocumentoVisualizacion, setNombreDocumentoVisualizacion] = useState('');
+  const [tipoDocumento, setTipoDocumento] = useState('Formato');
   const [codigo, setCodigo] = useState('');
   const [version, setVersion] = useState(1);
-  const [fecha_elaboracion, setFechaElaboracion] = useState('');
-  const [id_procedimiento, setIdProcedimiento] = useState('');
-  const [id_responsable, setIdResponsable] = useState('');
+  const [fechaElaboracion, setFechaElaboracion] = useState('');
+  const [idProcedimiento, setIdProcedimiento] = useState('');
+  const [idResponsable, setIdResponsable] = useState('');
   const [estado, setEstado] = useState('Activo');
   const [errors, setErrors] = useState({});
 
-  // Efecto para cargar los datos del documento cuando se recibe uno nuevo
+  // Cargar los datos del documento cuando se recibe uno nuevo
   useEffect(() => {
     if (documento) {
       setIdDocumento(documento.id_documento || null);
@@ -39,36 +39,32 @@ const FormDocumentos = ({
     }
   }, [documento]);
 
-  // Validar el formulario
   const validateForm = () => {
     const newErrors = {};
     if (!codigo || codigo.length < 3) {
       newErrors.codigo = 'El código del documento es obligatorio y debe tener al menos 3 caracteres.';
     }
-    if (!nombre_documento) {
-      newErrors.nombre_documento = 'El nombre del documento es obligatorio.';
+    if (!nombreDocumento) {
+      newErrors.nombreDocumento = 'El nombre del documento es obligatorio.';
     }
-    if (!id_procedimiento) {
-      newErrors.id_procedimiento = 'Debes seleccionar un procedimiento.';
+    if (!idProcedimiento) {
+      newErrors.idProcedimiento = 'Debes seleccionar un procedimiento.';
     }
-    if (!id_responsable) {
-      newErrors.id_responsable = 'Debes seleccionar un responsable.';
+    if (!idResponsable) {
+      newErrors.idResponsable = 'Debes seleccionar un responsable.';
     }
-    if (!nombre_documento_magnetico) {
-      newErrors.nombre_documento_magnetico = 'Debes subir un archivo Excel.';
+    if (!nombreDocumentoMagnetico) {
+      newErrors.nombreDocumentoMagnetico = 'Debes subir un archivo Excel.';
     }
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; // Formulario válido si no hay errores
+    return Object.keys(newErrors).length === 0; // El formulario es válido si no hay errores
   };
 
-  // Manejo de subida de archivo Excel
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       const fileName = file.name;
-      const fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.'); // Remueve la extensión del archivo
-
-      // Guarda el nombre del archivo Excel y genera el nombre del PDF automáticamente
+      const fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.');
       setNombreDocumentoMagnetico(fileName);
       setNombreDocumentoVisualizacion(`${fileNameWithoutExtension}.pdf`);
     }
@@ -80,22 +76,22 @@ const FormDocumentos = ({
       case 'codigo':
         setCodigo(value);
         break;
-      case 'nombre_documento':
+      case 'nombreDocumento':
         setNombreDocumento(value);
         break;
-      case 'tipo_documento':
+      case 'tipoDocumento':
         setTipoDocumento(value);
         break;
       case 'version':
         setVersion(value);
         break;
-      case 'fecha_elaboracion':
+      case 'fechaElaboracion':
         setFechaElaboracion(value);
         break;
-      case 'id_procedimiento':
+      case 'idProcedimiento':
         setIdProcedimiento(value);
         break;
-      case 'id_responsable':
+      case 'idResponsable':
         setIdResponsable(value);
         break;
       case 'estado':
@@ -110,16 +106,16 @@ const FormDocumentos = ({
     e.preventDefault();
     if (validateForm()) {
       handleSubmit(e, {
-        id_documento,
-        nombre_documento,
-        nombre_documento_magnetico, // Nombre del archivo Excel
-        nombre_documento_visualizacion, // Nombre del archivo PDF generado
-        tipo_documento,
+        id_documento: idDocumento,
+        nombre_documento: nombreDocumento,
+        nombre_documento_magnetico: nombreDocumentoMagnetico,
+        nombre_documento_visualizacion: nombreDocumentoVisualizacion,
+        tipo_documento: tipoDocumento,
         codigo,
         version,
-        fecha_elaboracion,
-        id_procedimiento,
-        id_responsable,
+        fecha_elaboracion: fechaElaboracion,
+        id_procedimiento: idProcedimiento,
+        id_responsable: idResponsable,
         estado,
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -148,118 +144,103 @@ const FormDocumentos = ({
       <form onSubmit={onSubmit}>
         {/* Código del Documento */}
         <div className="form-group">
-          <label>Código del Documento:</label>
+          <label htmlFor="codigo">Código del Documento:</label>
           <input
             type="text"
             name="codigo"
+            id="codigo"
             value={codigo}
             onChange={handleChange}
             required
+            aria-describedby="codigoError"
           />
-          {errors.codigo && <span className="error">{errors.codigo}</span>}
+          {errors.codigo && <span id="codigoError" className="error">{errors.codigo}</span>}
         </div>
 
         {/* Nombre del Documento */}
         <div className="form-group">
-          <label>Nombre del Documento:</label>
+          <label htmlFor="nombreDocumento">Nombre del Documento:</label>
           <input
             type="text"
-            name="nombre_documento"
-            value={nombre_documento}
+            name="nombreDocumento"
+            id="nombreDocumento"
+            value={nombreDocumento}
             onChange={handleChange}
             required
+            aria-describedby="nombreDocumentoError"
           />
-          {errors.nombre_documento && <span className="error">{errors.nombre_documento}</span>}
+          {errors.nombreDocumento && (
+            <span id="nombreDocumentoError" className="error">
+              {errors.nombreDocumento}
+            </span>
+          )}
         </div>
 
         {/* Subida del Archivo Excel */}
         <div className="form-group">
-          <label>Archivo Excel:</label>
+          <label htmlFor="nombreDocumentoMagnetico">Subir Documento Excel:</label>
           <input
             type="file"
-            name="nombre_documento_magnetico"
-            accept=".xls,.xlsx"
+            name="nombreDocumentoMagnetico"
+            id="nombreDocumentoMagnetico"
             onChange={handleFileChange}
             required
+            aria-describedby="nombreDocumentoMagneticoError"
           />
-          {errors.nombre_documento_magnetico && <span className="error">{errors.nombre_documento_magnetico}</span>}
-        </div>
-
-        {/* Visualización del nombre del archivo PDF generado */}
-        <div className="form-group">
-          <label>Nombre del Archivo PDF:</label>
-          <input
-            type="text"
-            name="nombre_documento_visualizacion"
-            value={nombre_documento_visualizacion}
-            readOnly
-          />
-        </div>
-
-        {/* Versión del Documento */}
-        <div className="form-group">
-          <label>Versión del Documento:</label>
-          <input
-            type="number"
-            name="version"
-            value={version}
-            onChange={handleChange}
-            min="1"
-          />
-        </div>
-
-        {/* Fecha de Elaboración */}
-        <div className="form-group">
-          <label>Fecha de Elaboración:</label>
-          <input
-            type="date"
-            name="fecha_elaboracion"
-            value={fecha_elaboracion}
-            onChange={handleChange}
-          />
-        </div>
-
-        {/* Selección de Procedimiento */}
-        <div className="form-group">
-          <label htmlFor="idProcedimiento">Procedimiento:</label>
-          <select
-            id="idProcedimiento"
-            name="id_procedimiento"
-            value={id_procedimiento}
-            onChange={handleChange}
-            required
-          >
-            <option value="">Seleccione un procedimiento</option>
-            {procedimientos.map((procedimiento) => (
-              <option key={procedimiento.id_procedimiento} value={procedimiento.id_procedimiento}>
-                {procedimiento.nombre_procedimiento}
-              </option>
-            ))}
-          </select>
-          {errors.id_procedimiento && (
-            <span className="error">{errors.id_procedimiento}</span>
+          {errors.nombreDocumentoMagnetico && (
+            <span id="nombreDocumentoMagneticoError" className="error">
+              {errors.nombreDocumentoMagnetico}
+            </span>
           )}
         </div>
 
-        {/* Selección de Responsable */}
+        {/* Procedimiento */}
         <div className="form-group">
-          <label htmlFor="idResponsable">Responsable:</label>
+          <label htmlFor="idProcedimiento">Procedimiento:</label>
           <select
-            id="idResponsable"
-            name="id_responsable"
-            value={id_responsable}
+            name="idProcedimiento"
+            id="idProcedimiento"
+            value={idProcedimiento}
             onChange={handleChange}
             required
+            aria-describedby="idProcedimientoError"
           >
-            <option value="">Seleccione un responsable</option>
-            {responsables.map((responsable) => (
-              <option key={responsable.id_responsable} value={responsable.id_responsable}>
-                {responsable.nombre_responsable}
+            <option value="">Selecciona un procedimiento</option>
+            {procedimientos.map((proc) => (
+              <option key={proc.id_procedimiento} value={proc.id_procedimiento}>
+                {proc.nombre_procedimiento}
               </option>
             ))}
           </select>
-          {errors.id_responsable && (
-            <span className="error">{errors.id_responsable}</span>
+          {errors.idProcedimiento && (
+            <span id="idProcedimientoError" className="error">
+              {errors.idProcedimiento}
+            </span>
+          )}
+        </div>
+
+        {/* Responsable */}
+        <div className="form-group">
+          <label htmlFor="idResponsable">Responsable:</label>
+          <select
+            name="idResponsable"
+            id="idResponsable"
+            value={idResponsable}
+            onChange={handleChange}
+            required
+            aria-describedby="idResponsableError"
+          >
+            <option value="">Selecciona un responsable</option>
+            {responsables.map((resp) => (
+              <option key={resp.id_responsable} value={resp.id_responsable}>
+                {resp.nombre_responsable}
+              </option>
+            ))}
+          </select>
+          {errors.idResponsable && (
+            <span id="idResponsableError" className="error">
+              {errors.idResponsable}
+            </span>
           )}
         </div>
 
@@ -267,19 +248,20 @@ const FormDocumentos = ({
         <div className="form-group">
           <label htmlFor="estado">Estado:</label>
           <select
-            id="estado"
             name="estado"
+            id="estado"
             value={estado}
             onChange={handleChange}
-            required
           >
             <option value="Activo">Activo</option>
             <option value="Inactivo">Inactivo</option>
           </select>
         </div>
 
-        {/* Botón de Envío */}
-        <button type="submit">{buttonForm}</button>
+        {/* Botón de Enviar */}
+        <button type="submit" className="btn-submit">
+          {buttonForm}
+        </button>
       </form>
     </div>
   );
