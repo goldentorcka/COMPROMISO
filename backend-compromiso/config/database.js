@@ -9,7 +9,7 @@ try {
   sequelize = new Sequelize(
     process.env.DATABASE_NAME,
     process.env.DATABASE_USERNAME,
-    process.env.DATABASE_PASSWORD || '', // Usa una cadena vacía si DATABASE_PASSWORD no está definida
+    process.env.DATABASE_PASSWORD, // Usa una cadena vacía si DATABASE_PASSWORD no está definida
     {
       host: process.env.DATABASE_HOST,
       dialect: process.env.DATABASE_CLIENT,

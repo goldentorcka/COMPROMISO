@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import userIcon from "../../../Public/images/IconLogin/Correo.svg";
 import lockIcon from "../../../Public/images/IconLogin/Password.svg";
 import logo from "../../../Public/images/logos/logo.png"; 
 import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
 import styled from "styled-components";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // Estilos del contenedor y tarjeta de formulario
 const FormContainer = styled.div`
@@ -64,18 +65,26 @@ const Login = ({ setIsAuthenticated }) => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, { email, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      setIsAuthenticated(true);
-      alert(response.data.message);
-      navigate('/administrator');
+      // Solo muestra la notificación de éxito sin validación
+      toast.success('Inicio de sesión exitoso', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+
+      // Simula la redirección sin autenticación real
+      setTimeout(() => {
+        navigate('/administrator');
+      }, 3000);
     } catch (error) {
       console.error('Error de inicio de sesión:', error);
-      alert('Error de inicio de sesión. Por favor, verifica tus credenciales.');
+      toast.error('Error de inicio de sesión. Por favor, verifica tus credenciales.');
     }
   };
 
@@ -103,7 +112,6 @@ const Login = ({ setIsAuthenticated }) => {
                 style={{ borderRadius: "5px", height: "46px", paddingLeft: "40px" }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
               />
               <img
                 src={userIcon}
@@ -120,7 +128,6 @@ const Login = ({ setIsAuthenticated }) => {
                 style={{ borderRadius: "5px", height: "46px", paddingLeft: "40px" }}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
               <img
                 src={lockIcon}
@@ -143,6 +150,7 @@ const Login = ({ setIsAuthenticated }) => {
           </form>
         </FormCard>
       </FormContainer>
+      <ToastContainer />
     </>
   );
 };

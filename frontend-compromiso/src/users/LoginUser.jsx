@@ -90,7 +90,7 @@ const LoginFormAdmin = () => {
         <div className="text-center mb-4">
           <Logo src={logo} alt="Logo" />
           <h1>Inicia Sesión</h1>
-          <p>INGRESA AL APLICATIVO COMPROMISO SENA</p>
+          <p>INGRESA AL APLICATIVO CALGDOCS </p>
         </div>
         <FormCard>
           <form onSubmit={handleSubmit}>
