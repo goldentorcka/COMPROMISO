@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx'; // Importar la biblioteca xlsx
 
 const FormDocumentos = ({
   documento,
   handleSubmit,
-  buttonForm,
   responsables = [],
   procedimientos = []
 }) => {
@@ -13,27 +13,25 @@ const FormDocumentos = ({
   const [nombreDocumentoVisualizacion, setNombreDocumentoVisualizacion] = useState('');
   const [tipoDocumento, setTipoDocumento] = useState('Formato');
   const [codigo, setCodigo] = useState('');
-  const [version, setVersion] = useState(1);
-  const [fechaElaboracion, setFechaElaboracion] = useState('');
   const [idProcedimiento, setIdProcedimiento] = useState('');
   const [idResponsable, setIdResponsable] = useState('');
   const [estado, setEstado] = useState('Activo');
+  const [version, setVersion] = useState('');
   const [errors, setErrors] = useState({});
 
   // Cargar los datos del documento cuando se recibe uno nuevo
   useEffect(() => {
     if (documento) {
-      setIdDocumento(documento.id_documento || null);
+      setIdDocumento(documento.id || null);
       setNombreDocumento(documento.nombre_documento || '');
       setNombreDocumentoMagnetico(documento.nombre_documento_magnetico || '');
       setNombreDocumentoVisualizacion(documento.nombre_documento_visualizacion || '');
       setTipoDocumento(documento.tipo_documento || 'Formato');
       setCodigo(documento.codigo || '');
-      setVersion(documento.version || 1);
-      setFechaElaboracion(documento.fecha_elaboracion || '');
       setIdProcedimiento(documento.id_procedimiento || '');
       setIdResponsable(documento.id_responsable || '');
       setEstado(documento.estado || 'Activo');
+      setVersion(documento.version || ''); // Agregar versión
     } else {
       resetForm(); // Resetear si no hay documento
     }
@@ -56,6 +54,9 @@ const FormDocumentos = ({
     if (!nombreDocumentoMagnetico) {
       newErrors.nombreDocumentoMagnetico = 'Debes subir un archivo Excel.';
     }
+    if (!version) {
+      newErrors.version = 'La versión del documento es obligatoria.'; // Validación para la versión
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // El formulario es válido si no hay errores
   };
@@ -64,9 +65,9 @@ const FormDocumentos = ({
     const file = e.target.files[0];
     if (file) {
       const fileName = file.name;
-      const fileNameWithoutExtension = fileName.split('.').slice(0, -1).join('.');
       setNombreDocumentoMagnetico(fileName);
-      setNombreDocumentoVisualizacion(`${fileNameWithoutExtension}.pdf`);
+      setNombreDocumento(fileName); // Asignar el nombre del archivo al nombre del documento
+      setNombreDocumentoVisualizacion(fileName.replace(/\.[^/.]+$/, '') + '.pdf'); // Cambiar extensión a .pdf
     }
   };
 
@@ -79,47 +80,72 @@ const FormDocumentos = ({
       case 'nombreDocumento':
         setNombreDocumento(value);
         break;
-      case 'tipoDocumento':
-        setTipoDocumento(value);
-        break;
-      case 'version':
-        setVersion(value);
-        break;
-      case 'fechaElaboracion':
-        setFechaElaboracion(value);
-        break;
       case 'idProcedimiento':
         setIdProcedimiento(value);
         break;
       case 'idResponsable':
         setIdResponsable(value);
         break;
+      case 'tipoDocumento':
+        setTipoDocumento(value);
+        break;
       case 'estado':
         setEstado(value);
+        break;
+      case 'version': // Manejo de la versión
+        setVersion(value);
         break;
       default:
         break;
     }
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      handleSubmit(e, {
+  const saveToExcel = () => {
+    const data = [
+      {
         id_documento: idDocumento,
         nombre_documento: nombreDocumento,
         nombre_documento_magnetico: nombreDocumentoMagnetico,
         nombre_documento_visualizacion: nombreDocumentoVisualizacion,
         tipo_documento: tipoDocumento,
         codigo,
-        version,
-        fecha_elaboracion: fechaElaboracion,
         id_procedimiento: idProcedimiento,
         id_responsable: idResponsable,
         estado,
+        version,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }
+    ];
+
+    // Crear una hoja de trabajo y un libro de trabajo
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Documentos');
+
+    // Guardar el archivo Excel
+    XLSX.writeFile(workbook, `${nombreDocumentoMagnetico}.xlsx`);
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      handleSubmit({
+        id_documento: idDocumento,
+        nombre_documento: nombreDocumento,
+        nombre_documento_magnetico: nombreDocumentoMagnetico,
+        nombre_documento_visualizacion: nombreDocumentoVisualizacion,
+        tipo_documento: tipoDocumento,
+        codigo,
+        id_procedimiento: idProcedimiento,
+        id_responsable: idResponsable,
+        estado,
+        version,
         createdAt: new Date(),
         updatedAt: new Date(),
       });
+
+      saveToExcel(); // Guardar datos en Excel
       resetForm(); // Resetea el formulario después de enviar
     }
   };
@@ -131,11 +157,10 @@ const FormDocumentos = ({
     setNombreDocumentoVisualizacion('');
     setTipoDocumento('Formato');
     setCodigo('');
-    setVersion(1);
-    setFechaElaboracion('');
     setIdProcedimiento('');
     setIdResponsable('');
     setEstado('Activo');
+    setVersion(''); // Resetear la versión
     setErrors({}); // Limpiar errores
   };
 
@@ -183,6 +208,7 @@ const FormDocumentos = ({
             type="file"
             name="nombreDocumentoMagnetico"
             id="nombreDocumentoMagnetico"
+            accept=".xlsx, .xls" // Aceptar solo archivos Excel
             onChange={handleFileChange}
             required
             aria-describedby="nombreDocumentoMagneticoError"
@@ -244,6 +270,22 @@ const FormDocumentos = ({
           )}
         </div>
 
+        {/* Tipo de Documento */}
+        <div className="form-group">
+          <label htmlFor="tipoDocumento">Tipo de Documento:</label>
+          <select
+            name="tipoDocumento"
+            id="tipoDocumento"
+            value={tipoDocumento}
+            onChange={handleChange}
+            required
+          >
+            <option value="Formato">Formato</option>
+            <option value="Informe">Informe</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
         {/* Estado */}
         <div className="form-group">
           <label htmlFor="estado">Estado:</label>
@@ -258,10 +300,23 @@ const FormDocumentos = ({
           </select>
         </div>
 
+        {/* Versión */}
+        <div className="form-group">
+          <label htmlFor="version">Versión:</label>
+          <input
+            type="text"
+            name="version"
+            id="version"
+            value={version}
+            onChange={handleChange}
+            required
+            aria-describedby="versionError"
+          />
+          {errors.version && <span id="versionError" className="error">{errors.version}</span>}
+        </div>
+
         {/* Botón de Enviar */}
-        <button type="submit" className="btn-submit">
-          {buttonForm}
-        </button>
+        <button type="submit">Guardar Documento</button>
       </form>
     </div>
   );
