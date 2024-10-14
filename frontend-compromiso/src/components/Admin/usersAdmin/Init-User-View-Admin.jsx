@@ -1,12 +1,27 @@
 import React from "react";
 import { CCard, CCardBody, CCardHeader, CRow, CCol } from "@coreui/react";
+import '../../styles/InitUserView.css'; // Importamos los estilos adicionales
 
 const InitUserView = () => {
   return (
     <>
-      <CRow className="justify-content-center">
+      <CRow className="justify-content-center align-items-center">
+        {/* Añadimos las imágenes al inicio */}
+        <CCol xs="12" md="10" lg="8" className="text-center mb-4">
+          <img
+            src="../../../../Public/images/logos/logoSE.png" // Reemplaza con la URL de tu imagen
+            alt="Logo 1"
+            className="image-3d"
+          />
+          <img
+            src="../../../../Public/images/logos/logo.png" // Reemplaza con la URL de tu imagen
+            alt="Logo 2"
+            className="image-3d"
+          />
+        </CCol>
+
         <CCol xs="12" md="10" lg="8" className="mb-4">
-          <CCard className="shadow-sm">
+          <CCard className="shadow-sm card-3d">
             <CCardHeader className="bg-primary text-white text-center">
               <h2>Bienvenido al Panel de Administración de CALGDOCS</h2>
             </CCardHeader>
