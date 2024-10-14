@@ -16,4 +16,5 @@ router.post('/forgot-password', rateLimiter, usuarioController.forgotPassword);
 // Ruta para restablecer la contraseña
 router.post('/reset-password/:userId', rateLimiter, usuarioController.resetPassword);
 
+router.get('/', rateLimiter, usuarioController.getUsuarios);
 module.exports = router;

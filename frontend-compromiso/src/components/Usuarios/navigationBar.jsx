@@ -1,6 +1,6 @@
 // components/NavigationBar.jsx
 import { Link } from 'react-router-dom';
-import SidebarAdministrator from "../Admin/SidebarAdministrator.jsx";
+// import SidebarAdministrator from "../Admin/SidebarAdministrator.jsx";
 
 import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
 const NavigationBar = ({ isAuthenticated, handleLogout }) => {
@@ -13,7 +13,7 @@ const NavigationBar = ({ isAuthenticated, handleLogout }) => {
             </>
           ) : (
             <>
-            <SidebarAdministrator />
+            {/* <SidebarAdministrator /> */}
             
             </>
           )}

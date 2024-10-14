@@ -135,10 +135,24 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const getUsuarios = async (req, res) => {
+  try {
+    const users = await Users.findAll();
+    if (users.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron users' });
+    }
+    res.status(200).json(users);
+  } catch (error) {
+    logger.error(error.message, { stack: error.stack });
+    res.status(500).json({ error: 'Error interno del servidor' });
+  }
+};
+
 // Exportar las funciones usando module.exports
 module.exports = {
   register,
   login,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  getUsuarios
 };
