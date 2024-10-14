@@ -5,6 +5,19 @@ const nodemailer = require('nodemailer');
 const sequelize = require('../../../../config/database.js'); // Cambié pool a sequelize
 const Usuario = require('../models/usuarioModel.js'); // Cambié el modelo a 'Usuario'
 
+// Configurar el servicio de correo
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER, // Asegúrate de que esto sea correcto
+    pass: process.env.EMAIL_PASS, // Asegúrate de que esto sea correcto
+  },
+  secure: false, // Establece el uso de TLS
+  tls: {
+    rejectUnauthorized: false // Esto permite conexiones no seguras
+  }
+});
+
 // Función para registrar un nuevo usuario
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -28,15 +41,6 @@ const register = async (req, res) => {
     res.status(500).json({ message: 'Error en el registro' });
   }
 };
-
-// Configurar el servicio de correo para forgotPassword
-const transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
 
 // Función para iniciar sesión
 const login = async (req, res) => {
@@ -83,18 +87,13 @@ const forgotPassword = async (req, res) => {
       `,
     };
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        console.log('Error al enviar el correo:', error);
-        return res.status(500).json({ message: 'Error al enviar el correo' });
-      }
-
-      console.log('Correo enviado:', info.response);
-      res.json({ message: 'Correo de restablecimiento enviado. Por favor revisa tu correo.', token });
-    });
+    // Enviar el correo
+    await transporter.sendMail(mailOptions);
+    console.log('Correo enviado');
+    res.json({ message: 'Correo de restablecimiento enviado. Por favor revisa tu correo.', token });
   } catch (error) {
-    console.error('Error en forgot password:', error);
-    res.status(500).json({ message: 'Error al procesar la solicitud' });
+    console.error('Error al enviar el correo:', error);
+    res.status(500).json({ message: 'Error al enviar el correo' });
   }
 };
 
@@ -116,15 +115,12 @@ const resetPassword = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     const userIdInt = parseInt(userId);
 
-    console.log('hashedPassword:', hashedPassword); // Depuración
-    console.log('userId:', userIdInt); // Depuración
-
     const result = await Usuario.update(
       { password: hashedPassword },
       { where: { id: userIdInt } }
     );
 
-    if (result.affectedRows === 0) {
+    if (result[0] === 0) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
@@ -135,15 +131,16 @@ const resetPassword = async (req, res) => {
   }
 };
 
+// Función para obtener todos los usuarios
 const getUsuarios = async (req, res) => {
   try {
-    const users = await Users.findAll();
+    const users = await Usuario.findAll(); // Cambié Users a Usuario
     if (users.length === 0) {
-      return res.status(404).json({ message: 'No se encontraron users' });
+      return res.status(404).json({ message: 'No se encontraron usuarios' });
     }
     res.status(200).json(users);
   } catch (error) {
-    logger.error(error.message, { stack: error.stack });
+    console.error('Error en getUsuarios:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };

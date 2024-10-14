@@ -47,11 +47,11 @@ function App() {
 
           {/* Agrupación de rutas administrativas bajo un Layout */}
           <Route path="/administrator" element={<Layout />}>
-            <Route path="Usuarios" element={<PrivateRoute><CrudUsuarios /></PrivateRoute>} />
-            <Route path="Responsables" element={<PrivateRoute><CrudResponsables /></PrivateRoute>} />
-            <Route path="Procedimientos" element={<PrivateRoute><CrudProcedure /></PrivateRoute>} />
-            <Route path="Procesos" element={<PrivateRoute><CrudProcesses /></PrivateRoute>} />
-            <Route path="Documentos" element={<PrivateRoute><CrudDocumentos /></PrivateRoute>} />
+            <Route path="Usuarios" element={<PrivateRoute isAuthenticated={isAuthenticated}><CrudUsuarios /></PrivateRoute>} />
+            <Route path="Responsables" element={<PrivateRoute isAuthenticated={isAuthenticated}><CrudResponsables /></PrivateRoute>} />
+            <Route path="Procedimientos" element={<PrivateRoute isAuthenticated={isAuthenticated}><CrudProcedure /></PrivateRoute>} />
+            <Route path="Procesos" element={<PrivateRoute isAuthenticated={isAuthenticated}><CrudProcesses /></PrivateRoute>} />
+            <Route path="Documentos" element={<PrivateRoute isAuthenticated={isAuthenticated}><CrudDocumentos /></PrivateRoute>} />
           </Route>
         </Routes>
         {/* <Footer /> */}

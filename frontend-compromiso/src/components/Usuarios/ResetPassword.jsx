@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -9,14 +9,13 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const { userId } = useParams();
   const navigate = useNavigate();
-  const [token, setToken] = useState(""); // State for the token
+  const [token, setToken] = useState("");
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
-    const tokenFromUrl = queryParams.get('token'); // Get the token from the URL
+    const tokenFromUrl = queryParams.get('token');
     if (tokenFromUrl) {
-      setToken(tokenFromUrl); // Store it in state
-      sessionStorage.setItem('resetToken', tokenFromUrl); // Optionally, store it in sessionStorage
+      setToken(tokenFromUrl);
     }
   }, []);
 
@@ -36,15 +35,12 @@ const ResetPassword = () => {
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/auth/reset-password/${userId}`,
-        {
-          password,
-          token,
-        }
+        { password, token }
       );
 
       setMessage(response.data.message);
       setLoading(false);
-      navigate('/login')
+      navigate('/login');
     } catch (error) {
       console.error("Error al restablecer la contraseña:", error);
       setMessage("Error al restablecer la contraseña. Por favor, intenta de nuevo.");
@@ -58,9 +54,7 @@ const ResetPassword = () => {
       {message && <div className="alert alert-info">{message}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label htmlFor="password" className="form-label">
-            Nueva Contraseña:
-          </label>
+          <label htmlFor="password" className="form-label">Nueva Contraseña:</label>
           <input
             type="password"
             className="form-control"
@@ -71,9 +65,7 @@ const ResetPassword = () => {
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="confirmPassword" className="form-label">
-            Confirmar Contraseña:
-          </label>
+          <label htmlFor="confirmPassword" className="form-label">Confirmar Contraseña:</label>
           <input
             type="password"
             className="form-control"
