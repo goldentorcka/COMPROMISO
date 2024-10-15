@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import SidebarAdministrator from '../SidebarAdministrator';
 import Home_Admin from '../usersAdmin/home_Admin'; // Asegúrate de que la ruta sea correcta
-import appIcon from '../../../../Public/images/logos/logo.png'; // Asegúrate de tener el ícono aquí
+import appIcon from '../../../../Public/images/logo.png'; // Asegúrate de tener el ícono aquí
 
 const Layout = () => {
   const location = useLocation();

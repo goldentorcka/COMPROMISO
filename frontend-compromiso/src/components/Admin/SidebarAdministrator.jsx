@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTachometerAlt, faUsers, faUserShield, faProjectDiagram, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import '../styles/stylesSidebar.css';
-import logo from './../../../Public/images/logos/logo.png'; // Importación del logo
+import logo from './../../../Public/images/logo.png'; // Importación del logo
 
 const SidebarAdministrator = () => {
   const [isUserActive, setIsUserActive] = React.useState(true);

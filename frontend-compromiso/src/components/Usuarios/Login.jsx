@@ -1,15 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import userIcon from "../../../Public/images/IconLogin/Correo.svg";
-import lockIcon from "../../../Public/images/IconLogin/Password.svg";
-import logo from "../../../Public/images/logos/logo.png"; 
 import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
 import '../styles/login.css'; // Importa el archivo CSS
 import { motion } from 'framer-motion'; // Para animaciones 3D
 import axios from 'axios';
-import alertUser from "../../../Public/images/iconLogin/alert-user.png"; // Ruta de la imagen
-import invalidUser from "../../../Public/images/iconLogin/invalid-user.png"; // Nueva imagen para credenciales inválidas
+
 
 const Login = ({ setIsAuthenticated }) => {
   const [email, setEmail] = useState('');
@@ -19,7 +15,7 @@ const Login = ({ setIsAuthenticated }) => {
   const [showErrorAlert, setShowErrorAlert] = useState(false); // Nueva alerta para errores
   const [userName, setUserName] = useState('');
   const [dialogText, setDialogText] = useState('');
-  const [alertImage, setAlertImage] = useState(alertUser); // Controla qué imagen mostrar
+  const [alertImage, setAlertImage] = useState("/images/alert-user.png"); // Controla qué imagen mostrar
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -35,7 +31,7 @@ const Login = ({ setIsAuthenticated }) => {
         localStorage.setItem('token', token);
         setIsAuthenticated(true);
         setUserName(user.name);
-        setAlertImage(alertUser); // Muestra la imagen del usuario
+        setAlertImage("/images/alert-user.png"); // Muestra la imagen del usuario
         setShowAlert(true);
         setDialogText("¡Bienvenido haz iniciado sesion en el aplicactivo CALGDOCS!");
 
@@ -48,7 +44,7 @@ const Login = ({ setIsAuthenticated }) => {
       }
     } catch (error) {
       console.error('Error de inicio de sesión:', error);
-      setAlertImage(invalidUser); // Muestra la imagen de error
+      setAlertImage("/images/invalid-user.png"); // Muestra la imagen de error
       setDialogText("¡Credenciales inválidas!");
       setShowErrorAlert(true); // Muestra la alerta de error
 
@@ -75,7 +71,7 @@ const Login = ({ setIsAuthenticated }) => {
       <NavMenuPublic />
       <div className="form-container">
         <div className="text-center mb-4">
-          <img className="logo" src={logo} alt="Logo" />
+          <img className="logo" src="/images/logo.png" alt="Logo" />
           <h1>Iniciar Sesión</h1>
           <p>INGRESA AL APLICATIVO CALGDOCS SENA</p>
         </div>
@@ -93,7 +89,7 @@ const Login = ({ setIsAuthenticated }) => {
                 autoComplete="email"
               />
               <img
-                src={userIcon}
+                src="/images/Correo.svg"
                 alt="Usuario"
                 className="input-icon"
               />
@@ -110,7 +106,7 @@ const Login = ({ setIsAuthenticated }) => {
                 autoComplete="current-password"
               />
               <img
-                src={lockIcon}
+                src="/images/Password.svg"
                 alt="Contraseña"
                 className="input-icon"
               />
@@ -143,7 +139,7 @@ const Login = ({ setIsAuthenticated }) => {
           >
             <motion.img
               className="alert-user-img"
-              src={alertImage}
+              src="/images/alert-user.png"
               alt="Alerta"
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ repeat: Infinity, duration: 0.8 }}
@@ -167,7 +163,7 @@ const Login = ({ setIsAuthenticated }) => {
           >
             <motion.img
               className="alert-user-img"
-              src={invalidUser}
+              src="/images/alert-user.png"
               alt="Error de credenciales"
               animate={{ scale: [1, 1.1, 1] }}
               transition={{ repeat: Infinity, duration: 0.5 }}

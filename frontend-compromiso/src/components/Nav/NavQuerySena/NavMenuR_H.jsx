@@ -2,7 +2,6 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FaFacebook, FaInstagram, FaTiktok, FaBloggerB } from "react-icons/fa";
 import NavMenuPublic from '../NavMenuPublic.jsx';
-import reseñaImage from '../../../../Public/images/logos/logoSE.png';
 import '../../styles/stylesNavR_H.css';
 
 const NavMenuReseña = () => {
@@ -11,7 +10,7 @@ const NavMenuReseña = () => {
             <NavMenuPublic />
             <div className="container my-5">
                 <div className="content-container">
-                    <img src={reseñaImage} alt="Logo" className="logo" />
+                    <img src="/images/logoSE.png" alt="Logo" className="logo" />
                     <h1 className="title">Reseña Histórica</h1>
 
                     <p className="paragraph">

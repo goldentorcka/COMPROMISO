@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import logo from '../../../Public/images/logos/logo.png';
+import logo from '../../../Public/images/logo.png';
 import { FaUser, FaBook, FaHistory, FaEye, FaCog } from 'react-icons/fa';
 
 const NavMenuPublic = () => {
@@ -91,7 +91,7 @@ const NavMenuPublic = () => {
       <div className="d-flex align-items-center">
         <Link to="/" className="d-inline-flex align-items-center text-decoration-none">
           <img
-            src={logo}
+            src="/images/logo.png"
             alt="Logo"
             style={{ width: "60px", height: "50px" }}
             className="d-inline-block align-top"

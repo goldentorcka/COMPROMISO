@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
 import NavMenuPublic from '../Nav/NavMenuPublic.jsx';
-import imgJulian from '../../../Public/images/ImagesMenbersGroup/IMG_Julian_Montaña.jpeg';
-import imgMarlon from '../../../Public/images/ImagesMenbersGroup/IMG_Marlon_Cumbe.jpeg';
-import imgSofia1 from '../../../Public/images/ImagesMenbersGroup/sofia1.jpeg';
-import imgSofia2 from '../../../Public/images/ImagesMenbersGroup/sofia2.jpeg';
-import imgSofia3 from '../../../Public/images/ImagesMenbersGroup/sofia3.jpeg';
-import imgJulian1 from '../../../Public/images/ImagesMenbersGroup/julia1.jpeg';
-import imgJulian2 from '../../../Public/images/ImagesMenbersGroup/julian2.jpeg';
-import imgMarlon2 from '../../../Public/images/ImagesMenbersGroup/cumbe.jpeg';
-import imgMarlon3 from '../../../Public/images/ImagesMenbersGroup/cumbe2.jpeg';
 import DetailsModal from '../Modal/DetailsModal.jsx';
 
 const ContactUs = () => {
@@ -32,17 +23,9 @@ const ContactUs = () => {
       description: 'DESARROLLADOR',
       carouselItems: [
         {
-          img: imgJulian,
+          img: "/images/IMG_Julian_Montaña.jpeg",
           caption: 'Nació en Espinal-Tolima, tiene 19 años.',
-        },
-        {
-          img: imgJulian1,
-          caption: 'Le gusta la programación.',
-        },
-        {
-          img: imgJulian2,
-          caption: 'Es un gran jugador de ajedrez.',
-        },
+        }
       ],
       facebook: 'https://www.facebook.com/julian.montana',
       instagram: 'https://www.instagram.com/julian.montana',
@@ -52,17 +35,9 @@ const ContactUs = () => {
       description: 'GERENTE',
       carouselItems: [
         {
-          img: imgMarlon,
+          img: "/images/IMG_Marlon_Cumbe.jpeg",
           caption: 'Nació en Coyaima-Tolima, tiene 18 años.',
-        },
-        {
-          img: imgMarlon2,
-          caption: 'Le gusta el fútbol.',
-        },
-        {
-          img: imgMarlon3,
-          caption: 'Es una persona muy organizada y meticulosa.',
-        },
+        }
       ],
       facebook: 'https://www.facebook.com/profile.php?id=61561011352009&mibextid=ZbWKwL',
       instagram: 'https://www.instagram.com/marlxon69?igsh=MXI4bHo2bjdlZHAxag==',
@@ -72,17 +47,9 @@ const ContactUs = () => {
       description: 'DISEÑADORA',
       carouselItems: [
         {
-          img: imgSofia1,
+          img: "/images/IMG_Sofia_Solano.jpeg",
           caption: 'Nació en Ibagué, le encanta el diseño gráfico.',
-        },
-        {
-          img: imgSofia2,
-          caption: 'Su hobby es la fotografía.',
-        },
-        {
-          img: imgSofia3,
-          caption: 'Siempre está buscando nuevas tendencias.',
-        },
+        }
       ],
       facebook: 'https://www.facebook.com/sofia.lopez',
       instagram: 'https://www.instagram.com/sofia.lopez',
@@ -135,6 +102,7 @@ const ContactUs = () => {
                     margin: '0 auto', // Centrar imagen
                   }}
                 />
+
                 <h2
                   className="fw-normal"
                   style={{
@@ -167,7 +135,7 @@ const ContactUs = () => {
                     style={{ display: 'inline-block', margin: '0 5px' }}
                   >
                     <img 
-                      src="../Public/images/icons/facebook.png" 
+                      src="/images/facebook.png" 
                       width="30" 
                       height="30" 
                       style={{ borderRadius: '50%', objectFit: 'cover' }}
@@ -181,7 +149,7 @@ const ContactUs = () => {
                     style={{ display: 'inline-block', margin: '0 5px' }}
                   >
                     <img 
-                      src="../Public/images/icons/instagram.png" 
+                      src="/images/instagram.png" 
                       width="30" 
                       height="30" 
                       style={{ borderRadius: '50%', objectFit: 'cover' }}
@@ -189,27 +157,6 @@ const ContactUs = () => {
                     />
                   </a>
                 </div>
-
-                {/* <p>
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleShow(member)}
-                    style={{
-                      display: 'inline-block',
-                      padding: '10px 20px',
-                      fontSize: '0.9rem',
-                      textDecoration: 'none',
-                      color: '#fff',
-                      backgroundColor: '#007bff',
-                      borderRadius: '5px',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                    onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#0056b3')}
-                    onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#007bff')}
-                  >
-                    Ver detalles »
-                  </button>
-                </p> */}
               </div>
             </div>
           ))}

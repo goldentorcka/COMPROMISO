@@ -2,11 +2,6 @@ import React, { useState } from 'react';
 import NavMenuPublic from '../../Nav/NavMenuPublic';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
-// Importa los archivos PDF
-import techManual from '../../../../Public/pdf/MANUAL_TECNICO.pdf';
-import userManual from '../../../../Public/pdf/MANUAL_DE_USUARIO.pdf';
-
 const MySwal = withReactContent(Swal);
 
 const ManualViewer = () => {
@@ -100,21 +95,22 @@ const ManualViewer = () => {
             </button>
             <h3 style={modalTitleStyle}>MANUAL TÉCNICO</h3>
             <iframe
-              src={techManual}
+              src= "/pdf/MANUAL_TECNICO.pdf"
               style={iframeStyle}
               title="Manual Técnico"
             ></iframe>
             <div style={modalFooterStyle}>
-              <a href={techManual} target="_blank" rel="noopener noreferrer" style={modalButtonStyle}>
+              <a href="/pdf/MANUAL_TECNICO.pdf" target="_blank" rel="noopener noreferrer" style={modalButtonStyle}>
                 Ver en otra ventana
               </a>
-              <a href={techManual} download style={downloadButtonStyle}>
+              <a href="/pdf/MANUAL_TECNICO.pdf" download style={downloadButtonStyle}>
                 Descargar
               </a>
             </div>
           </div>
         </div>
       )}
+
 
       {/* Modal del Manual de Usuario */}
       {showUserModal && (
@@ -130,15 +126,15 @@ const ManualViewer = () => {
             </button>
             <h3 style={modalTitleStyle}>MANUAL DE USUARIO</h3>
             <iframe
-              src={userManual}
+              src="/pdf/MANUAL_DE_USUARIO.pdf"
               style={iframeStyle}
               title="Manual de Usuario"
             ></iframe>
             <div style={modalFooterStyle}>
-              <a href={userManual} target="_blank" rel="noopener noreferrer" style={modalButtonStyle}>
+              <a href="/pdf/MANUAL_DE_USUARIO.pdf" target="_blank" rel="noopener noreferrer" style={modalButtonStyle}>
                 Ver en otra ventana
               </a>
-              <a href={userManual} download style={downloadButtonStyle}>
+              <a href="/pdf/MANUAL_DE_USUARIO.pdf" download style={downloadButtonStyle}>
                 Descargar
               </a>
             </div>
