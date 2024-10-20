@@ -4,40 +4,18 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
-import { Tag } from 'primereact/tag';
 import { Button } from 'primereact/button';
 import clienteAxios from '../../api.js';
 import { FaEye, FaDownload } from 'react-icons/fa';
 import NavMenuPublic from "../Nav/NavMenuPublic.jsx";
-import { Dialog } from 'primereact/dialog';
-import { PDFViewer } from '@react-pdf-viewer/core';
 
 function AdvancedFilterDemo() {
     const [documentoList, setDocumentoList] = useState([]);
     const [filters, setFilters] = useState(null);
     const [globalFilterValue, setGlobalFilterValue] = useState('');
-    const [statuses] = useState(['Activo', 'Inactivo']);
     const [processes, setProcesses] = useState([]);
     const [procedures, setProcedures] = useState([]);
     const [responsibles, setResponsibles] = useState([]);
-    const [filterCodigo, setFilterCodigo] = useState('');
-    const [filterProceso, setFilterProceso] = useState('');
-    const [filterProcedimiento, setFilterProcedimiento] = useState('');
-    const [filterResponsable, setFilterResponsable] = useState('');
-    const [selectedDocument, setSelectedDocument] = useState(null); // Para el modal
-    const [modalVisible, setModalVisible] = useState(false); // Control del modal
-    const [fileUrls, setFileUrls] = useState([]); // Para almacenar URLs de los archivos PDF
-
-    const getSeverity = (status) => {
-        switch (status) {
-            case 'Inactivo':
-                return 'danger';
-            case 'Activo':
-                return 'success';
-            default:
-                return null;
-        }
-    };
 
     useEffect(() => {
         cargarDatosAuxiliares();
@@ -56,7 +34,7 @@ function AdvancedFilterDemo() {
                         ...doc,
                         nombre_procedimiento: procedimiento ? procedimiento.nombre_procedimiento : 'No disponible',
                         nombre_responsable: responsable ? responsable.nombre_responsable : 'No disponible',
-                        fileUrl: doc.fileUrl // Asegurarnos de que cada documento tenga la URL del archivo
+                        fileUrl: doc.fileUrl || "/pdf/04 FOr CBPA 01 cosecha bpa.pdf" // URL del PDF de ejemplo
                     };
                 });
                 setDocumentoList(documentosConNombres);
@@ -91,10 +69,9 @@ function AdvancedFilterDemo() {
             nombre_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             version: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             tipo_documento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            fecha_elaboracion: { operator: FilterOperator.AAND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
+            fecha_elaboracion: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.STARTS_WITH }] },
             nombre_procedimiento: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
             nombre_responsable: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-            status: { operator: FilterOperator.OR, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
         });
         setGlobalFilterValue('');
     };
@@ -132,7 +109,6 @@ function AdvancedFilterDemo() {
     const fechaElaboracionBodyTemplate = (rowData) => rowData.fecha_elaboracion;
     const nombreProcedimientoBodyTemplate = (rowData) => rowData.nombre_procedimiento;
     const nombreResponsableBodyTemplate = (rowData) => rowData.nombre_responsable;
-    const statusBodyTemplate = (rowData) => <Tag value={rowData.status} severity={getSeverity(rowData.status)} />;
     const codigoBodyTemplate = (rowData) => rowData.codigo;
 
     const actionBodyTemplate = (rowData) => (
@@ -140,36 +116,29 @@ function AdvancedFilterDemo() {
             <Button 
                 icon={<FaEye />} 
                 className="p-button-rounded" 
-                onClick={() => handleViewDocument(rowData)} 
+                onClick={() => handleViewDocument(rowData.fileUrl)} 
                 title="Ver Documento" 
             />
             <Button 
                 icon={<FaDownload />} 
                 className="p-button-rounded" 
-                onClick={() => handleDownloadDocument(rowData)} 
+                onClick={() => handleDownloadDocument(rowData.fileUrl)} 
                 title="Descargar Documento" 
             />
         </div>
     );
 
-    const handleViewDocument = (rowData) => {
-        setSelectedDocument(rowData); 
-        setModalVisible(true);
+    const handleViewDocument = (fileUrl) => {
+        window.open(fileUrl, '_blank'); // Abre el PDF en una nueva ventana
     };
 
-    const handleDownloadDocument = (rowData) => {
-        const url = rowData.fileUrl; // Asegurarse de que la URL del archivo esté presente
+    const handleDownloadDocument = (fileUrl) => {
         const link = document.createElement('a');
-        link.href = url;
-        link.download = rowData.nombre_documento; // Nombre de archivo a descargar
+        link.href = fileUrl; // Asegurarse de que la URL del archivo esté presente
+        link.download = ''; // Esto permite la descarga del archivo
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setSelectedDocument(null);
     };
 
     return (
@@ -192,24 +161,11 @@ function AdvancedFilterDemo() {
                     <Column field="version" header="Versión" body={versionBodyTemplate} filter sortable />
                     <Column field="tipo_documento" header="Tipo Documento" body={tipoDocumentoBodyTemplate} filter sortable />
                     <Column field="fecha_elaboracion" header="Fecha Elaboración" body={fechaElaboracionBodyTemplate} filter sortable />
-                    <Column field="nombre_procedimiento" header="Procedimiento" body={nombreProcedimientoBodyTemplate} filter sortable />
-                    <Column field="nombre_responsable" header="Responsable" body={nombreResponsableBodyTemplate} filter sortable />
-                    <Column field="status" header="Estado" body={statusBodyTemplate} filter sortable />
-                    <Column body={actionBodyTemplate} header="Acciones" />
+                    <Column field="nombre_procedimiento" header="Nombre Procedimiento" body={nombreProcedimientoBodyTemplate} filter sortable />
+                    <Column field="nombre_responsable" header="Nombre Responsable" body={nombreResponsableBodyTemplate} filter sortable />
+                    <Column header="Acciones" body={actionBodyTemplate} />
                 </DataTable>
             </div>
-
-            <Dialog
-                header="Visualizar Documento"
-                visible={modalVisible}
-                style={{ width: '70vw' }}
-                footer={<Button label="Cerrar" icon="pi pi-times" onClick={closeModal} />}
-                onHide={closeModal}
-            >
-                {selectedDocument && (
-                    <PDFViewer fileUrl={selectedDocument.fileUrl} />
-                )}
-            </Dialog>
         </div>
     );
 }

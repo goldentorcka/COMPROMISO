@@ -244,8 +244,9 @@ const closeButtonStyle = {
   position: 'absolute',
   top: '10px',
   right: '10px',
-  backgroundColor: 'transparent',
-  border: 'none',
+  backgroundColor: '#d33', // Fondo rojo para destacar
+  border: '2px solid #fff', // Borde blanco para contraste
+  borderRadius: '50%', // Redondear el botón
   cursor: 'pointer',
   zIndex: 1001,
   padding: '10px',
@@ -253,14 +254,15 @@ const closeButtonStyle = {
 };
 
 const closeButtonIconStyle = {
-  color: '#555',
-  fontSize: '22px',
+  color: '#fff', // Ícono blanco
+  fontSize: '24px', // Aumentar el tamaño del ícono
 };
 
 const iconStyle = {
-  width: '24px',
-  height: '24px',
+  width: '30px', // Aumentar el tamaño del ícono
+  height: '30px',
 };
+
 
 const modalTitleStyle = {
   marginBottom: '25px',

@@ -62,7 +62,7 @@ const CrudUsuarios = () => {
   const columns = [
     { field: 'id', header: 'ID', width: '10%' },
     { field: 'email', header: 'Email', width: '50%' },
-    { field: 'rol', header: 'Rol', width: '20%' }
+    { field: 'password', header: 'Password', width: '20%' }
   ];
 
   // Obtener usuario seleccionado para editar

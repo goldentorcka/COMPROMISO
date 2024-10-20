@@ -6,17 +6,25 @@ const sequelize = require('../../../../config/database.js'); // Cambié pool a s
 const Usuario = require('../models/usuarioModel.js'); // Cambié el modelo a 'Usuario'
 
 // Configurar el servicio de correo
+// const transporter = nodemailer.createTransport({
+//   service: 'Gmail', // Puedes cambiar esto al servicio que prefieras
+//   auth: {
+//     user: process.env.EMAIL_USER, // Asegúrate de tener esto configurado en tu .env
+//     pass: process.env.EMAIL_PASS, // Configura esto en tu .env
+//   },
+// });
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: 'gmail', // o el servicio que estés utilizando
   auth: {
-    user: process.env.EMAIL_USER, // Asegúrate de que esto sea correcto
-    pass: process.env.EMAIL_PASS, // Asegúrate de que esto sea correcto
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
-  secure: false, // Establece el uso de TLS
   tls: {
-    rejectUnauthorized: false // Esto permite conexiones no seguras
-  }
+    rejectUnauthorized: false,
+  },
 });
+
+
 
 // Función para registrar un nuevo usuario
 const register = async (req, res) => {
@@ -66,36 +74,45 @@ const login = async (req, res) => {
   }
 };
 
-// Función para restablecer la contraseña
+
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
+    // Busca al usuario por correo usando Sequelize
     const user = await Usuario.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
+    // Genera un token de restablecimiento (válido por 1 hora)
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
+    // Configurar el envío de correo
     const mailOptions = {
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Restablecer tu contraseña',
       html: `
         <p>Para restablecer tu contraseña, haz clic en el siguiente enlace:</p>
-        <a href="${process.env.FRONTEND_URL}/reset-password/${user.id}?token=${token}">Restablecer contraseña</a>
+        <a href="${process.env.FRONTEND_URL}/reset-password/${user.id}?token=${token}" style="text-decoration:none;">Restablecer contraseña</a>
       `,
     };
 
-    // Enviar el correo
-    await transporter.sendMail(mailOptions);
-    console.log('Correo enviado');
-    res.json({ message: 'Correo de restablecimiento enviado. Por favor revisa tu correo.', token });
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log('Error al enviar el correo:', error);
+        return res.status(500).json({ message: 'Error al enviar el correo' });
+      }
+
+      console.log('Correo enviado:', info.response);
+      res.json({ message: 'Correo de restablecimiento enviado. Por favor revisa tu correo.', token });
+    });
   } catch (error) {
-    console.error('Error al enviar el correo:', error);
-    res.status(500).json({ message: 'Error al enviar el correo' });
+    console.error('Error en forgot password:', error);
+    res.status(500).json({ message: 'Error al procesar la solicitud' });
   }
 };
+
 
 // Función para actualizar la contraseña
 const resetPassword = async (req, res) => {

@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTachometerAlt, faUsers, faUserShield, faProjectDiagram, faFileAlt, faCogs, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import '../styles/stylesSidebar.css';
-import logo from './../../../Public/images/logo.png'; // Importación del logo
+// import logo from './../../../Public/images/logo.png'; // Importación del logo
 
 const SidebarAdministrator = () => {
   const [isUserActive, setIsUserActive] = React.useState(true);
@@ -12,10 +12,10 @@ const SidebarAdministrator = () => {
     <div className="sidebar">
       <div className="sidebar-content d-md-flex flex-column p-0 pt-lg-3">
         
-        {/* Logo del aplicativo */}
+        {/* Logo del aplicativo
         <div className="logo-container">
-          <img src={logo} alt="Logo" className="logo" />
-        </div>
+          <img src="/images/logo.png" alt="Logo" className="logo" />
+        </div> */}
         
         <ul className="nav flex-column mt-3">
           <li className="nav-item">
@@ -89,14 +89,14 @@ const SidebarAdministrator = () => {
             </li>
           </ul>
         </div>
-
+{/* 
         <div className="user-section d-flex align-items-center justify-content-between p-3 mt-auto">
           <div className="user-info d-flex align-items-center">
             <FontAwesomeIcon icon={faUserShield} className="icon user-icon" />
             <span className="user-name ms-2">Usuario Nombre</span>
           </div>
           <div className={`status-indicator ${isUserActive ? 'active' : 'inactive'}`}></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
