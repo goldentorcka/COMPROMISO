@@ -1,10 +1,10 @@
-import Usuario from '../../usuario/models/usuarioModel.js';
-import { generarJWT } from '../../../../helpers/generarJWT.js';
-import { generarToken } from '../../../../helpers/generarTOKEN.js';
-import { emailRegistro } from '../../../../helpers/emailRegister.js';
-import { emailOlvidePassword } from '../../../../helpers/emailOlvidePassword.js';
-import bcrypt from 'bcrypt'; 
-import logger from '../../../../config/logger.js';
+const Usuario = requiere('../../usuario/models/usuarioModel.js';)
+const { generarJWT } = requiere('../../../../helpers/generarJWT.js';)
+const { generarToken } = requiere('../../../../helpers/generarTOKEN.js';)
+const { emailRegistro } = requiere('../../../../helpers/emailRegister.js';)
+const { emailOlvidePassword } = requiere('../../../../helpers/emailOlvidePassword.js';)
+const bcrypt requiere('bcrypt';)
+const logger requiere('../../../../config/logger.js';)
 
 // Autenticar usuario
 export const autenticar = async (req, res) => {
